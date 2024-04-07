@@ -1,0 +1,23 @@
+{
+  "components": [
+    {
+      "label": "Offer text",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_110ngjk",
+        "columns": null
+      },
+      "id": "Field_1dch8qa",
+      "key": "offer_text"
+    }
+  ],
+  "type": "default",
+  "id": "Form_Confirm_Offer",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.20.0"
+  },
+  "schemaVersion": 15
+}

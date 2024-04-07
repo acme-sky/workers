@@ -1,0 +1,85 @@
+{
+  "components": [
+    {
+      "values": [
+        {
+          "label": "CTA",
+          "value": "1"
+        },
+        {
+          "label": "BLQ",
+          "value": "2"
+        },
+        {
+          "label": "CPH",
+          "value": "3"
+        }
+      ],
+      "label": "Departaure airport",
+      "type": "select",
+      "layout": {
+        "row": "Row_0vql3cv",
+        "columns": null
+      },
+      "id": "Field_04r8kr1",
+      "key": "departaure_airport_id"
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Departaure time",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_0vql3cv",
+        "columns": null
+      },
+      "id": "Field_0qu3kyo",
+      "key": "departaure_time"
+    },
+    {
+      "values": [
+        {
+          "label": "CTA",
+          "value": "1"
+        },
+        {
+          "label": "BLQ",
+          "value": "2"
+        },
+        {
+          "label": "CPH",
+          "value": "3"
+        }
+      ],
+      "label": "Arrival airport",
+      "type": "select",
+      "layout": {
+        "row": "Row_0sgv2ff",
+        "columns": null
+      },
+      "id": "Field_05vm4p0",
+      "key": "arrival_airport_id"
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Arrival time",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_0sgv2ff",
+        "columns": null
+      },
+      "id": "Field_0db60v3",
+      "key": "arrival_time"
+    }
+  ],
+  "type": "default",
+  "id": "Form_Express_Interest",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.20.0"
+  },
+  "schemaVersion": 15
+}
