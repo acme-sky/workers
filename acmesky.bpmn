@@ -637,6 +637,93 @@
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmn:process id="Process_User" name="sd_user" isExecutable="true">
+    <bpmn:extensionElements>
+      <zeebe:userTaskForm id="UserTaskForm_0u7i0sk">{
+  "components": [
+    {
+      "values": [
+        {
+          "label": "CTA",
+          "value": "1"
+        },
+        {
+          "label": "BLQ",
+          "value": "2"
+        },
+        {
+          "label": "CPH",
+          "value": "3"
+        }
+      ],
+      "label": "Departaure airport",
+      "type": "select",
+      "layout": {
+        "row": "Row_0vql3cv",
+        "columns": null
+      },
+      "id": "Field_04r8kr1",
+      "key": "departaure_airport_id"
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Departaure time",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_0vql3cv",
+        "columns": null
+      },
+      "id": "Field_0qu3kyo",
+      "key": "departaure_time"
+    },
+    {
+      "values": [
+        {
+          "label": "CTA",
+          "value": "1"
+        },
+        {
+          "label": "BLQ",
+          "value": "2"
+        },
+        {
+          "label": "CPH",
+          "value": "3"
+        }
+      ],
+      "label": "Arrival airport",
+      "type": "select",
+      "layout": {
+        "row": "Row_0sgv2ff",
+        "columns": null
+      },
+      "id": "Field_05vm4p0",
+      "key": "arrival_airport_id"
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Arrival time",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_0sgv2ff",
+        "columns": null
+      },
+      "id": "Field_0db60v3",
+      "key": "arrival_time"
+    }
+  ],
+  "type": "default",
+  "id": "Form_Express_Interest",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.20.0"
+  },
+  "schemaVersion": 15
+}</zeebe:userTaskForm>
+    </bpmn:extensionElements>
     <bpmn:sequenceFlow id="Flow_0dtcwq0" sourceRef="CM_Check_Offer" targetRef="End_Received_New_Offer_Err_Bank" />
     <bpmn:sequenceFlow id="Flow_0ze2302" sourceRef="EG_BankLink_Or_Error" targetRef="CM_Check_Offer" />
     <bpmn:sequenceFlow id="Flow_0wguizh" sourceRef="EG_BankLink_Or_Error" targetRef="CM_Received_Bank_Link" />
@@ -735,13 +822,6 @@
       <bpmn:outgoing>Flow_0c6op3o</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_172vhdd" messageRef="Message_0qr0q4c" />
     </bpmn:intermediateCatchEvent>
-    <bpmn:userTask id="UT_Express_Interest_For_Flight" name="Express interest to monitor a flight">
-      <bpmn:extensionElements>
-        <zeebe:formDefinition formId="Form_Express_Interest" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_08ouphi</bpmn:incoming>
-      <bpmn:outgoing>Flow_12s97mk</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_12s97mk" sourceRef="UT_Express_Interest_For_Flight" targetRef="TM_New_Request_Save_Flight" />
     <bpmn:intermediateThrowEvent id="TM_New_Request_Save_Flight">
       <bpmn:extensionElements>
@@ -752,6 +832,13 @@
       <bpmn:messageEventDefinition id="MessageEventDefinition_1yl7evy" />
     </bpmn:intermediateThrowEvent>
     <bpmn:sequenceFlow id="Flow_02d1m16" sourceRef="TM_New_Request_Save_Flight" targetRef="RM_Ack_Flight_Request_Save" />
+    <bpmn:userTask id="UT_Express_Interest_For_Flight" name="Express interest to monitor a flight">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_0u7i0sk" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_08ouphi</bpmn:incoming>
+      <bpmn:outgoing>Flow_12s97mk</bpmn:outgoing>
+    </bpmn:userTask>
     <bpmn:association id="Association_0x5u43a" associationDirection="None" sourceRef="EG_Journey_Or_JourneyAndRent" targetRef="TextAnnotation_0kywoye" />
   </bpmn:process>
   <bpmn:message id="Message_1jmlpn7" name="CM_New_Request_Save_Flight">
@@ -1490,11 +1577,11 @@
       <bpmndi:BPMNShape id="Event_1k1adeg_di" bpmnElement="RM_Ack_Flight_Request_Save">
         <dc:Bounds x="542" y="222" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1hc4owu_di" bpmnElement="UT_Express_Interest_For_Flight">
-        <dc:Bounds x="310" y="200" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0r3klqr_di" bpmnElement="TM_New_Request_Save_Flight">
         <dc:Bounds x="442" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ypkcg0_di" bpmnElement="UT_Express_Interest_For_Flight">
+        <dc:Bounds x="310" y="200" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0dtcwq0_di" bpmnElement="Flow_0dtcwq0">
         <di:waypoint x="2018" y="317" />
