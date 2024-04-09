@@ -2,9 +2,10 @@ module github.com/acme-sky/bpmn/workers
 
 go 1.22.0
 
+require github.com/camunda/zeebe/clients/go/v8 v8.5.0
+
 require (
 	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
-	github.com/camunda/zeebe/clients/go/v8 v8.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect

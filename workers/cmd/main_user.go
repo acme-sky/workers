@@ -3,12 +3,19 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/acme-sky/bpmn/workers/internal/user"
-	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 	"os"
+
+	"github.com/acme-sky/bpmn/workers/internal/user"
+	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
+	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 )
 
 var jobStatuses = make(map[string](chan int))
+
+type Job struct {
+	name    string
+	handler worker.JobHandler
+}
 
 func main() {
 	ZeebeAddr := os.Getenv("ZEEBE_ADDRESS")
@@ -41,14 +48,11 @@ func main() {
 	fmt.Println(result.String())
 	fmt.Println()
 
-	jobs := []string{"TM_New_Request_Save_Flight"}
+	jobs := []Job{
+		{"TM_New_Request_Save_Flight", user.TMNewRequestSaveFlight},
+	}
 
 	for _, job := range jobs {
-		jobWorker := client.NewJobWorker().JobType(job).Handler(user.handleJob).Open()
-		jobStatuses[job] = make(chan int, 0)
-
-		<-jobStatuses[job]
-		jobWorker.Close()
-		jobWorker.AwaitClose()
+		client.NewJobWorker().JobType(job.name).Handler(job.handler).Open().AwaitClose()
 	}
 }
