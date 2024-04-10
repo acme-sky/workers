@@ -1,4 +1,4 @@
-package user
+package acme
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func RMAckFlightRequestSave(client worker.JobClient, job entities.Job) {
+func STSaveFlight(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -25,8 +25,7 @@ func RMAckFlightRequestSave(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	prefix := fmt.Sprintf("[%s] [%d] ", job.Type, jobKey)
-	log.SetPrefix(prefix)
+	log.SetPrefix(fmt.Sprintf("[%s] [%d] ", job.Type, jobKey))
 	log.Println("Job completed")
 	log.Println("Processing data:", variables)
 
@@ -38,4 +37,5 @@ func RMAckFlightRequestSave(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Println("Successfully completed job")
+	close(acmejob.JobStatuses[job.Type])
 }

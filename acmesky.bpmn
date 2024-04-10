@@ -32,9 +32,9 @@
     <bpmn:messageFlow id="Flow_06i4ava" sourceRef="TM_Journey_And_Rent" targetRef="CM_Journey_And_Rent" />
     <bpmn:messageFlow id="Flow_1iqz0qp" sourceRef="UT_Pay" targetRef="Participant_Bank" />
     <bpmn:messageFlow id="Flow_0mf165c" sourceRef="Participant_Bank" targetRef="UT_Pay" />
-    <bpmn:messageFlow id="Flow_0260exq" sourceRef="SM_Ack_Flight_Request_Save" targetRef="RM_Ack_Flight_Request_Save" />
+    <bpmn:messageFlow id="Flow_0260exq" sourceRef="SM_Ack_Flight_Request_Save" targetRef="CM_Ack_Flight_Request_Save" />
+    <bpmn:messageFlow id="Flow_13atww6" sourceRef="TM_New_Request_Save_Flight" targetRef="CM_New_Request_Save_Flight" />
     <bpmn:messageFlow id="Flow_1lmclj3" sourceRef="TM_Propagate_Message_From_Prontogram" targetRef="Start_Received_New_Offer" />
-    <bpmn:messageFlow id="Flow_13atww6" sourceRef="TM_New_Request_Save_Flight" targetRef="RM_New_Request_Save_Flight" />
     <bpmn:textAnnotation id="TextAnnotation_04likem">
       <bpmn:text>Check if token timestamp is not expired and not used</bpmn:text>
     </bpmn:textAnnotation>
@@ -75,7 +75,7 @@
         <bpmn:flowNodeRef>Activity_Book_Journey</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_Check_Offer</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EB_Check_Offer</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>RM_New_Request_Save_Flight</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>CM_New_Request_Save_Flight</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Start_ACME_UserProfile</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_0jl8r24</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>TM_Offer_Still_Valid</bpmn:flowNodeRef>
@@ -101,7 +101,7 @@
     <bpmn:sequenceFlow id="Flow_1liyfs9" name="No" sourceRef="EG_Price_Greater_Than_1000" targetRef="TM_Journey">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=1</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_0tixpey" sourceRef="Start_ACME_UserProfile" targetRef="RM_New_Request_Save_Flight" />
+    <bpmn:sequenceFlow id="Flow_0tixpey" sourceRef="Start_ACME_UserProfile" targetRef="CM_New_Request_Save_Flight" />
     <bpmn:sequenceFlow id="Flow_1rtz04m" sourceRef="ST_Save_Flight" targetRef="SM_Ack_Flight_Request_Save" />
     <bpmn:sequenceFlow id="Flow_1qmul68" sourceRef="SM_Ack_Flight_Request_Save" targetRef="End_ACME_UserProfile" />
     <bpmn:subProcess id="Activity_Book_Journey" name="Book journey">
@@ -403,7 +403,7 @@
       <bpmn:outgoing>Flow_066ca6d</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true">
         <bpmn:extensionElements>
-          <zeebe:loopCharacteristics inputCollection="=0" />
+          <zeebe:loopCharacteristics inputCollection="=[0]" />
         </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:startEvent id="Start_Check_Each_Interest">
@@ -556,8 +556,8 @@
       <bpmn:outgoing>Flow_1wyb4ra</bpmn:outgoing>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1ksvc53" errorRef="Error_0xts0bk" />
     </bpmn:boundaryEvent>
-    <bpmn:sequenceFlow id="Flow_1j8k5x3" sourceRef="RM_New_Request_Save_Flight" targetRef="ST_Save_Flight" />
-    <bpmn:intermediateCatchEvent id="RM_New_Request_Save_Flight">
+    <bpmn:sequenceFlow id="Flow_1j8k5x3" sourceRef="CM_New_Request_Save_Flight" targetRef="ST_Save_Flight" />
+    <bpmn:intermediateCatchEvent id="CM_New_Request_Save_Flight">
       <bpmn:incoming>Flow_0tixpey</bpmn:incoming>
       <bpmn:outgoing>Flow_1j8k5x3</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_06di9uo" messageRef="Message_1jmlpn7" />
@@ -767,11 +767,7 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0s5gfkf" sourceRef="UT_Pay" targetRef="EG_Payment_Success_By_User" />
     <bpmn:sequenceFlow id="Flow_0f87fw4" sourceRef="CM_Received_Bank_Link" targetRef="UT_Pay" />
-    <bpmn:sequenceFlow id="Flow_0c6op3o" sourceRef="RM_Ack_Flight_Request_Save" targetRef="End_User" />
-    <bpmn:startEvent id="Start_User">
-      <bpmn:outgoing>Flow_08ouphi</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_08ouphi" sourceRef="Start_User" targetRef="UT_Express_Interest_For_Flight" />
+    <bpmn:sequenceFlow id="Flow_0c6op3o" sourceRef="CM_Ack_Flight_Request_Save" targetRef="End_User" />
     <bpmn:sequenceFlow id="Flow_0f3dyxs" sourceRef="Start_Received_New_Offer" targetRef="UT_Confirm_Offer" />
     <bpmn:endEvent id="End_Received_New_Offer_Err_Bank">
       <bpmn:incoming>Flow_0dtcwq0</bpmn:incoming>
@@ -839,11 +835,7 @@
     <bpmn:endEvent id="End_User">
       <bpmn:incoming>Flow_0c6op3o</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:startEvent id="Start_Received_New_Offer" name="Received a message with offer and token">
-      <bpmn:outgoing>Flow_0f3dyxs</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1hi6jje" messageRef="Message_0qr0q4c" />
-    </bpmn:startEvent>
-    <bpmn:intermediateCatchEvent id="RM_Ack_Flight_Request_Save">
+    <bpmn:intermediateCatchEvent id="CM_Ack_Flight_Request_Save">
       <bpmn:incoming>Flow_02d1m16</bpmn:incoming>
       <bpmn:outgoing>Flow_0c6op3o</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_172vhdd" messageRef="Message_3bvr02c" />
@@ -857,7 +849,7 @@
       <bpmn:outgoing>Flow_02d1m16</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1yl7evy" />
     </bpmn:intermediateThrowEvent>
-    <bpmn:sequenceFlow id="Flow_02d1m16" sourceRef="TM_New_Request_Save_Flight" targetRef="RM_Ack_Flight_Request_Save" />
+    <bpmn:sequenceFlow id="Flow_02d1m16" sourceRef="TM_New_Request_Save_Flight" targetRef="CM_Ack_Flight_Request_Save" />
     <bpmn:userTask id="UT_Express_Interest_For_Flight" name="Express interest to monitor a flight">
       <bpmn:extensionElements>
         <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_0u7i0sk" />
@@ -865,11 +857,19 @@
       <bpmn:incoming>Flow_08ouphi</bpmn:incoming>
       <bpmn:outgoing>Flow_12s97mk</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_08ouphi" sourceRef="Start_User" targetRef="UT_Express_Interest_For_Flight" />
+    <bpmn:startEvent id="Start_User">
+      <bpmn:outgoing>Flow_08ouphi</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:startEvent id="Start_Received_New_Offer" name="Received a message with offer and token">
+      <bpmn:outgoing>Flow_0f3dyxs</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1hi6jje" messageRef="Message_3dhlcim" />
+    </bpmn:startEvent>
     <bpmn:association id="Association_0x5u43a" associationDirection="None" sourceRef="EG_Journey_Or_JourneyAndRent" targetRef="TextAnnotation_0kywoye" />
   </bpmn:process>
   <bpmn:message id="Message_1jmlpn7" name="CM_New_Request_Save_Flight">
     <bpmn:extensionElements>
-      <zeebe:subscription correlationKey="=0" />
+      <zeebe:subscription correlationKey="=&#34;0&#34;" />
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmn:message id="Message_3ofh7oh" name="CM_Start_Prontogram" />
@@ -880,11 +880,12 @@
       <zeebe:subscription correlationKey="=0" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:message id="Message_3bvr02c" name="RM_Ack_Flight_Request_Save">
+  <bpmn:message id="Message_3bvr02c" name="CM_Ack_Flight_Request_Save">
     <bpmn:extensionElements>
-      <zeebe:subscription correlationKey="=0" />
+      <zeebe:subscription correlationKey="=&#34;0&#34;" />
     </bpmn:extensionElements>
   </bpmn:message>
+  <bpmn:message id="Message_3dhlcim" name="Start_Received_New_Offer" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ACMESky">
       <bpmndi:BPMNShape id="Participant_1aiixuc_di" bpmnElement="Participant_ACME" isHorizontal="true">
@@ -1133,7 +1134,7 @@
       <bpmndi:BPMNShape id="Event_0p1hfgs_di" bpmnElement="TM_Error_On_Check_Offer">
         <dc:Bounds x="2612" y="702" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2603" y="743" width="53" height="14" />
+          <dc:Bounds x="2603" y="753" width="53" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0jtytbd_di" bpmnElement="ST_Retrieve_Offer">
@@ -1371,7 +1372,7 @@
         <di:waypoint x="2168" y="797" />
         <di:waypoint x="2113" y="740" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_1o1penk_di" bpmnElement="RM_New_Request_Save_Flight">
+      <bpmndi:BPMNShape id="Event_1o1penk_di" bpmnElement="CM_New_Request_Save_Flight">
         <dc:Bounds x="332" y="793" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0vw9al4_di" bpmnElement="Start_ACME_UserProfile">
@@ -1605,7 +1606,7 @@
           <dc:Bounds x="1391" y="170" width="74" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1k1adeg_di" bpmnElement="RM_Ack_Flight_Request_Save">
+      <bpmndi:BPMNShape id="Event_1k1adeg_di" bpmnElement="CM_Ack_Flight_Request_Save">
         <dc:Bounds x="542" y="222" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0r3klqr_di" bpmnElement="TM_New_Request_Save_Flight">
