@@ -723,6 +723,29 @@
   },
   "schemaVersion": 15
 }</zeebe:userTaskForm>
+      <zeebe:userTaskForm id="UserTaskForm_004a5d7">{
+  "components": [
+    {
+      "label": "Offer text",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_110ngjk",
+        "columns": null
+      },
+      "id": "Field_1dch8qa",
+      "key": "offer_text"
+    }
+  ],
+  "type": "default",
+  "id": "Form_Confirm_Offer",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.20.0"
+  },
+  "schemaVersion": 15
+}</zeebe:userTaskForm>
     </bpmn:extensionElements>
     <bpmn:sequenceFlow id="Flow_0dtcwq0" sourceRef="CM_Check_Offer" targetRef="End_Received_New_Offer_Err_Bank" />
     <bpmn:sequenceFlow id="Flow_0ze2302" sourceRef="EG_BankLink_Or_Error" targetRef="CM_Check_Offer" />
@@ -767,7 +790,7 @@
     </bpmn:eventBasedGateway>
     <bpmn:userTask id="UT_Confirm_Offer" name="Confirm offer using token from the message">
       <bpmn:extensionElements>
-        <zeebe:formDefinition formId="Form_Confirm_Offer" />
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_004a5d7" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0f3dyxs</bpmn:incoming>
       <bpmn:outgoing>Flow_0l8oigt</bpmn:outgoing>
