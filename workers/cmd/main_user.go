@@ -5,16 +5,24 @@ import (
 	"fmt"
 	"os"
 
+	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
 	"github.com/acme-sky/bpmn/workers/internal/user"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 )
 
-var jobStatuses = make(map[string](chan int))
+type HandlerType int
+
+const (
+	JobType HandlerType = iota
+	MessageType
+)
 
 type Job struct {
-	name    string
-	handler worker.JobHandler
+	name           string
+	handler        worker.JobHandler
+	_type          HandlerType
+	correlationKey string
 }
 
 func main() {
@@ -26,6 +34,8 @@ func main() {
 		GatewayAddress:         ZeebeAddr,
 		UsePlaintextConnection: true,
 	})
+
+	defer client.Close()
 
 	if err != nil {
 		panic(err)
@@ -49,10 +59,28 @@ func main() {
 	fmt.Println()
 
 	jobs := []Job{
-		{"TM_New_Request_Save_Flight", user.TMNewRequestSaveFlight},
+		{"TM_New_Request_Save_Flight", user.TMNewRequestSaveFlight, JobType, ""},
+		{"RM_Ack_Flight_Request_Save", nil, MessageType, "0"},
 	}
 
 	for _, job := range jobs {
-		client.NewJobWorker().JobType(job.name).Handler(job.handler).Open().AwaitClose()
+		switch job._type {
+		case JobType:
+			acmejob.JobStatuses[job.name] = make(chan int, 1)
+
+			client.NewJobWorker().JobType(job.name).Handler(job.handler).Open()
+			<-acmejob.JobStatuses[job.name]
+
+			defer client.Close()
+			break
+		case MessageType:
+			res, err := client.NewPublishMessageCommand().MessageName(job.name).CorrelationKey(job.correlationKey).Send(ctx)
+			if err != nil {
+				println("err", err)
+			} else {
+				println("res", res.String())
+			}
+			break
+		}
 	}
 }

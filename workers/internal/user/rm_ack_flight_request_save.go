@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func TMNewRequestSaveFlight(client worker.JobClient, job entities.Job) {
+func RMAckFlightRequestSave(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -38,5 +38,4 @@ func TMNewRequestSaveFlight(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Println("Successfully completed job")
-	close(acmejob.JobStatuses[job.Type])
 }

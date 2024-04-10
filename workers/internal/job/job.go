@@ -7,6 +7,8 @@ import (
 	"log"
 )
 
+var JobStatuses = make(map[string](chan int))
+
 func FailJob(client worker.JobClient, job entities.Job) {
 	log.Println("Failed to complete job", job.GetKey())
 
