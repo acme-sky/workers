@@ -436,6 +436,9 @@
       <bpmn:sendTask id="TM_Send_Offer" name="Send offer">
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="TM_Send_Offer" />
+          <zeebe:properties>
+            <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10; &#34;message&#34;: &#34;Hello John Doe, this is the offer token for your flight from &#60;b&#62;BLQ&#60;/b&#62; to &#60;b&#62;CPH&#60;/b&#62; in date April 10th 11:10 - April 10th 13:30.&#60;br&#62;&#60;a href=\&#34;#\&#34; target=\&#34;_blank\&#34;&#62;1234&#60;/a&#62;&#34;,&#10; &#34;expired&#34;: &#34;10124235345&#34;&#10;}&#10;" />
+          </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0b8q3aw</bpmn:incoming>
         <bpmn:outgoing>Flow_1xm6mep</bpmn:outgoing>
@@ -843,7 +846,7 @@
     <bpmn:intermediateCatchEvent id="RM_Ack_Flight_Request_Save">
       <bpmn:incoming>Flow_02d1m16</bpmn:incoming>
       <bpmn:outgoing>Flow_0c6op3o</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_172vhdd" messageRef="Message_0qr0q4c" />
+      <bpmn:messageEventDefinition id="MessageEventDefinition_172vhdd" messageRef="Message_3bvr02c" />
     </bpmn:intermediateCatchEvent>
     <bpmn:sequenceFlow id="Flow_12s97mk" sourceRef="UT_Express_Interest_For_Flight" targetRef="TM_New_Request_Save_Flight" />
     <bpmn:intermediateThrowEvent id="TM_New_Request_Save_Flight">
@@ -873,6 +876,11 @@
   <bpmn:error id="Error_0xts0bk" name="EB_Check_Offer" errorCode="0" />
   <bpmn:error id="Error_16y8tjh" name="EB_Book_Journey" errorCode="EB_Book_Journey" />
   <bpmn:message id="Message_2i9855h" name="CM_Journey">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=0" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_3bvr02c" name="RM_Ack_Flight_Request_Save">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="=0" />
     </bpmn:extensionElements>
