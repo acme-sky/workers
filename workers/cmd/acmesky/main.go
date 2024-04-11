@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 	"os/signal"
-	"time"
 
 	"github.com/acme-sky/bpmn/workers/internal/acme"
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
@@ -21,12 +20,13 @@ func main() {
 		os.Exit(1)
 	}()
 
-	time.Sleep(10 * time.Second)
-
 	jobs := []acmejob.Job{
 		{Name: "ST_Save_Flight", Handler: acme.STSaveFlight, Message: nil},
 		{Name: "TM_Ack_Flight_Request_Save", Handler: acme.TMAckFlightRequestSave, Message: &acmejob.MessageCommand{Name: "CM_Ack_Flight_Request_Save", CorrelationKey: "0"}},
 		{Name: "ST_Get_Interests", Handler: acme.STGetInterests, Message: nil},
+		{Name: "ST_Check_Flight_For_An_Interest", Handler: acme.STCheckFlightForAnInterest, Message: nil},
+		{Name: "ST_Prepare_Offer", Handler: acme.STPrepareOffer, Message: nil},
+		{Name: "TM_Send_Offer", Handler: acme.TMSendOffer, Message: &acmejob.MessageCommand{Name: "CM_Start_Prontogram", CorrelationKey: "0"}},
 	}
 
 	for _, job := range jobs {

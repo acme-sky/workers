@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
@@ -13,7 +12,7 @@ import (
 )
 
 var JobStatuses = make(map[string](chan int))
-var JobVariables = make(map[string](chan string))
+var JobVariables = make(map[string](chan map[string]interface{}))
 
 type MessageCommand struct {
 	Name           string
@@ -67,13 +66,15 @@ func HandleJob(client *zbc.Client, job Job) {
 	ctx := context.Background()
 
 	JobStatuses[job.Name] = make(chan int, 1)
-	JobVariables[job.Name] = make(chan string, 1)
+	JobVariables[job.Name] = make(chan map[string]interface{}, 1)
 
-	worker := (*client).NewJobWorker().JobType(job.Name).Handler(job.Handler).Open()
+	// TODO: study why multi-instance jobs does not fit this close-worker below
+	// worker := (*client).NewJobWorker().JobType(job.Name).Handler(job.Handler).Open()
+	(*client).NewJobWorker().JobType(job.Name).Handler(job.Handler).Open()
 
 	if job.Message != nil {
 		variables := <-JobVariables[job.Name]
-		res, err := (*client).NewPublishMessageCommand().MessageName(job.Message.Name).CorrelationKey(job.Message.CorrelationKey).VariablesFromString(variables)
+		res, err := (*client).NewPublishMessageCommand().MessageName(job.Message.Name).CorrelationKey(job.Message.CorrelationKey).VariablesFromMap(variables)
 
 		if err != nil {
 			log.Println(err.Error())
@@ -87,10 +88,9 @@ func HandleJob(client *zbc.Client, job Job) {
 	}
 
 	<-JobStatuses[job.Name]
-	worker.Close()
-	worker.AwaitClose()
+	// worker.Close()
+	// worker.AwaitClose()
 
-	time.Sleep(10 * time.Second)
 	HandleJob(client, job)
 }
 

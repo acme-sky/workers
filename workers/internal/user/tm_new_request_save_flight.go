@@ -37,7 +37,7 @@ func TMNewRequestSaveFlight(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Println("Successfully completed job")
-	acmejob.JobVariables[job.Type] <- job.GetVariables()
+	acmejob.JobVariables[job.Type] <- variables
 
 	close(acmejob.JobStatuses[job.Type])
 }

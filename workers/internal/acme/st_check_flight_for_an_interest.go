@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/rand"
 
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func STGetInterests(client worker.JobClient, job entities.Job) {
+func STCheckFlightForAnInterest(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -18,7 +19,20 @@ func STGetInterests(client worker.JobClient, job entities.Job) {
 		acmejob.FailJob(client, job)
 		return
 	}
-	variables["interests"] = []map[string]interface{}{{"id": 3}, {"id": 4}}
+
+	interests := variables["interests"].([]interface{})
+	index := int(variables["loopCounter"].(float64)) - 1
+
+	if index < 0 || index >= len(interests) {
+		panic("Index out of range")
+	}
+	interest := interests[index].(map[string]interface{})
+
+	variables["flight"] = "y"
+	r := rand.Int()
+	if r%2 == 0 {
+		variables["flight"] = nil
+	}
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
@@ -37,8 +51,6 @@ func STGetInterests(client worker.JobClient, job entities.Job) {
 		panic(err)
 	}
 
-	log.Println("Successfully completed job")
-	acmejob.JobVariables[job.Type] <- variables
-
+	log.Println("Successfully completed job for ", interest)
 	close(acmejob.JobStatuses[job.Type])
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func STGetInterests(client worker.JobClient, job entities.Job) {
+func TMSendOffer(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -18,7 +18,6 @@ func STGetInterests(client worker.JobClient, job entities.Job) {
 		acmejob.FailJob(client, job)
 		return
 	}
-	variables["interests"] = []map[string]interface{}{{"id": 3}, {"id": 4}}
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {

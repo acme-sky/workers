@@ -341,7 +341,7 @@
       <bpmn:outgoing>Flow_0uv1725</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true">
         <bpmn:extensionElements>
-          <zeebe:loopCharacteristics inputCollection="=0" />
+          <zeebe:loopCharacteristics inputCollection="=airlines" />
         </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:startEvent id="Start_Check_Each_Airline">
@@ -403,7 +403,7 @@
       <bpmn:outgoing>Flow_066ca6d</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true">
         <bpmn:extensionElements>
-          <zeebe:loopCharacteristics inputCollection="=[0]" />
+          <zeebe:loopCharacteristics inputCollection="=interests" />
         </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:startEvent id="Start_Check_Each_Interest">
@@ -437,7 +437,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="TM_Send_Offer" />
           <zeebe:properties>
-            <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10; &#34;message&#34;: &#34;Hello John Doe, this is the offer token for your flight from &#60;b&#62;BLQ&#60;/b&#62; to &#60;b&#62;CPH&#60;/b&#62; in date April 10th 11:10 - April 10th 13:30.&#60;br&#62;&#60;a href=\&#34;#\&#34; target=\&#34;_blank\&#34;&#62;1234&#60;/a&#62;&#34;,&#10; &#34;expired&#34;: &#34;10124235345&#34;&#10;}&#10;" />
+            <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10; &#34;message&#34;: &#34;Hello John Doe, this is the offer token for your flight from &#60;b&#62;BLQ&#60;/b&#62; to &#60;b&#62;CPH&#60;/b&#62; in date April 10th 11:10 - April 10th 13:30.&#60;br&#62;&#60;a href=\&#34;#\&#34; target=\&#34;_blank\&#34;&#62;1234&#60;/a&#62;&#34;,&#10; &#34;expired&#34;: &#34;10124235345&#34;,&#10; &#34;user&#34;: &#34;sa&#34;&#10;}&#10;" />
           </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0b8q3aw</bpmn:incoming>
@@ -450,7 +450,7 @@
       <bpmn:sequenceFlow id="Flow_1u6sjen" sourceRef="Start_Check_Each_Interest" targetRef="ST_Check_Flight_For_An_Interest" />
       <bpmn:sequenceFlow id="Flow_17oa3fe" sourceRef="ST_Check_Flight_For_An_Interest" targetRef="EG_Flight_Is_Available" />
       <bpmn:sequenceFlow id="Flow_10jlgcy" name="Yes" sourceRef="EG_Flight_Is_Available" targetRef="ST_Prepare_Offer">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=1</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=flight != null</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_0b8q3aw" sourceRef="ST_Prepare_Offer" targetRef="TM_Send_Offer" />
       <bpmn:sequenceFlow id="Flow_1xm6mep" sourceRef="TM_Send_Offer" targetRef="End_Check_Each_Interest" />
@@ -460,7 +460,7 @@
         <bpmn:outgoing>Flow_0m2o3uy</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:sequenceFlow id="Flow_0m2o3uy" name="No" sourceRef="EG_Flight_Is_Available" targetRef="End_Check_Each_Interest">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=1</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=flight = null</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
     </bpmn:subProcess>
     <bpmn:endEvent id="End_ACME_UserProfile">
@@ -1549,9 +1549,6 @@
         <dc:Bounds x="160" y="150" width="6220" height="220" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_17xvb43_di" bpmnElement="Start_User">
-        <dc:Bounds x="222" y="222" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_08pkhkf_di" bpmnElement="End_Received_New_Offer_Err_Bank">
         <dc:Bounds x="2112" y="299" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -1610,12 +1607,6 @@
       <bpmndi:BPMNShape id="Event_0j51f4r_di" bpmnElement="End_User">
         <dc:Bounds x="632" y="222" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1xnptws_di" bpmnElement="Start_Received_New_Offer">
-        <dc:Bounds x="1410" y="222" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1391" y="170" width="74" height="40" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1k1adeg_di" bpmnElement="CM_Ack_Flight_Request_Save">
         <dc:Bounds x="542" y="222" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -1624,6 +1615,15 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0ypkcg0_di" bpmnElement="UT_Express_Interest_For_Flight">
         <dc:Bounds x="310" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_17xvb43_di" bpmnElement="Start_User">
+        <dc:Bounds x="222" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xnptws_di" bpmnElement="Start_Received_New_Offer">
+        <dc:Bounds x="1410" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1391" y="170" width="74" height="40" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0dtcwq0_di" bpmnElement="Flow_0dtcwq0">
         <di:waypoint x="2018" y="317" />
@@ -1691,10 +1691,6 @@
         <di:waypoint x="578" y="240" />
         <di:waypoint x="632" y="240" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_08ouphi_di" bpmnElement="Flow_08ouphi">
-        <di:waypoint x="258" y="240" />
-        <di:waypoint x="310" y="240" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0f3dyxs_di" bpmnElement="Flow_0f3dyxs">
         <di:waypoint x="1446" y="240" />
         <di:waypoint x="1661" y="240" />
@@ -1706,6 +1702,10 @@
       <bpmndi:BPMNEdge id="Flow_02d1m16_di" bpmnElement="Flow_02d1m16">
         <di:waypoint x="478" y="240" />
         <di:waypoint x="542" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08ouphi_di" bpmnElement="Flow_08ouphi">
+        <di:waypoint x="258" y="240" />
+        <di:waypoint x="310" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_0x5u43a_di" bpmnElement="Association_0x5u43a">
         <di:waypoint x="4651" y="224" />
@@ -1888,15 +1888,15 @@
         <di:waypoint x="560" y="540" />
         <di:waypoint x="560" y="258" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1lmclj3_di" bpmnElement="Flow_1lmclj3">
-        <di:waypoint x="1428" y="440" />
-        <di:waypoint x="1428" y="258" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_13atww6_di" bpmnElement="Flow_13atww6">
         <di:waypoint x="460" y="258" />
         <di:waypoint x="460" y="536" />
         <di:waypoint x="350" y="536" />
         <di:waypoint x="350" y="793" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lmclj3_di" bpmnElement="Flow_1lmclj3">
+        <di:waypoint x="1428" y="440" />
+        <di:waypoint x="1428" y="258" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
