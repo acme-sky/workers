@@ -26,7 +26,7 @@ func main() {
 		{Name: "ST_Get_Interests", Handler: acme.STGetInterests, Message: nil},
 		{Name: "ST_Check_Flight_For_An_Interest", Handler: acme.STCheckFlightForAnInterest, Message: nil},
 		{Name: "ST_Prepare_Offer", Handler: acme.STPrepareOffer, Message: nil},
-		{Name: "TM_Send_Offer", Handler: acme.TMSendOffer, Message: &acmejob.MessageCommand{Name: "CM_Start_Prontogram", CorrelationKey: "0"}},
+		{Name: "TM_Send_Offer", Handler: acme.TMSendOffer, Message: &acmejob.MessageCommand{Name: "CM_New_Message_For_Prontogram", CorrelationKey: "0"}},
 	}
 
 	for _, job := range jobs {

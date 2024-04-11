@@ -8,7 +8,6 @@
     <bpmn:participant id="Participant_Geolocation" name="Geolocation" />
     <bpmn:participant id="Participant_Rent" name="Rent" />
     <bpmn:participant id="Participant_User" name="User" processRef="Process_User" />
-    <bpmn:messageFlow id="Flow_0081sv6" sourceRef="TM_Send_Offer" targetRef="Start_Prontogram" />
     <bpmn:messageFlow id="Flow_0j394yt" sourceRef="Participant_Airline" targetRef="Start_Flight_Manager_New_Offer" />
     <bpmn:messageFlow id="Flow_0na21j9" sourceRef="TM_Search_Flights_On_Airline" targetRef="Participant_Airline" />
     <bpmn:messageFlow id="Flow_005mq2v" sourceRef="Participant_Airline" targetRef="TM_Search_Flights_On_Airline" />
@@ -35,6 +34,7 @@
     <bpmn:messageFlow id="Flow_0260exq" sourceRef="TM_Ack_Flight_Request_Save" targetRef="CM_Ack_Flight_Request_Save" />
     <bpmn:messageFlow id="Flow_13atww6" sourceRef="TM_New_Request_Save_Flight" targetRef="CM_New_Request_Save_Flight" />
     <bpmn:messageFlow id="Flow_1lmclj3" sourceRef="TM_Propagate_Message_From_Prontogram" targetRef="Start_Received_New_Offer" />
+    <bpmn:messageFlow id="Flow_04g2o5z" sourceRef="TM_Send_Offer" targetRef="CM_New_Message_For_Prontogram" />
     <bpmn:textAnnotation id="TextAnnotation_04likem">
       <bpmn:text>Check if token timestamp is not expired and not used</bpmn:text>
     </bpmn:textAnnotation>
@@ -589,11 +589,7 @@
   <bpmn:process id="Process_Prontogram" name="sd_prontogram" isExecutable="true">
     <bpmn:sequenceFlow id="Flow_0a080if" sourceRef="TM_Propagate_Message_From_Prontogram" targetRef="End_Prontogram" />
     <bpmn:sequenceFlow id="Flow_1r7wwko" sourceRef="ST_Save_Info_On_Prontogram" targetRef="TM_Propagate_Message_From_Prontogram" />
-    <bpmn:sequenceFlow id="Flow_1e3bbg3" sourceRef="Start_Prontogram" targetRef="ST_Save_Info_On_Prontogram" />
-    <bpmn:startEvent id="Start_Prontogram" name="Received a message to resend">
-      <bpmn:outgoing>Flow_1e3bbg3</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_0g48xjb" messageRef="Message_3ofh7oh" />
-    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1e3bbg3" sourceRef="CM_New_Message_For_Prontogram" targetRef="ST_Save_Info_On_Prontogram" />
     <bpmn:serviceTask id="ST_Save_Info_On_Prontogram" name="Save info for historic purpose">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="ST_Save_Info_On_Prontogram" />
@@ -616,7 +612,16 @@
     <bpmn:endEvent id="End_Prontogram">
       <bpmn:incoming>Flow_0a080if</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="CM_New_Message_For_Prontogram" name="Received a message to resend">
+      <bpmn:incoming>Flow_12p4lgj</bpmn:incoming>
+      <bpmn:outgoing>Flow_1e3bbg3</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0hntsyi" messageRef="Message_2i8h2gk" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_12p4lgj" sourceRef="Start_Prontogram" targetRef="CM_New_Message_For_Prontogram" />
     <bpmn:dataStoreReference id="DataStoreReference_12i6ajz" name="Messages" />
+    <bpmn:startEvent id="Start_Prontogram">
+      <bpmn:outgoing>Flow_12p4lgj</bpmn:outgoing>
+    </bpmn:startEvent>
   </bpmn:process>
   <bpmn:message id="Message_3lghqg7" name="CM_Journey_And_Rent">
     <bpmn:extensionElements>
@@ -896,6 +901,11 @@
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmn:message id="Message_3dhlcim" name="Start_Received_New_Offer" />
+  <bpmn:message id="Message_2i8h2gk" name="CM_New_Message_For_Prontogram">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=0" />
+    </bpmn:extensionElements>
+  </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ACMESky">
       <bpmndi:BPMNShape id="Participant_1aiixuc_di" bpmnElement="Participant_ACME" isHorizontal="true">
@@ -1492,14 +1502,8 @@
         <di:waypoint x="6096" y="741" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1iv87gq_di" bpmnElement="Participant_Prontogram" isHorizontal="true">
-        <dc:Bounds x="980" y="400" width="620" height="163" />
+        <dc:Bounds x="900" y="400" width="700" height="163" />
         <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_19oea7d_di" bpmnElement="Start_Prontogram">
-        <dc:Bounds x="1132" y="462" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1124" y="418" width="57" height="40" />
-        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0zzkptj_di" bpmnElement="ST_Save_Info_On_Prontogram">
         <dc:Bounds x="1220" y="440" width="100" height="80" />
@@ -1511,11 +1515,20 @@
       <bpmndi:BPMNShape id="Event_0n62raq_di" bpmnElement="End_Prontogram">
         <dc:Bounds x="1542" y="462" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DataStoreReference_12i6ajz_di" bpmnElement="DataStoreReference_12i6ajz">
-        <dc:Bounds x="1045" y="455" width="50" height="50" />
+      <bpmndi:BPMNShape id="Event_0y1dmuu_di" bpmnElement="CM_New_Message_For_Prontogram">
+        <dc:Bounds x="1132" y="462" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1044" y="431" width="51" height="14" />
+          <dc:Bounds x="1124" y="418" width="57" height="40" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_12i6ajz_di" bpmnElement="DataStoreReference_12i6ajz">
+        <dc:Bounds x="965" y="455" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="964" y="431" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14am36t_di" bpmnElement="Start_Prontogram">
+        <dc:Bounds x="1052" y="462" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0a080if_di" bpmnElement="Flow_0a080if">
         <di:waypoint x="1480" y="480" />
@@ -1528,6 +1541,10 @@
       <bpmndi:BPMNEdge id="Flow_1e3bbg3_di" bpmnElement="Flow_1e3bbg3">
         <di:waypoint x="1168" y="480" />
         <di:waypoint x="1220" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12p4lgj_di" bpmnElement="Flow_12p4lgj">
+        <di:waypoint x="1088" y="480" />
+        <di:waypoint x="1132" y="480" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_0j0mtii_di" bpmnElement="Participant_Airline" isHorizontal="true">
         <dc:Bounds x="160" y="1680" width="2920" height="60" />
@@ -1770,14 +1787,10 @@
         <di:waypoint x="2270" y="724" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0tb22zr_di" bpmnElement="DataInputAssociation_0tb22zr">
-        <di:waypoint x="1070" y="505" />
-        <di:waypoint x="1070" y="527" />
+        <di:waypoint x="1001" y="505" />
+        <di:waypoint x="1010" y="527" />
         <di:waypoint x="1180" y="527" />
         <di:waypoint x="1220" y="506" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0081sv6_di" bpmnElement="Flow_0081sv6">
-        <di:waypoint x="1150" y="1110" />
-        <di:waypoint x="1150" y="498" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0j394yt_di" bpmnElement="Flow_0j394yt">
         <di:waypoint x="299" y="1680" />
@@ -1897,6 +1910,10 @@
       <bpmndi:BPMNEdge id="Flow_1lmclj3_di" bpmnElement="Flow_1lmclj3">
         <di:waypoint x="1428" y="440" />
         <di:waypoint x="1428" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04g2o5z_di" bpmnElement="Flow_04g2o5z">
+        <di:waypoint x="1150" y="1110" />
+        <di:waypoint x="1150" y="498" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
