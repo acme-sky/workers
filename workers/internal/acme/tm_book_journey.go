@@ -35,11 +35,11 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 	_, err = request.Send(ctx)
 	if err != nil {
 		acmejob.FailJob(client, job)
-		panic(err)
+		return
 	}
 
 	log.Println("Successfully completed job")
 	acmejob.JobVariables[job.Type] <- variables
 
-	acmejob.JobStatuses[job.Type] <- 0
+	acmejob.JobStatuses.Close(job.Type)
 }

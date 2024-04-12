@@ -5,14 +5,38 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 )
 
-var JobStatuses = make(map[string](chan int))
+type jobStatusesMap struct {
+	mu sync.Mutex
+	m  map[string](chan int)
+}
+
+var JobStatuses = jobStatusesMap{m: make(map[string](chan int))}
 var JobVariables = make(map[string](chan map[string]interface{}))
+func (sm *jobStatusesMap) Set(key string, value chan int) {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+	sm.m[key] = value
+}
+
+func (sm *jobStatusesMap) Close(key string) {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+	sm.m[key] <- 0
+}
+
+func (sm *jobStatusesMap) Get(key string) (chan int, bool) {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+	value, ok := sm.m[key]
+	return value, ok
+}
 
 type MessageCommand struct {
 	Name           string
@@ -68,7 +92,9 @@ func CreateClient(pid string) *zbc.Client {
 func HandleJob(client *zbc.Client, job Job) {
 	ctx := context.Background()
 
-	JobStatuses[job.Name] = make(chan int, 1)
+	ch := make(chan int, 1)
+	JobStatuses.Set(job.Name, ch)
+
 	JobVariables[job.Name] = make(chan map[string]interface{}, 1)
 
 	// TODO: study why multi-instance jobs does not fit this close-worker below
@@ -101,12 +127,10 @@ func HandleJob(client *zbc.Client, job Job) {
 	// worker.AwaitClose()
 
 	println("--------------\n", job.Name, "\n-------------_")
-	<-JobStatuses[job.Name]
+	JobStatuses.Get(job.Name)
+	<-ch
 
-	if job.After != nil {
-		job.After(client)
-	}
-
+	// close(ch)
 	// HandleJob(client, job)
 }
 
