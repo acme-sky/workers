@@ -21,7 +21,6 @@ func main() {
 	}()
 
 	jobs := []acmejob.Job{
-		{Name: "CM_New_Message_For_Prontogram", Handler: prontogram.CMNewMessageForProntogram, Message: nil},
 		{Name: "ST_Save_Info_On_Prontogram", Handler: prontogram.STSaveInfoOnProntogram, Message: nil},
 		{Name: "TM_Propagate_Message_From_Prontogram", Handler: prontogram.TMPropagateMessageFromProntogram, Message: &acmejob.MessageCommand{Name: "Start_Received_New_Offer", CorrelationKey: "0"}},
 	}

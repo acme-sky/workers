@@ -1,4 +1,4 @@
-package prontogram
+package acme
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func CMNewMessageForProntogram(client worker.JobClient, job entities.Job) {
+func TMErrorOnCheckOffer(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -36,5 +36,7 @@ func CMNewMessageForProntogram(client worker.JobClient, job entities.Job) {
 		panic(err)
 	}
 
+	log.Println("Successfully completed job")
+	acmejob.JobVariables[job.Type] <- variables
 	close(acmejob.JobStatuses[job.Type])
 }

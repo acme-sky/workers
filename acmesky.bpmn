@@ -22,17 +22,17 @@
     <bpmn:messageFlow id="Flow_01fwi9s" sourceRef="TM_Computer_Distance_User_Airport" targetRef="Participant_Geolocation" />
     <bpmn:messageFlow id="Flow_11v886u" sourceRef="Participant_Geolocation" targetRef="TM_Computer_Distance_User_Airport" />
     <bpmn:messageFlow id="Flow_0eonj29" sourceRef="Participant_Bank" targetRef="Event_0wdh6he" />
-    <bpmn:messageFlow id="Flow_0055psj" sourceRef="TM_Error_On_Book_Journey" targetRef="CM_Check_Offer" />
-    <bpmn:messageFlow id="Flow_00yxmjl" sourceRef="TM_Error_On_Check_Offer" targetRef="CM_Check_Offer" />
+    <bpmn:messageFlow id="Flow_0055psj" sourceRef="TM_Error_On_Book_Journey" targetRef="CM_Received_Bank_Error" />
+    <bpmn:messageFlow id="Flow_00yxmjl" sourceRef="TM_Error_On_Check_Offer" targetRef="CM_Received_Bank_Error" />
     <bpmn:messageFlow id="Flow_1f8t58i" sourceRef="TM_Send_Payment_Link" targetRef="CM_Received_Bank_Link" />
-    <bpmn:messageFlow id="Flow_170f2ic" sourceRef="UT_Confirm_Offer" targetRef="Start_Event_Check_Offer" />
+    <bpmn:messageFlow id="Flow_170f2ic" sourceRef="TM_Check_Offer" targetRef="Event_1pqdi5r" />
     <bpmn:messageFlow id="Flow_18a9rlu" sourceRef="TM_Journey_Rent_Error" targetRef="CM_Journey" />
     <bpmn:messageFlow id="Flow_0ida45p" sourceRef="TM_Journey" targetRef="CM_Journey" />
     <bpmn:messageFlow id="Flow_06i4ava" sourceRef="TM_Journey_And_Rent" targetRef="CM_Journey_And_Rent" />
     <bpmn:messageFlow id="Flow_1iqz0qp" sourceRef="UT_Pay" targetRef="Participant_Bank" />
     <bpmn:messageFlow id="Flow_0mf165c" sourceRef="Participant_Bank" targetRef="UT_Pay" />
     <bpmn:messageFlow id="Flow_0260exq" sourceRef="TM_Ack_Flight_Request_Save" targetRef="CM_Ack_Flight_Request_Save" />
-    <bpmn:messageFlow id="Flow_13atww6" sourceRef="TM_New_Request_Save_Flight" targetRef="CM_New_Request_Save_Flight" />
+    <bpmn:messageFlow id="Flow_13atww6" sourceRef="TM_New_Request_Save_Flight" targetRef="Start_ACME_UserProfile" />
     <bpmn:messageFlow id="Flow_1lmclj3" sourceRef="TM_Propagate_Message_From_Prontogram" targetRef="Start_Received_New_Offer" />
     <bpmn:messageFlow id="Flow_04g2o5z" sourceRef="TM_Send_Offer" targetRef="CM_New_Message_For_Prontogram" />
     <bpmn:textAnnotation id="TextAnnotation_04likem">
@@ -63,29 +63,31 @@
         <bpmn:childLaneSet id="LaneSet_146b69j" />
       </bpmn:lane>
       <bpmn:lane id="Lane_08pvrfu" name="User profile">
-        <bpmn:flowNodeRef>Start_Event_Check_Offer</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>TM_Ack_Flight_Request_Save</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ST_Save_Flight</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_ACME_UserProfile</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ST_Retrieve_Offer</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>TM_Error_On_Check_Offer</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EG_Price_Greater_Than_1000</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>TM_Journey</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_Rent_Service</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Activity_Book_Journey</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_Check_Offer</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EB_Check_Offer</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>CM_New_Request_Save_Flight</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Start_ACME_UserProfile</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_0jl8r24</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>TM_Offer_Still_Valid</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>TM_Error_On_Book_Journey</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TM_Error_On_Check_Offer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0a5pqyi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0i80v8b</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_Book_Journey</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0jl8r24</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1pqdi5r</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>CM_Check_Offer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start_ACME_UserProfile</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="Flow_066ca6d" sourceRef="Activity_Foreach_Interest" targetRef="End_Check_Interests" />
     <bpmn:sequenceFlow id="Flow_0rpwl97" sourceRef="TS_Check_Interests" targetRef="ST_Get_Interests" />
     <bpmn:sequenceFlow id="Flow_15s8hw1" sourceRef="ST_Get_Interests" targetRef="Activity_Foreach_Interest" />
-    <bpmn:sequenceFlow id="Flow_0ckkzu4" sourceRef="Start_Event_Check_Offer" targetRef="ST_Retrieve_Offer" />
+    <bpmn:sequenceFlow id="Flow_0ckkzu4" sourceRef="CM_Check_Offer" targetRef="Event_1pqdi5r" />
     <bpmn:sequenceFlow id="Flow_1ggiirr" sourceRef="TS_Check_Airline" targetRef="Activity_Foreach_AirlineService" />
     <bpmn:sequenceFlow id="Flow_0uv1725" sourceRef="Activity_Foreach_AirlineService" targetRef="End_Check_Airline" />
     <bpmn:sequenceFlow id="Flow_1htessf" sourceRef="Start_Flight_Manager_New_Offer" targetRef="ST_Save_Last_Minute_Offer" />
@@ -101,78 +103,9 @@
     <bpmn:sequenceFlow id="Flow_1liyfs9" name="No" sourceRef="EG_Price_Greater_Than_1000" targetRef="TM_Journey">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=1</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_0tixpey" sourceRef="Start_ACME_UserProfile" targetRef="CM_New_Request_Save_Flight" />
+    <bpmn:sequenceFlow id="Flow_0tixpey" sourceRef="Start_ACME_UserProfile" targetRef="ST_Save_Flight" />
     <bpmn:sequenceFlow id="Flow_1rtz04m" sourceRef="ST_Save_Flight" targetRef="TM_Ack_Flight_Request_Save" />
     <bpmn:sequenceFlow id="Flow_1qmul68" sourceRef="TM_Ack_Flight_Request_Save" targetRef="End_ACME_UserProfile" />
-    <bpmn:subProcess id="Activity_Book_Journey" name="Book journey">
-      <bpmn:incoming>Flow_0s4t45f</bpmn:incoming>
-      <bpmn:outgoing>Flow_0vvq016</bpmn:outgoing>
-      <bpmn:startEvent id="Start_Book_Journey">
-        <bpmn:outgoing>Flow_0szdp0g</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:sendTask id="TM_Book_Journey" name="Book journey">
-        <bpmn:extensionElements>
-          <zeebe:taskDefinition type="TM_Book_Journey" />
-        </bpmn:extensionElements>
-        <bpmn:incoming>Flow_0szdp0g</bpmn:incoming>
-        <bpmn:outgoing>Flow_12dswsg</bpmn:outgoing>
-      </bpmn:sendTask>
-      <bpmn:sendTask id="TM_Ask_Payment_Link" name="Ask bank for payment link">
-        <bpmn:extensionElements>
-          <zeebe:taskDefinition type="TM_Ask_Payment_Link" />
-        </bpmn:extensionElements>
-        <bpmn:incoming>Flow_12dswsg</bpmn:incoming>
-        <bpmn:outgoing>Flow_1fypvic</bpmn:outgoing>
-      </bpmn:sendTask>
-      <bpmn:sendTask id="TM_Send_Payment_Link" name="Send payment link">
-        <bpmn:extensionElements>
-          <zeebe:taskDefinition type="TM_Send_Payment_Link" />
-        </bpmn:extensionElements>
-        <bpmn:incoming>Flow_137syh0</bpmn:incoming>
-        <bpmn:outgoing>Flow_0xix94l</bpmn:outgoing>
-      </bpmn:sendTask>
-      <bpmn:intermediateCatchEvent id="Event_0wdh6he">
-        <bpmn:incoming>Flow_0kpaa08</bpmn:incoming>
-        <bpmn:outgoing>Flow_1kig1jb</bpmn:outgoing>
-        <bpmn:messageEventDefinition id="MessageEventDefinition_06vwz4h" messageRef="Message_27llgm2" />
-      </bpmn:intermediateCatchEvent>
-      <bpmn:parallelGateway id="PG_Send_Payment_Link_Start">
-        <bpmn:incoming>Flow_1fypvic</bpmn:incoming>
-        <bpmn:outgoing>Flow_137syh0</bpmn:outgoing>
-        <bpmn:outgoing>Flow_0kpaa08</bpmn:outgoing>
-      </bpmn:parallelGateway>
-      <bpmn:endEvent id="End_Book_Journey">
-        <bpmn:incoming>Flow_0kuzdys</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:exclusiveGateway id="EG_Payment_Success" name="Payment success?">
-        <bpmn:incoming>Flow_1kig1jb</bpmn:incoming>
-        <bpmn:outgoing>Flow_1xgd3n1</bpmn:outgoing>
-        <bpmn:outgoing>Flow_01oh7g4</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:endEvent id="EE_Payment">
-        <bpmn:incoming>Flow_1xgd3n1</bpmn:incoming>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_1llfl9h" errorRef="Error_16y8tjh" />
-      </bpmn:endEvent>
-      <bpmn:parallelGateway id="PG_Send_Payment_Link_End">
-        <bpmn:incoming>Flow_0xix94l</bpmn:incoming>
-        <bpmn:incoming>Flow_01oh7g4</bpmn:incoming>
-        <bpmn:outgoing>Flow_0kuzdys</bpmn:outgoing>
-      </bpmn:parallelGateway>
-      <bpmn:sequenceFlow id="Flow_0szdp0g" sourceRef="Start_Book_Journey" targetRef="TM_Book_Journey" />
-      <bpmn:sequenceFlow id="Flow_12dswsg" sourceRef="TM_Book_Journey" targetRef="TM_Ask_Payment_Link" />
-      <bpmn:sequenceFlow id="Flow_1fypvic" sourceRef="TM_Ask_Payment_Link" targetRef="PG_Send_Payment_Link_Start" />
-      <bpmn:sequenceFlow id="Flow_137syh0" sourceRef="PG_Send_Payment_Link_Start" targetRef="TM_Send_Payment_Link" />
-      <bpmn:sequenceFlow id="Flow_0xix94l" sourceRef="TM_Send_Payment_Link" targetRef="PG_Send_Payment_Link_End" />
-      <bpmn:sequenceFlow id="Flow_0kpaa08" sourceRef="PG_Send_Payment_Link_Start" targetRef="Event_0wdh6he" />
-      <bpmn:sequenceFlow id="Flow_1kig1jb" sourceRef="Event_0wdh6he" targetRef="EG_Payment_Success" />
-      <bpmn:sequenceFlow id="Flow_0kuzdys" sourceRef="PG_Send_Payment_Link_End" targetRef="End_Book_Journey" />
-      <bpmn:sequenceFlow id="Flow_1xgd3n1" name="No" sourceRef="EG_Payment_Success" targetRef="EE_Payment">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=1</bpmn:conditionExpression>
-      </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_01oh7g4" name="Yes" sourceRef="EG_Payment_Success" targetRef="PG_Send_Payment_Link_End">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=1</bpmn:conditionExpression>
-      </bpmn:sequenceFlow>
-    </bpmn:subProcess>
     <bpmn:subProcess id="Activity_Rent_Service" name="Rent service">
       <bpmn:incoming>Flow_1lwcjk0</bpmn:incoming>
       <bpmn:sendTask id="TM_Ask_For_Rent" name="Ask for rent">
@@ -288,18 +221,11 @@
       <bpmn:outgoing>Flow_1liyfs9</bpmn:outgoing>
       <bpmn:outgoing>Flow_1lwcjk0</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="TM_Error_On_Check_Offer" name="Send error">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="TM_Error_On_Check_Offer" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1wyb4ra</bpmn:incoming>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1rq5qir" />
-    </bpmn:endEvent>
     <bpmn:serviceTask id="ST_Retrieve_Offer" name="Retrieve offer">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="ST_Retrieve_Offer" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0ckkzu4</bpmn:incoming>
+      <bpmn:incoming>Flow_09p4d93</bpmn:incoming>
       <bpmn:outgoing>Flow_1xpmumi</bpmn:outgoing>
       <bpmn:property id="Property_1ta58pl" name="__targetRef_placeholder" />
       <bpmn:dataInputAssociation id="DataInputAssociation_1x5py3l">
@@ -470,7 +396,7 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="ST_Save_Flight" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1j8k5x3</bpmn:incoming>
+      <bpmn:incoming>Flow_0tixpey</bpmn:incoming>
       <bpmn:outgoing>Flow_1rtz04m</bpmn:outgoing>
       <bpmn:property id="Property_0g4b4iw" name="__targetRef_placeholder" />
       <bpmn:dataInputAssociation id="DataInputAssociation_0kqnlnq">
@@ -485,10 +411,6 @@
       <bpmn:incoming>Flow_1rtz04m</bpmn:incoming>
       <bpmn:outgoing>Flow_1qmul68</bpmn:outgoing>
     </bpmn:sendTask>
-    <bpmn:startEvent id="Start_Event_Check_Offer">
-      <bpmn:outgoing>Flow_0ckkzu4</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1vj8g1z" messageRef="Message_2v61lip" />
-    </bpmn:startEvent>
     <bpmn:dataStoreReference id="DB_Available_Flights" name="Available flights" />
     <bpmn:serviceTask id="ST_Get_Interests" name="Get interests">
       <bpmn:extensionElements>
@@ -517,10 +439,10 @@
       <bpmn:outgoing>Flow_0s4t45f</bpmn:outgoing>
       <bpmn:sequenceFlow id="Flow_0rd90dd" sourceRef="ST_Change_Offer_Status" targetRef="End_Check_Offer" />
       <bpmn:sequenceFlow id="Flow_0uf9jdp" sourceRef="EG_Check_Offer_Is_Good" targetRef="EE_Check_Offer">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=d</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=token_is_valid = false</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_0d3u10h" name="Yes" sourceRef="EG_Check_Offer_Is_Good" targetRef="ST_Change_Offer_Status">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=1</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=token_is_valid = true</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_0206tn2" sourceRef="Start_Check_Offer" targetRef="EG_Check_Offer_Is_Good" />
       <bpmn:serviceTask id="ST_Change_Offer_Status" name="Change offer status">
@@ -556,19 +478,6 @@
       <bpmn:outgoing>Flow_1wyb4ra</bpmn:outgoing>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1ksvc53" errorRef="Error_0xts0bk" />
     </bpmn:boundaryEvent>
-    <bpmn:sequenceFlow id="Flow_1j8k5x3" sourceRef="CM_New_Request_Save_Flight" targetRef="ST_Save_Flight" />
-    <bpmn:intermediateCatchEvent id="CM_New_Request_Save_Flight">
-      <bpmn:incoming>Flow_0tixpey</bpmn:incoming>
-      <bpmn:outgoing>Flow_1j8k5x3</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_06di9uo" messageRef="Message_1jmlpn7" />
-    </bpmn:intermediateCatchEvent>
-    <bpmn:startEvent id="Start_ACME_UserProfile">
-      <bpmn:outgoing>Flow_0tixpey</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:boundaryEvent id="Event_0jl8r24" attachedToRef="Activity_Book_Journey">
-      <bpmn:outgoing>Flow_1g8qzsm</bpmn:outgoing>
-      <bpmn:errorEventDefinition id="ErrorEventDefinition_1eo5ntm" errorRef="Error_16y8tjh" />
-    </bpmn:boundaryEvent>
     <bpmn:serviceTask id="TM_Offer_Still_Valid" name="Offer is still valid">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="TM_Offer_Still_Valid" />
@@ -577,13 +486,116 @@
       <bpmn:outgoing>Flow_1imwv2y</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_1imwv2y" sourceRef="TM_Offer_Still_Valid" targetRef="TM_Error_On_Book_Journey" />
-    <bpmn:endEvent id="TM_Error_On_Book_Journey" name="Send error">
+    <bpmn:intermediateThrowEvent id="TM_Error_On_Book_Journey" name="Send error">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="TM_Error_On_Book_Journey" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1imwv2y</bpmn:incoming>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_00rml91" />
+      <bpmn:outgoing>Flow_1r4t4nc</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1vxuw77" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_0iaa0jc" sourceRef="TM_Error_On_Check_Offer" targetRef="Event_0a5pqyi" />
+    <bpmn:intermediateThrowEvent id="TM_Error_On_Check_Offer" name="Send error">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="TM_Error_On_Check_Offer" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1wyb4ra</bpmn:incoming>
+      <bpmn:outgoing>Flow_0iaa0jc</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1l4a3og" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:endEvent id="Event_0a5pqyi">
+      <bpmn:incoming>Flow_0iaa0jc</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:endEvent id="Event_0i80v8b">
+      <bpmn:incoming>Flow_1r4t4nc</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1r4t4nc" sourceRef="TM_Error_On_Book_Journey" targetRef="Event_0i80v8b" />
+    <bpmn:subProcess id="Activity_Book_Journey" name="Book journey">
+      <bpmn:incoming>Flow_0s4t45f</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vvq016</bpmn:outgoing>
+      <bpmn:startEvent id="Start_Book_Journey">
+        <bpmn:outgoing>Flow_0szdp0g</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:sendTask id="TM_Book_Journey" name="Book journey">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="TM_Book_Journey" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0szdp0g</bpmn:incoming>
+        <bpmn:outgoing>Flow_12dswsg</bpmn:outgoing>
+      </bpmn:sendTask>
+      <bpmn:sendTask id="TM_Ask_Payment_Link" name="Ask bank for payment link">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="TM_Ask_Payment_Link" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_12dswsg</bpmn:incoming>
+        <bpmn:outgoing>Flow_1fypvic</bpmn:outgoing>
+      </bpmn:sendTask>
+      <bpmn:sendTask id="TM_Send_Payment_Link" name="Send payment link">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="TM_Send_Payment_Link" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_137syh0</bpmn:incoming>
+        <bpmn:outgoing>Flow_0xix94l</bpmn:outgoing>
+      </bpmn:sendTask>
+      <bpmn:intermediateCatchEvent id="Event_0wdh6he">
+        <bpmn:incoming>Flow_0kpaa08</bpmn:incoming>
+        <bpmn:outgoing>Flow_1kig1jb</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_06vwz4h" messageRef="Message_27llgm2" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:parallelGateway id="PG_Send_Payment_Link_Start">
+        <bpmn:incoming>Flow_1fypvic</bpmn:incoming>
+        <bpmn:outgoing>Flow_137syh0</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0kpaa08</bpmn:outgoing>
+      </bpmn:parallelGateway>
+      <bpmn:endEvent id="End_Book_Journey">
+        <bpmn:incoming>Flow_0kuzdys</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:exclusiveGateway id="EG_Payment_Success" name="Payment success?">
+        <bpmn:incoming>Flow_1kig1jb</bpmn:incoming>
+        <bpmn:outgoing>Flow_1xgd3n1</bpmn:outgoing>
+        <bpmn:outgoing>Flow_01oh7g4</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="EE_Payment">
+        <bpmn:incoming>Flow_1xgd3n1</bpmn:incoming>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1llfl9h" errorRef="Error_16y8tjh" />
+      </bpmn:endEvent>
+      <bpmn:parallelGateway id="PG_Send_Payment_Link_End">
+        <bpmn:incoming>Flow_0xix94l</bpmn:incoming>
+        <bpmn:incoming>Flow_01oh7g4</bpmn:incoming>
+        <bpmn:outgoing>Flow_0kuzdys</bpmn:outgoing>
+      </bpmn:parallelGateway>
+      <bpmn:sequenceFlow id="Flow_0szdp0g" sourceRef="Start_Book_Journey" targetRef="TM_Book_Journey" />
+      <bpmn:sequenceFlow id="Flow_12dswsg" sourceRef="TM_Book_Journey" targetRef="TM_Ask_Payment_Link" />
+      <bpmn:sequenceFlow id="Flow_1fypvic" sourceRef="TM_Ask_Payment_Link" targetRef="PG_Send_Payment_Link_Start" />
+      <bpmn:sequenceFlow id="Flow_137syh0" sourceRef="PG_Send_Payment_Link_Start" targetRef="TM_Send_Payment_Link" />
+      <bpmn:sequenceFlow id="Flow_0xix94l" sourceRef="TM_Send_Payment_Link" targetRef="PG_Send_Payment_Link_End" />
+      <bpmn:sequenceFlow id="Flow_0kpaa08" sourceRef="PG_Send_Payment_Link_Start" targetRef="Event_0wdh6he" />
+      <bpmn:sequenceFlow id="Flow_1kig1jb" sourceRef="Event_0wdh6he" targetRef="EG_Payment_Success" />
+      <bpmn:sequenceFlow id="Flow_0kuzdys" sourceRef="PG_Send_Payment_Link_End" targetRef="End_Book_Journey" />
+      <bpmn:sequenceFlow id="Flow_1xgd3n1" name="No" sourceRef="EG_Payment_Success" targetRef="EE_Payment">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=1</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_01oh7g4" name="Yes" sourceRef="EG_Payment_Success" targetRef="PG_Send_Payment_Link_End">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=1</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+    </bpmn:subProcess>
+    <bpmn:boundaryEvent id="Event_0jl8r24" attachedToRef="Activity_Book_Journey">
+      <bpmn:outgoing>Flow_1g8qzsm</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1eo5ntm" errorRef="Error_16y8tjh" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_09p4d93" sourceRef="Event_1pqdi5r" targetRef="ST_Retrieve_Offer" />
+    <bpmn:intermediateCatchEvent id="Event_1pqdi5r">
+      <bpmn:incoming>Flow_0ckkzu4</bpmn:incoming>
+      <bpmn:outgoing>Flow_09p4d93</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0qdyzfl" messageRef="Message_2v61lip" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:startEvent id="CM_Check_Offer">
+      <bpmn:outgoing>Flow_0ckkzu4</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:startEvent id="Start_ACME_UserProfile">
+      <bpmn:outgoing>Flow_0tixpey</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0oakx7d" messageRef="Message_1jmlpn7" />
+    </bpmn:startEvent>
     <bpmn:association id="Association_1nkvtkr" associationDirection="None" sourceRef="TM_Journey_Rent_Error" targetRef="TextAnnotation_0id9qv6" />
   </bpmn:process>
   <bpmn:process id="Process_Prontogram" name="sd_prontogram" isExecutable="true">
@@ -630,7 +642,7 @@
   </bpmn:message>
   <bpmn:message id="Message_2v61lip" name="CM_Check_Offer">
     <bpmn:extensionElements>
-      <zeebe:subscription correlationKey="=0" />
+      <zeebe:subscription correlationKey="=&#34;0&#34;" />
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmn:message id="Message_27llgm2" name="CM_Payment_Response">
@@ -755,10 +767,10 @@
   "schemaVersion": 15
 }</zeebe:userTaskForm>
     </bpmn:extensionElements>
-    <bpmn:sequenceFlow id="Flow_0dtcwq0" sourceRef="CM_Check_Offer" targetRef="End_Received_New_Offer_Err_Bank" />
-    <bpmn:sequenceFlow id="Flow_0ze2302" sourceRef="EG_BankLink_Or_Error" targetRef="CM_Check_Offer" />
+    <bpmn:sequenceFlow id="Flow_0dtcwq0" sourceRef="CM_Received_Bank_Error" targetRef="End_Received_New_Offer_Err_Bank" />
+    <bpmn:sequenceFlow id="Flow_0ze2302" sourceRef="EG_BankLink_Or_Error" targetRef="CM_Received_Bank_Error" />
     <bpmn:sequenceFlow id="Flow_0wguizh" sourceRef="EG_BankLink_Or_Error" targetRef="CM_Received_Bank_Link" />
-    <bpmn:sequenceFlow id="Flow_0l8oigt" sourceRef="UT_Confirm_Offer" targetRef="EG_BankLink_Or_Error" />
+    <bpmn:sequenceFlow id="Flow_0l8oigt" sourceRef="UT_Confirm_Offer" targetRef="TM_Check_Offer" />
     <bpmn:sequenceFlow id="Flow_1l3crlq" sourceRef="CM_Journey" targetRef="EG_End" />
     <bpmn:sequenceFlow id="Flow_1arp88i" sourceRef="EG_End" targetRef="End_Received_New_Offer" />
     <bpmn:sequenceFlow id="Flow_032y2js" sourceRef="CM_Journey_And_Rent" targetRef="EG_End" />
@@ -777,10 +789,10 @@
     <bpmn:endEvent id="End_Received_New_Offer_Err_Bank">
       <bpmn:incoming>Flow_0dtcwq0</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:intermediateCatchEvent id="CM_Check_Offer" name="Received an error">
+    <bpmn:intermediateCatchEvent id="CM_Received_Bank_Error" name="Received an error">
       <bpmn:incoming>Flow_0ze2302</bpmn:incoming>
       <bpmn:outgoing>Flow_0dtcwq0</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_0ln8f5o" messageRef="Message_2v61lip" />
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0ln8f5o" messageRef="Message_13i212b" />
     </bpmn:intermediateCatchEvent>
     <bpmn:intermediateCatchEvent id="CM_Received_Bank_Link" name="Received a bank link">
       <bpmn:incoming>Flow_0wguizh</bpmn:incoming>
@@ -788,17 +800,10 @@
       <bpmn:messageEventDefinition id="MessageEventDefinition_0p64zkl" messageRef="Message_0qr0q4c" />
     </bpmn:intermediateCatchEvent>
     <bpmn:eventBasedGateway id="EG_BankLink_Or_Error">
-      <bpmn:incoming>Flow_0l8oigt</bpmn:incoming>
+      <bpmn:incoming>Flow_0d34arx</bpmn:incoming>
       <bpmn:outgoing>Flow_0ze2302</bpmn:outgoing>
       <bpmn:outgoing>Flow_0wguizh</bpmn:outgoing>
     </bpmn:eventBasedGateway>
-    <bpmn:userTask id="UT_Confirm_Offer" name="Confirm offer using token from the message">
-      <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_004a5d7" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0f3dyxs</bpmn:incoming>
-      <bpmn:outgoing>Flow_0l8oigt</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:intermediateCatchEvent id="CM_Journey" name="Journey receipt">
       <bpmn:incoming>Flow_1xy1zu5</bpmn:incoming>
       <bpmn:outgoing>Flow_1l3crlq</bpmn:outgoing>
@@ -880,6 +885,22 @@
       <bpmn:outgoing>Flow_0f3dyxs</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1hi6jje" messageRef="Message_3dhlcim" />
     </bpmn:startEvent>
+    <bpmn:userTask id="UT_Confirm_Offer" name="Confirm offer using token from the message">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_004a5d7" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0f3dyxs</bpmn:incoming>
+      <bpmn:outgoing>Flow_0l8oigt</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0d34arx" sourceRef="TM_Check_Offer" targetRef="EG_BankLink_Or_Error" />
+    <bpmn:intermediateThrowEvent id="TM_Check_Offer">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="TM_Check_Offer" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0l8oigt</bpmn:incoming>
+      <bpmn:outgoing>Flow_0d34arx</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0bcgl5f" />
+    </bpmn:intermediateThrowEvent>
     <bpmn:association id="Association_0x5u43a" associationDirection="None" sourceRef="EG_Journey_Or_JourneyAndRent" targetRef="TextAnnotation_0kywoye" />
   </bpmn:process>
   <bpmn:message id="Message_1jmlpn7" name="CM_New_Request_Save_Flight">
@@ -906,6 +927,11 @@
       <zeebe:subscription correlationKey="=0" />
     </bpmn:extensionElements>
   </bpmn:message>
+  <bpmn:message id="Message_13i212b" name="CM_Received_Bank_Error">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=&#34;0&#34;" />
+    </bpmn:extensionElements>
+  </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ACMESky">
       <bpmndi:BPMNShape id="Participant_1aiixuc_di" bpmnElement="Participant_ACME" isHorizontal="true">
@@ -924,91 +950,15 @@
         <dc:Bounds x="190" y="1310" width="6190" height="330" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_02rb4mb_di" bpmnElement="Activity_Book_Journey" isExpanded="true">
-        <dc:Bounds x="2732" y="672" width="1298" height="278" />
+      <bpmndi:BPMNShape id="Event_10y9pg8_di" bpmnElement="Event_1pqdi5r">
+        <dc:Bounds x="1692" y="792" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1xkzsys_di" bpmnElement="Start_Book_Journey">
-        <dc:Bounds x="2771" y="792" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_0vdkb8m_di" bpmnElement="CM_Check_Offer">
+        <dc:Bounds x="1592" y="792" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1j5gp0r_di" bpmnElement="TM_Book_Journey">
-        <dc:Bounds x="2862" y="770" width="100" height="80" />
+      <bpmndi:BPMNShape id="Event_0sfbt4m_di" bpmnElement="Start_ACME_UserProfile">
+        <dc:Bounds x="322" y="792" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ms10mk_di" bpmnElement="TM_Ask_Payment_Link">
-        <dc:Bounds x="3190" y="770" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1cjj4kf_di" bpmnElement="TM_Send_Payment_Link">
-        <dc:Bounds x="3487" y="710" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0hpwuz3_di" bpmnElement="Event_0wdh6he">
-        <dc:Bounds x="3662" y="872" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0a6fa21_di" bpmnElement="PG_Send_Payment_Link_Start">
-        <dc:Bounds x="3355" y="785" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0f02d4f_di" bpmnElement="End_Book_Journey">
-        <dc:Bounds x="3912" y="792" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0olt329" bpmnElement="EG_Payment_Success" isMarkerVisible="true">
-        <dc:Bounds x="3775" y="865" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="3778" y="916" width="46" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0wapphh" bpmnElement="EE_Payment">
-        <dc:Bounds x="3912" y="872" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1ml947h_di" bpmnElement="PG_Send_Payment_Link_End">
-        <dc:Bounds x="3775" y="785" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0szdp0g_di" bpmnElement="Flow_0szdp0g">
-        <di:waypoint x="2807" y="810" />
-        <di:waypoint x="2862" y="810" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_12dswsg_di" bpmnElement="Flow_12dswsg">
-        <di:waypoint x="2962" y="810" />
-        <di:waypoint x="3190" y="810" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1fypvic_di" bpmnElement="Flow_1fypvic">
-        <di:waypoint x="3290" y="810" />
-        <di:waypoint x="3355" y="810" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_137syh0_di" bpmnElement="Flow_137syh0">
-        <di:waypoint x="3380" y="785" />
-        <di:waypoint x="3380" y="750" />
-        <di:waypoint x="3487" y="750" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0xix94l_di" bpmnElement="Flow_0xix94l">
-        <di:waypoint x="3587" y="750" />
-        <di:waypoint x="3800" y="750" />
-        <di:waypoint x="3800" y="785" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0kpaa08_di" bpmnElement="Flow_0kpaa08">
-        <di:waypoint x="3380" y="835" />
-        <di:waypoint x="3380" y="890" />
-        <di:waypoint x="3662" y="890" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1kig1jb_di" bpmnElement="Flow_1kig1jb">
-        <di:waypoint x="3698" y="890" />
-        <di:waypoint x="3775" y="890" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0kuzdys_di" bpmnElement="Flow_0kuzdys">
-        <di:waypoint x="3825" y="810" />
-        <di:waypoint x="3912" y="810" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1xgd3n1_di" bpmnElement="Flow_1xgd3n1">
-        <di:waypoint x="3825" y="890" />
-        <di:waypoint x="3912" y="890" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="3861" y="872" width="15" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_01oh7g4_di" bpmnElement="Flow_01oh7g4">
-        <di:waypoint x="3800" y="865" />
-        <di:waypoint x="3800" y="835" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="3806" y="847" width="19" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_055za18_di" bpmnElement="Activity_Rent_Service" isExpanded="true">
         <dc:Bounds x="4938" y="672" width="1260" height="279" />
         <bpmndi:BPMNLabel />
@@ -1149,12 +1099,6 @@
         <dc:Bounds x="4555" y="785" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="4544" y="761" width="72" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0p1hfgs_di" bpmnElement="TM_Error_On_Check_Offer">
-        <dc:Bounds x="2612" y="702" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2603" y="753" width="53" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0jtytbd_di" bpmnElement="ST_Retrieve_Offer">
@@ -1314,12 +1258,6 @@
       <bpmndi:BPMNShape id="Activity_1nd8x6a_di" bpmnElement="TM_Ack_Flight_Request_Save">
         <dc:Bounds x="617" y="770" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_12yakyn_di" bpmnElement="Start_Event_Check_Offer">
-        <dc:Bounds x="1693" y="792" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1714" y="690" width="74" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0rx4hlh" bpmnElement="DB_Available_Flights">
         <dc:Bounds x="244" y="1195" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -1392,23 +1330,114 @@
         <di:waypoint x="2168" y="797" />
         <di:waypoint x="2113" y="740" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_1o1penk_di" bpmnElement="CM_New_Request_Save_Flight">
-        <dc:Bounds x="332" y="793" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0vw9al4_di" bpmnElement="Start_ACME_UserProfile">
-        <dc:Bounds x="242" y="793" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1bqt49v_di" bpmnElement="TM_Offer_Still_Valid">
         <dc:Bounds x="4120" y="680" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_10xvar6_di" bpmnElement="TM_Error_On_Book_Journey">
+      <bpmndi:BPMNShape id="Event_0d9e8uq_di" bpmnElement="TM_Error_On_Book_Journey">
         <dc:Bounds x="4282" y="702" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="4274" y="748" width="53" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0rg6bs2_di" bpmnElement="TM_Error_On_Check_Offer">
+        <dc:Bounds x="2612" y="702" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2603.5" y="748" width="53" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0a5pqyi_di" bpmnElement="Event_0a5pqyi">
+        <dc:Bounds x="2692" y="702" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0i80v8b_di" bpmnElement="Event_0i80v8b">
+        <dc:Bounds x="4382" y="702" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02rb4mb_di" bpmnElement="Activity_Book_Journey" isExpanded="true">
+        <dc:Bounds x="2770" y="671" width="1298" height="278" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xkzsys_di" bpmnElement="Start_Book_Journey">
+        <dc:Bounds x="2809" y="791" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1j5gp0r_di" bpmnElement="TM_Book_Journey">
+        <dc:Bounds x="2900" y="769" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ms10mk_di" bpmnElement="TM_Ask_Payment_Link">
+        <dc:Bounds x="3228" y="769" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1cjj4kf_di" bpmnElement="TM_Send_Payment_Link">
+        <dc:Bounds x="3525" y="709" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0hpwuz3_di" bpmnElement="Event_0wdh6he">
+        <dc:Bounds x="3700" y="871" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0a6fa21_di" bpmnElement="PG_Send_Payment_Link_Start">
+        <dc:Bounds x="3393" y="784" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0f02d4f_di" bpmnElement="End_Book_Journey">
+        <dc:Bounds x="3950" y="791" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0olt329" bpmnElement="EG_Payment_Success" isMarkerVisible="true">
+        <dc:Bounds x="3813" y="864" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3816" y="915" width="46" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0wapphh" bpmnElement="EE_Payment">
+        <dc:Bounds x="3950" y="871" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1ml947h_di" bpmnElement="PG_Send_Payment_Link_End">
+        <dc:Bounds x="3813" y="784" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0szdp0g_di" bpmnElement="Flow_0szdp0g">
+        <di:waypoint x="2845" y="809" />
+        <di:waypoint x="2900" y="809" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12dswsg_di" bpmnElement="Flow_12dswsg">
+        <di:waypoint x="3000" y="809" />
+        <di:waypoint x="3228" y="809" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fypvic_di" bpmnElement="Flow_1fypvic">
+        <di:waypoint x="3328" y="809" />
+        <di:waypoint x="3393" y="809" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_137syh0_di" bpmnElement="Flow_137syh0">
+        <di:waypoint x="3418" y="784" />
+        <di:waypoint x="3418" y="749" />
+        <di:waypoint x="3525" y="749" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xix94l_di" bpmnElement="Flow_0xix94l">
+        <di:waypoint x="3625" y="749" />
+        <di:waypoint x="3838" y="749" />
+        <di:waypoint x="3838" y="784" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kpaa08_di" bpmnElement="Flow_0kpaa08">
+        <di:waypoint x="3418" y="834" />
+        <di:waypoint x="3418" y="889" />
+        <di:waypoint x="3700" y="889" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kig1jb_di" bpmnElement="Flow_1kig1jb">
+        <di:waypoint x="3736" y="889" />
+        <di:waypoint x="3813" y="889" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kuzdys_di" bpmnElement="Flow_0kuzdys">
+        <di:waypoint x="3863" y="809" />
+        <di:waypoint x="3950" y="809" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xgd3n1_di" bpmnElement="Flow_1xgd3n1">
+        <di:waypoint x="3863" y="889" />
+        <di:waypoint x="3950" y="889" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3899" y="871" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01oh7g4_di" bpmnElement="Flow_01oh7g4">
+        <di:waypoint x="3838" y="864" />
+        <di:waypoint x="3838" y="834" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3844" y="846" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0ieguxi_di" bpmnElement="Event_0jl8r24">
-        <dc:Bounds x="4012" y="702" width="36" height="36" />
+        <dc:Bounds x="4050" y="701" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0jf7qlf_di" bpmnElement="EB_Check_Offer">
         <dc:Bounds x="2522" y="702" width="36" height="36" />
@@ -1426,8 +1455,8 @@
         <di:waypoint x="570" y="1150" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0ckkzu4_di" bpmnElement="Flow_0ckkzu4">
-        <di:waypoint x="1729" y="810" />
-        <di:waypoint x="1820" y="810" />
+        <di:waypoint x="1628" y="810" />
+        <di:waypoint x="1692" y="810" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1ggiirr_di" bpmnElement="Flow_1ggiirr">
         <di:waypoint x="698" y="1475" />
@@ -1450,19 +1479,21 @@
         <di:waypoint x="2020" y="810" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0s4t45f_di" bpmnElement="Flow_0s4t45f">
-        <di:waypoint x="2540" y="810" />
-        <di:waypoint x="2732" y="810" />
+        <di:waypoint x="2540" y="809" />
+        <di:waypoint x="2770" y="809" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1wyb4ra_di" bpmnElement="Flow_1wyb4ra">
         <di:waypoint x="2558" y="720" />
         <di:waypoint x="2612" y="720" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1g8qzsm_di" bpmnElement="Flow_1g8qzsm">
-        <di:waypoint x="4048" y="720" />
+        <di:waypoint x="4086" y="719" />
+        <di:waypoint x="4103" y="719" />
+        <di:waypoint x="4103" y="720" />
         <di:waypoint x="4120" y="720" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0vvq016_di" bpmnElement="Flow_0vvq016">
-        <di:waypoint x="4030" y="810" />
+        <di:waypoint x="4068" y="810" />
         <di:waypoint x="4555" y="810" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1lwcjk0_di" bpmnElement="Flow_1lwcjk0">
@@ -1478,8 +1509,8 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0tixpey_di" bpmnElement="Flow_0tixpey">
-        <di:waypoint x="278" y="811" />
-        <di:waypoint x="332" y="811" />
+        <di:waypoint x="358" y="810" />
+        <di:waypoint x="457" y="810" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1rtz04m_di" bpmnElement="Flow_1rtz04m">
         <di:waypoint x="557" y="810" />
@@ -1489,17 +1520,25 @@
         <di:waypoint x="717" y="810" />
         <di:waypoint x="779" y="810" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1j8k5x3_di" bpmnElement="Flow_1j8k5x3">
-        <di:waypoint x="368" y="810" />
-        <di:waypoint x="457" y="810" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1imwv2y_di" bpmnElement="Flow_1imwv2y">
         <di:waypoint x="4220" y="720" />
         <di:waypoint x="4282" y="720" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0iaa0jc_di" bpmnElement="Flow_0iaa0jc">
+        <di:waypoint x="2648" y="720" />
+        <di:waypoint x="2692" y="720" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r4t4nc_di" bpmnElement="Flow_1r4t4nc">
+        <di:waypoint x="4318" y="720" />
+        <di:waypoint x="4382" y="720" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_1nkvtkr_di" bpmnElement="Association_1nkvtkr">
         <di:waypoint x="6049" y="796" />
         <di:waypoint x="6096" y="741" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09p4d93_di" bpmnElement="Flow_09p4d93">
+        <di:waypoint x="1728" y="810" />
+        <di:waypoint x="1820" y="810" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1iv87gq_di" bpmnElement="Participant_Prontogram" isHorizontal="true">
         <dc:Bounds x="900" y="400" width="700" height="163" />
@@ -1569,7 +1608,7 @@
       <bpmndi:BPMNShape id="Event_08pkhkf_di" bpmnElement="End_Received_New_Offer_Err_Bank">
         <dc:Bounds x="2112" y="299" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0p4u8wi_di" bpmnElement="CM_Check_Offer">
+      <bpmndi:BPMNShape id="Event_0p4u8wi_di" bpmnElement="CM_Received_Bank_Error">
         <dc:Bounds x="1982" y="299" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1956" y="275" width="88" height="14" />
@@ -1583,9 +1622,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1gb105j_di" bpmnElement="EG_BankLink_Or_Error">
         <dc:Bounds x="1855" y="215" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_041pt1r_di" bpmnElement="UT_Confirm_Offer">
-        <dc:Bounds x="1661" y="200" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1a5ehcg_di" bpmnElement="CM_Journey">
         <dc:Bounds x="4742" y="282" width="36" height="36" />
@@ -1642,6 +1678,12 @@
           <dc:Bounds x="1391" y="170" width="74" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_041pt1r_di" bpmnElement="UT_Confirm_Offer">
+        <dc:Bounds x="1550" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0u2jgaz_di" bpmnElement="TM_Check_Offer">
+        <dc:Bounds x="1692" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0dtcwq0_di" bpmnElement="Flow_0dtcwq0">
         <di:waypoint x="2018" y="317" />
         <di:waypoint x="2112" y="317" />
@@ -1656,8 +1698,8 @@
         <di:waypoint x="1982" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0l8oigt_di" bpmnElement="Flow_0l8oigt">
-        <di:waypoint x="1761" y="240" />
-        <di:waypoint x="1855" y="240" />
+        <di:waypoint x="1650" y="240" />
+        <di:waypoint x="1692" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1l3crlq_di" bpmnElement="Flow_1l3crlq">
         <di:waypoint x="4778" y="300" />
@@ -1710,7 +1752,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0f3dyxs_di" bpmnElement="Flow_0f3dyxs">
         <di:waypoint x="1446" y="240" />
-        <di:waypoint x="1661" y="240" />
+        <di:waypoint x="1550" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_12s97mk_di" bpmnElement="Flow_12s97mk">
         <di:waypoint x="410" y="240" />
@@ -1723,6 +1765,10 @@
       <bpmndi:BPMNEdge id="Flow_08ouphi_di" bpmnElement="Flow_08ouphi">
         <di:waypoint x="258" y="240" />
         <di:waypoint x="310" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d34arx_di" bpmnElement="Flow_0d34arx">
+        <di:waypoint x="1728" y="240" />
+        <di:waypoint x="1855" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_0x5u43a_di" bpmnElement="Association_0x5u43a">
         <di:waypoint x="4651" y="224" />
@@ -1805,20 +1851,20 @@
         <di:waypoint x="1120" y="1510" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0og41q2_di" bpmnElement="Flow_0og41q2">
-        <di:waypoint x="2892" y="850" />
-        <di:waypoint x="2892" y="1680" />
+        <di:waypoint x="2930" y="849" />
+        <di:waypoint x="2930" y="1680" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0gk0ngd_di" bpmnElement="Flow_0gk0ngd">
-        <di:waypoint x="2932" y="1680" />
-        <di:waypoint x="2932" y="850" />
+        <di:waypoint x="2970" y="1680" />
+        <di:waypoint x="2970" y="849" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1m0b3kh_di" bpmnElement="Flow_1m0b3kh">
-        <di:waypoint x="3220" y="850" />
-        <di:waypoint x="3220" y="1680" />
+        <di:waypoint x="3258" y="849" />
+        <di:waypoint x="3258" y="1680" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0h4l2hr_di" bpmnElement="Flow_0h4l2hr">
-        <di:waypoint x="3260" y="1680" />
-        <di:waypoint x="3260" y="850" />
+        <di:waypoint x="3298" y="1680" />
+        <di:waypoint x="3298" y="849" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0ru857c_di" bpmnElement="Flow_0ru857c">
         <di:waypoint x="5658" y="850" />
@@ -1845,8 +1891,8 @@
         <di:waypoint x="5238" y="850" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0eonj29_di" bpmnElement="Flow_0eonj29">
-        <di:waypoint x="3680" y="1680" />
-        <di:waypoint x="3680" y="908" />
+        <di:waypoint x="3718" y="1680" />
+        <di:waypoint x="3718" y="907" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0055psj_di" bpmnElement="Flow_0055psj">
         <di:waypoint x="4300" y="702" />
@@ -1861,14 +1907,14 @@
         <di:waypoint x="1990" y="332" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1f8t58i_di" bpmnElement="Flow_1f8t58i">
-        <di:waypoint x="3537" y="710" />
-        <di:waypoint x="3537" y="290" />
+        <di:waypoint x="3575" y="709" />
+        <di:waypoint x="3575" y="290" />
         <di:waypoint x="2000" y="290" />
         <di:waypoint x="2000" y="258" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_170f2ic_di" bpmnElement="Flow_170f2ic">
-        <di:waypoint x="1711" y="280" />
-        <di:waypoint x="1711" y="792" />
+        <di:waypoint x="1710" y="258" />
+        <di:waypoint x="1710" y="792" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_18a9rlu_di" bpmnElement="Flow_18a9rlu">
         <di:waypoint x="6056" y="810" />
@@ -1904,8 +1950,8 @@
       <bpmndi:BPMNEdge id="Flow_13atww6_di" bpmnElement="Flow_13atww6">
         <di:waypoint x="460" y="258" />
         <di:waypoint x="460" y="536" />
-        <di:waypoint x="350" y="536" />
-        <di:waypoint x="350" y="793" />
+        <di:waypoint x="340" y="536" />
+        <di:waypoint x="340" y="792" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1lmclj3_di" bpmnElement="Flow_1lmclj3">
         <di:waypoint x="1428" y="440" />
