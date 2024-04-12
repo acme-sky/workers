@@ -72,6 +72,8 @@ func HandleJob(client *zbc.Client, job Job) {
 	// worker := (*client).NewJobWorker().JobType(job.Name).Handler(job.Handler).Open()
 	(*client).NewJobWorker().JobType(job.Name).Handler(job.Handler).Open()
 
+	<-JobStatuses[job.Name]
+
 	if job.Message != nil {
 		variables := <-JobVariables[job.Name]
 		res, err := (*client).NewPublishMessageCommand().MessageName(job.Message.Name).CorrelationKey(job.Message.CorrelationKey).VariablesFromMap(variables)
@@ -87,7 +89,6 @@ func HandleJob(client *zbc.Client, job Job) {
 		}
 	}
 
-	<-JobStatuses[job.Name]
 	// worker.Close()
 	// worker.AwaitClose()
 
