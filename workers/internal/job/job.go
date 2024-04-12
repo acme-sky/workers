@@ -7,7 +7,9 @@ import (
 	"os"
 	"sync"
 
+	"github.com/camunda/zeebe/clients/go/v8/pkg/commands"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
+	"github.com/camunda/zeebe/clients/go/v8/pkg/pb"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 )
@@ -58,30 +60,41 @@ func CreateClient(pid string) *zbc.Client {
 	ZeebeAddr := os.Getenv("ZEEBE_ADDRESS")
 	BPMNFile := os.Getenv("BPMN_FILE")
 	ProcessId := os.Getenv("PROCESS_ID")
+
 	if len(pid) != 0 {
 		ProcessId = pid
 	}
 
-	client, err := zbc.NewClient(&zbc.ClientConfig{
+	var err error
+	var client zbc.Client
+
+	if client, err = zbc.NewClient(&zbc.ClientConfig{
 		GatewayAddress:         ZeebeAddr,
 		UsePlaintextConnection: true,
-	})
-
-	if err != nil {
+	}); err != nil {
 		panic(err)
 	}
 
 	ctx := context.Background()
 
-	response, err := client.NewDeployResourceCommand().AddResourceFile(BPMNFile).Send(ctx)
-	if err != nil {
+	var response *pb.DeployResourceResponse
+
+	if response, err = client.NewDeployResourceCommand().AddResourceFile(BPMNFile).Send(ctx); err != nil {
 		panic(err)
 	}
 
 	fmt.Println(response.String())
 
-	result, err := client.NewCreateInstanceCommand().BPMNProcessId(ProcessId).LatestVersion().Send(ctx)
-	if err != nil {
+	variables := map[string]interface{}{"airlines": []int{1, 2, 3}}
+
+	var instance commands.CreateInstanceCommandStep3
+	if instance, err = client.NewCreateInstanceCommand().BPMNProcessId(ProcessId).LatestVersion().VariablesFromMap(variables); err != nil {
+		panic(err)
+	}
+
+	var result *pb.CreateProcessInstanceResponse
+
+	if result, err = instance.Send(ctx); err != nil {
 		panic(err)
 	}
 

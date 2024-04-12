@@ -41,6 +41,19 @@ func main() {
 		{Name: "TM_Book_Journey", Handler: acme.TMBookJourney},
 		{Name: "TM_Ask_Payment_Link", Handler: acme.TMAskPaymentLink, After: acme.TMAskPaymentLinkAfter},
 		{Name: "TM_Send_Payment_Link", Handler: acme.TMSendPaymentLink, Message: &acmejob.MessageCommand{Name: "CM_Received_Bank_Link", CorrelationKey: "0"}},
+		{Name: "ST_Offer_Still_Valid", Handler: acme.STOfferStillValid},
+		{Name: "TM_Error_On_Book_Journey", Handler: acme.TMErrorOnBookJourney, Message: &acmejob.MessageCommand{Name: "CM_Received_Bank_Error", CorrelationKey: "0"}},
+		{Name: "TM_Journey", Handler: acme.TMJourney, Message: &acmejob.MessageCommand{Name: "CM_Journey", CorrelationKey: "0"}},
+		{Name: "TM_Computer_Distance_User_Airport", Handler: acme.TMComputerDistanceUserAirport},
+		{Name: "TM_Find_Nearest_Available_Rent_Company", Handler: acme.TMFindNearestAvailableRentCompany},
+		{Name: "TM_Ask_For_Rent", Handler: acme.TMAskForRent},
+		{Name: "TM_Journey_And_Rent", Handler: acme.TMJourneyAndRent, Message: &acmejob.MessageCommand{Name: "CM_Journey_And_Rent", CorrelationKey: "0"}},
+		{Name: "TM_Journey_Rent_Error", Handler: acme.TMJourneyRentError, Message: &acmejob.MessageCommand{Name: "CM_Journey", CorrelationKey: "0"}},
+
+		// User profile lane: flights manager
+		{Name: "ST_Get_User_Interests", Handler: acme.STGetUserInterests},
+		{Name: "TM_Search_Flights_On_Airline", Handler: acme.TMSearchFlightsOnAirline},
+		{Name: "ST_Save_Flights_As_Available", Handler: acme.STSaveFlightsAsAvailable},
 	}
 
 	for _, job := range jobs {
