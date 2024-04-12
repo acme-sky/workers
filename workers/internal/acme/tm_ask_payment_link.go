@@ -3,7 +3,7 @@ package acme
 import (
 	"context"
 	"fmt"
-	"log"
+	"github.com/charmbracelet/log"
 	"math/rand"
 
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
@@ -28,8 +28,8 @@ func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 	}
 
 	log.SetPrefix(fmt.Sprintf("[%s] [%d] ", job.Type, jobKey))
-	log.Println("Job completed")
-	log.Println("Processing data:", variables)
+
+	log.Debug("Processing data:", variables)
 
 	ctx := context.Background()
 	_, err = request.Send(ctx)
@@ -38,7 +38,7 @@ func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.Println("Successfully completed job")
+	log.Infof("Successfully completed job")
 	acmejob.JobVariables[job.Type] <- variables
 	acmejob.JobAfter[job.Type] <- 0
 
@@ -56,12 +56,12 @@ func TMAskPaymentLinkAfter(client *zbc.Client, ctx context.Context) {
 	res, err := (*client).NewPublishMessageCommand().MessageName("CM_Payment_Response").CorrelationKey("0").VariablesFromMap(variables)
 
 	if err != nil {
-		log.Println(err.Error())
+		log.Infof(err.Error())
 	} else {
 		if _, err := res.Send(ctx); err != nil {
-			log.Println(err.Error())
+			log.Infof(err.Error())
 		} else {
-			log.Println("Sent message to `CM_Payment_Response` with correlation key = `0` and ", variables)
+			log.Infof("Sent message to `CM_Payment_Response` with correlation key = `0` and ", variables)
 		}
 	}
 }

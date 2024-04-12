@@ -3,7 +3,7 @@ package acme
 import (
 	"context"
 	"fmt"
-	"log"
+	"github.com/charmbracelet/log"
 
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
@@ -37,8 +37,8 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 	}
 
 	log.SetPrefix(fmt.Sprintf("[%s] [%d] ", job.Type, jobKey))
-	log.Println("Job completed")
-	log.Println("Processing data:", variables)
+
+	log.Debug("Processing data:", variables)
 
 	ctx := context.Background()
 	_, err = request.Send(ctx)
@@ -47,7 +47,7 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.Println("Successfully completed job for ", interest)
+	log.Infof("Successfully completed job for ", interest)
 	acmejob.JobVariables[job.Type] <- variables
 	acmejob.JobStatuses.Close(job.Type)
 }

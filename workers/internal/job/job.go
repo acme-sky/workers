@@ -2,8 +2,7 @@ package job
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"github.com/charmbracelet/log"
 	"os"
 	"sync"
 
@@ -83,7 +82,7 @@ func CreateClient(pid string) *zbc.Client {
 		panic(err)
 	}
 
-	fmt.Println(response.String())
+	log.Infof(response.String())
 
 	variables := map[string]interface{}{"airlines": []int{1, 2, 3}}
 
@@ -98,8 +97,7 @@ func CreateClient(pid string) *zbc.Client {
 		panic(err)
 	}
 
-	fmt.Println(result.String())
-	fmt.Println()
+	log.Infof(result.String())
 
 	return &client
 }
@@ -123,18 +121,19 @@ func HandleJob(client *zbc.Client, job Job) {
 		select {
 		case variables, ok = <-JobVariables[job.Name]:
 			if !ok {
-				log.Panicf("Channel JobVariables for %s is already closed\n", job.Name)
+				log.Errorf("Channel JobVariables for %s is already closed\n", job.Name)
+				panic("Reuse of closed channel")
 			}
 		}
 		res, err := (*client).NewPublishMessageCommand().MessageName(job.Message.Name).CorrelationKey(job.Message.CorrelationKey).VariablesFromMap(variables)
 
 		if err != nil {
-			log.Println(err.Error())
+			log.Error(err.Error())
 		} else {
 			if _, err := res.Send(ctx); err != nil {
-				log.Println(err.Error())
+				log.Error(err.Error())
 			} else {
-				log.Printf("Sent message to `%s` with correlation key = `%s`\n", job.Message.Name, job.Message.CorrelationKey)
+				log.Infof("Sent message to `%s` with correlation key = `%s`\n", job.Message.Name, job.Message.CorrelationKey)
 			}
 		}
 	}
@@ -143,7 +142,8 @@ func HandleJob(client *zbc.Client, job Job) {
 		select {
 		case _, ok := <-JobAfter[job.Name]:
 			if !ok {
-				log.Panicf("Channel JobVariables for %s is already closed\n", job.Name)
+				log.Errorf("Channel JobAfter for %s is already closed\n", job.Name)
+				panic("Reuse of closed channel")
 			} else {
 				job.After(client, ctx)
 			}
@@ -152,16 +152,14 @@ func HandleJob(client *zbc.Client, job Job) {
 	// worker.Close()
 	// worker.AwaitClose()
 
-	println("--------------\n", job.Name, "\n-------------_")
 	JobStatuses.Get(job.Name)
 	<-ch
 
-	// close(ch)
 	// HandleJob(client, job)
 }
 
 func FailJob(client worker.JobClient, job entities.Job) {
-	log.Println("Failed to complete job", job.GetKey())
+	log.Error("Failed to complete job", "job", job.GetKey())
 
 	ctx := context.Background()
 	_, err := client.NewFailJobCommand().JobKey(job.GetKey()).Retries(job.Retries - 1).Send(ctx)

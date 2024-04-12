@@ -3,14 +3,14 @@ package prontogram
 import (
 	"context"
 	"fmt"
-	"log"
+	"github.com/charmbracelet/log"
 
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func STSaveInfoOnProntogram(client worker.JobClient, job entities.Job) {
+func STSaveInfofOnProntogram(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -26,8 +26,8 @@ func STSaveInfoOnProntogram(client worker.JobClient, job entities.Job) {
 	}
 
 	log.SetPrefix(fmt.Sprintf("[%s] [%d] ", job.Type, jobKey))
-	log.Println("Job completed")
-	log.Println("Processing data:", variables)
+
+	log.Debug("Processing data:", variables)
 
 	ctx := context.Background()
 	_, err = request.Send(ctx)
@@ -36,7 +36,7 @@ func STSaveInfoOnProntogram(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.Println("Successfully completed job")
+	log.Infof("Successfully completed job")
 
 	acmejob.JobStatuses.Close(job.Type)
 }
