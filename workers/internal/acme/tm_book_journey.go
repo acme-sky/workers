@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func STChangeOfferStatus(client worker.JobClient, job entities.Job) {
+func TMBookJourney(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -18,6 +18,8 @@ func STChangeOfferStatus(client worker.JobClient, job entities.Job) {
 		acmejob.FailJob(client, job)
 		return
 	}
+
+	variables["flight_price"] = 1001
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
@@ -37,5 +39,7 @@ func STChangeOfferStatus(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Println("Successfully completed job")
+	acmejob.JobVariables[job.Type] <- variables
+
 	acmejob.JobStatuses[job.Type] <- 0
 }

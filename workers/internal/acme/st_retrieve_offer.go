@@ -22,7 +22,7 @@ func STRetrieveOffer(client worker.JobClient, job entities.Job) {
 	variables["token_is_valid"] = true
 	r := rand.Int()
 	if r%2 == 0 {
-		variables["token_is_valid"] = false
+		variables["token_is_valid"] = true
 	}
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
@@ -43,5 +43,5 @@ func STRetrieveOffer(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Println("Successfully completed job")
-	close(acmejob.JobStatuses[job.Type])
+	acmejob.JobStatuses[job.Type] <- 0
 }

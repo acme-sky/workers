@@ -37,5 +37,5 @@ func STSaveFlight(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Println("Successfully completed job")
-	close(acmejob.JobStatuses[job.Type])
+	acmejob.JobStatuses[job.Type] <- 0
 }

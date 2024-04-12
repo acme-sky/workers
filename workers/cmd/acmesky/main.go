@@ -22,16 +22,25 @@ func main() {
 
 	jobs := []acmejob.Job{
 		// First part of User Profile lane
-		{Name: "ST_Save_Flight", Handler: acme.STSaveFlight, Message: nil},
+		{Name: "ST_Save_Flight", Handler: acme.STSaveFlight},
 		{Name: "TM_Ack_Flight_Request_Save", Handler: acme.TMAckFlightRequestSave, Message: &acmejob.MessageCommand{Name: "CM_Ack_Flight_Request_Save", CorrelationKey: "0"}},
 
-		{Name: "ST_Get_Interests", Handler: acme.STGetInterests, Message: nil},
-		{Name: "ST_Check_Flight_For_An_Interest", Handler: acme.STCheckFlightForAnInterest, Message: nil},
-		{Name: "ST_Prepare_Offer", Handler: acme.STPrepareOffer, Message: nil},
+		// Interests manager lane
+		{Name: "ST_Get_Interests", Handler: acme.STGetInterests},
+		{Name: "ST_Check_Flight_For_An_Interest", Handler: acme.STCheckFlightForAnInterest},
+		{Name: "ST_Prepare_Offer", Handler: acme.STPrepareOffer},
 		{Name: "TM_Send_Offer", Handler: acme.TMSendOffer, Message: &acmejob.MessageCommand{Name: "CM_New_Message_For_Prontogram", CorrelationKey: "0"}},
-		{Name: "ST_Retrieve_Offer", Handler: acme.STRetrieveOffer, Message: nil},
-		{Name: "ST_Change_Offer_Status", Handler: acme.STChangeOfferStatus, Message: nil},
+
+		// User profile lane: check offer
+		{Name: "ST_Retrieve_Offer", Handler: acme.STRetrieveOffer},
+		{Name: "ST_Change_Offer_Status", Handler: acme.STChangeOfferStatus},
 		{Name: "TM_Error_On_Check_Offer", Handler: acme.TMErrorOnCheckOffer, Message: &acmejob.MessageCommand{Name: "CM_Received_Bank_Error", CorrelationKey: "0"}},
+
+		// User profile lane: book journey
+		// Message fields for TM_Book_Journey and TM_Ask_Payment_Link is `nil` because it comunicates with an hidden participant
+		{Name: "TM_Book_Journey", Handler: acme.TMBookJourney},
+		{Name: "TM_Ask_Payment_Link", Handler: acme.TMAskPaymentLink, After: acme.TMAskPaymentLinkAfter},
+		{Name: "TM_Send_Payment_Link", Handler: acme.TMSendPaymentLink, Message: &acmejob.MessageCommand{Name: "CM_Received_Bank_Link", CorrelationKey: "0"}},
 	}
 
 	for _, job := range jobs {

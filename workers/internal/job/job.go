@@ -19,10 +19,13 @@ type MessageCommand struct {
 	CorrelationKey string
 }
 
+type PostJobHandler func(*zbc.Client)
+
 type Job struct {
 	Name    string
 	Handler worker.JobHandler
 	Message *MessageCommand
+	After   PostJobHandler
 }
 
 func CreateClient(pid string) *zbc.Client {
@@ -72,10 +75,15 @@ func HandleJob(client *zbc.Client, job Job) {
 	// worker := (*client).NewJobWorker().JobType(job.Name).Handler(job.Handler).Open()
 	(*client).NewJobWorker().JobType(job.Name).Handler(job.Handler).Open()
 
-	<-JobStatuses[job.Name]
-
 	if job.Message != nil {
-		variables := <-JobVariables[job.Name]
+		var variables map[string]interface{}
+		ok := true
+		select {
+		case variables, ok = <-JobVariables[job.Name]:
+			if !ok {
+				log.Panicf("Channel JobVariables for %s is already closed\n", job.Name)
+			}
+		}
 		res, err := (*client).NewPublishMessageCommand().MessageName(job.Message.Name).CorrelationKey(job.Message.CorrelationKey).VariablesFromMap(variables)
 
 		if err != nil {
@@ -92,7 +100,14 @@ func HandleJob(client *zbc.Client, job Job) {
 	// worker.Close()
 	// worker.AwaitClose()
 
-	HandleJob(client, job)
+	println("--------------\n", job.Name, "\n-------------_")
+	<-JobStatuses[job.Name]
+
+	if job.After != nil {
+		job.After(client)
+	}
+
+	// HandleJob(client, job)
 }
 
 func FailJob(client worker.JobClient, job entities.Job) {
