@@ -19,6 +19,8 @@ type jobStatusesMap struct {
 
 var JobStatuses = jobStatusesMap{m: make(map[string](chan int))}
 var JobVariables = make(map[string](chan map[string]interface{}))
+var JobAfter = make(map[string](chan int))
+
 func (sm *jobStatusesMap) Set(key string, value chan int) {
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
@@ -43,7 +45,7 @@ type MessageCommand struct {
 	CorrelationKey string
 }
 
-type PostJobHandler func(*zbc.Client)
+type PostJobHandler func(*zbc.Client, context.Context)
 
 type Job struct {
 	Name    string
@@ -96,6 +98,7 @@ func HandleJob(client *zbc.Client, job Job) {
 	JobStatuses.Set(job.Name, ch)
 
 	JobVariables[job.Name] = make(chan map[string]interface{}, 1)
+	JobAfter[job.Name] = make(chan int, 1)
 
 	// TODO: study why multi-instance jobs does not fit this close-worker below
 	// worker := (*client).NewJobWorker().JobType(job.Name).Handler(job.Handler).Open()
@@ -123,6 +126,16 @@ func HandleJob(client *zbc.Client, job Job) {
 		}
 	}
 
+	if job.After != nil {
+		select {
+		case _, ok := <-JobAfter[job.Name]:
+			if !ok {
+				log.Panicf("Channel JobVariables for %s is already closed\n", job.Name)
+			} else {
+				job.After(client, ctx)
+			}
+		}
+	}
 	// worker.Close()
 	// worker.AwaitClose()
 

@@ -45,8 +45,7 @@ func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 }
 
 // Simulate a response from Bank participant
-func TMAskPaymentLinkAfter(client *zbc.Client) {
-	ctx := context.Background()
+func TMAskPaymentLinkAfter(client *zbc.Client, ctx context.Context) {
 	variables := map[string]interface{}{"payment_status": "ERR"}
 
 	if rand.Int()%2 == 0 {
