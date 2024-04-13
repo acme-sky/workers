@@ -29,7 +29,7 @@ func main() {
 
 	for _, job := range jobs {
 		go func(job *acmejob.Job) {
-			acmejob.HandleJob(client, *job)
+			job.Handle(client)
 		}(&job)
 	}
 
