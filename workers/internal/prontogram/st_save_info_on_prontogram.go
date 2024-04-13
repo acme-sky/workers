@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func STSaveInfofOnProntogram(client worker.JobClient, job entities.Job) {
+func STSaveInfoOnProntogram(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
