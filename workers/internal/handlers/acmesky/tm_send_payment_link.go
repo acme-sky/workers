@@ -1,4 +1,4 @@
-package acme
+package handlers
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func STOfferStillValid(client worker.JobClient, job entities.Job) {
+func TMSendPaymentLink(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -18,6 +18,8 @@ func STOfferStillValid(client worker.JobClient, job entities.Job) {
 		acmejob.FailJob(client, job)
 		return
 	}
+
+	variables["payment_link"] = "https://acmebank.cs.unibo.it/pay/0000-000-000"
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
@@ -37,5 +39,7 @@ func STOfferStillValid(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Infof("Successfully completed job")
+	acmejob.JobVariables[job.Type] <- variables
+
 	acmejob.JobStatuses.Close(job.Type)
 }

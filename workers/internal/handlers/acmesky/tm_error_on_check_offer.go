@@ -1,4 +1,4 @@
-package acme
+package handlers
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
+func TMErrorOnCheckOffer(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -18,17 +18,6 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 		acmejob.FailJob(client, job)
 		return
 	}
-
-	interests := variables["interests"].([]interface{})
-	index := int(variables["loopCounter"].(float64)) - 1
-
-	if index < 0 || index >= len(interests) {
-		panic("Index out of range")
-	}
-	interest := interests[index].(map[string]interface{})
-
-	variables["flight_is_found"] = true
-	variables["flights"] = []map[string]interface{}{{"id": 6}, {"id": 12}}
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
@@ -47,7 +36,7 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.Infof("Successfully completed job for ", interest)
+	log.Infof("Successfully completed job")
 	acmejob.JobVariables[job.Type] <- variables
 	acmejob.JobStatuses.Close(job.Type)
 }

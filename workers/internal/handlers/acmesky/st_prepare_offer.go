@@ -1,4 +1,4 @@
-package user
+package handlers
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func TMCheckOffer(client worker.JobClient, job entities.Job) {
+func STPrepareOffer(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -37,7 +37,5 @@ func TMCheckOffer(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Infof("Successfully completed job")
-	acmejob.JobVariables[job.Type] <- variables
-
 	acmejob.JobStatuses.Close(job.Type)
 }

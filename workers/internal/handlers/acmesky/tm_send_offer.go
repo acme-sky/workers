@@ -1,4 +1,4 @@
-package prontogram
+package handlers
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func TMPropagateMessageFromProntogram(client worker.JobClient, job entities.Job) {
+func TMSendOffer(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -18,6 +18,11 @@ func TMPropagateMessageFromProntogram(client worker.JobClient, job entities.Job)
 		acmejob.FailJob(client, job)
 		return
 	}
+
+	payload := variables
+	payload["message"] = "Hello John Doe, this is the offer token for your flight from <b>BLQ</b> to <b>CPH</b> in date April 10th 11:10 - April 10th 13:30.<br><a href=\"#\" target=\"_blank\">1234</a>"
+	payload["expired"] = "1712855681"
+	payload["user"] = "sa"
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
@@ -37,7 +42,7 @@ func TMPropagateMessageFromProntogram(client worker.JobClient, job entities.Job)
 	}
 
 	log.Infof("Successfully completed job")
-	acmejob.JobVariables[job.Type] <- variables
+	acmejob.JobVariables[job.Type] <- payload
 
 	acmejob.JobStatuses.Close(job.Type)
 }

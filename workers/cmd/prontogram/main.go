@@ -5,7 +5,7 @@ import (
 	"os/signal"
 
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
-	"github.com/acme-sky/bpmn/workers/internal/prontogram"
+	handlers "github.com/acme-sky/bpmn/workers/internal/handlers/prontogram"
 )
 
 var quit = make(chan os.Signal, 1)
@@ -21,8 +21,8 @@ func main() {
 	}()
 
 	jobs := []acmejob.Job{
-		{Name: "ST_Save_Info_On_Prontogram", Handler: prontogram.STSaveInfoOnProntogram, Message: nil},
-		{Name: "TM_Propagate_Message_From_Prontogram", Handler: prontogram.TMPropagateMessageFromProntogram, Message: &acmejob.MessageCommand{Name: "Start_Received_New_Offer", CorrelationKey: "0"}},
+		{Name: "ST_Save_Info_On_Prontogram", Handler: handlers.STSaveInfoOnProntogram, Message: nil},
+		{Name: "TM_Propagate_Message_From_Prontogram", Handler: handlers.TMPropagateMessageFromProntogram, Message: &acmejob.MessageCommand{Name: "Start_Received_New_Offer", CorrelationKey: "0"}},
 	}
 
 	for _, job := range jobs {

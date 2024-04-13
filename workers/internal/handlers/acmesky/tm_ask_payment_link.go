@@ -1,16 +1,18 @@
-package acme
+package handlers
 
 import (
 	"context"
 	"fmt"
 	"github.com/charmbracelet/log"
+	"math/rand"
 
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
+	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 )
 
-func TMAckFlightRequestSave(client worker.JobClient, job entities.Job) {
+func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -38,5 +40,28 @@ func TMAckFlightRequestSave(client worker.JobClient, job entities.Job) {
 
 	log.Infof("Successfully completed job")
 	acmejob.JobVariables[job.Type] <- variables
+	acmejob.JobAfter[job.Type] <- 0
+
 	acmejob.JobStatuses.Close(job.Type)
+}
+
+// Simulate a response from Bank participant
+func TMAskPaymentLinkAfter(client *zbc.Client, ctx context.Context) {
+	variables := map[string]interface{}{"payment_status": "ERR"}
+
+	if rand.Int()%2 == 0 {
+		variables["payment_status"] = "ERR"
+	}
+
+	res, err := (*client).NewPublishMessageCommand().MessageName("CM_Payment_Response").CorrelationKey("0").VariablesFromMap(variables)
+
+	if err != nil {
+		log.Infof(err.Error())
+	} else {
+		if _, err := res.Send(ctx); err != nil {
+			log.Infof(err.Error())
+		} else {
+			log.Infof("Sent message to `CM_Payment_Response` with correlation key = `0` and ", variables)
+		}
+	}
 }

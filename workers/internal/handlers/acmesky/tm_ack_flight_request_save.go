@@ -1,28 +1,22 @@
-package acme
+package handlers
 
 import (
 	"context"
 	"fmt"
 	"github.com/charmbracelet/log"
-	"math/rand"
 
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func STRetrieveOffer(client worker.JobClient, job entities.Job) {
+func TMAckFlightRequestSave(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
 	if err != nil {
 		acmejob.FailJob(client, job)
 		return
-	}
-	variables["token_is_valid"] = true
-	r := rand.Int()
-	if r%2 == 0 {
-		variables["token_is_valid"] = true
 	}
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
@@ -43,5 +37,6 @@ func STRetrieveOffer(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Infof("Successfully completed job")
+	acmejob.JobVariables[job.Type] <- variables
 	acmejob.JobStatuses.Close(job.Type)
 }

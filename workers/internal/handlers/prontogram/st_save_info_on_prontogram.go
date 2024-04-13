@@ -1,4 +1,4 @@
-package acme
+package handlers
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func TMComputerDistanceUserAirport(client worker.JobClient, job entities.Job) {
+func STSaveInfoOnProntogram(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -18,8 +18,6 @@ func TMComputerDistanceUserAirport(client worker.JobClient, job entities.Job) {
 		acmejob.FailJob(client, job)
 		return
 	}
-
-	variables["distance"] = 28
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
@@ -39,7 +37,6 @@ func TMComputerDistanceUserAirport(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Infof("Successfully completed job")
-	acmejob.JobVariables[job.Type] <- variables
 
 	acmejob.JobStatuses.Close(job.Type)
 }

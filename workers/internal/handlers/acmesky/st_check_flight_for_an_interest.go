@@ -1,16 +1,17 @@
-package acme
+package handlers
 
 import (
 	"context"
 	"fmt"
 	"github.com/charmbracelet/log"
+	"math/rand"
 
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func TMSendPaymentLink(client worker.JobClient, job entities.Job) {
+func STCheckFlightForAnInterest(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -19,7 +20,19 @@ func TMSendPaymentLink(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	variables["payment_link"] = "https://acmebank.cs.unibo.it/pay/0000-000-000"
+	interests := variables["interests"].([]interface{})
+	index := int(variables["loopCounter"].(float64)) - 1
+
+	if index < 0 || index >= len(interests) {
+		panic("Index out of range")
+	}
+	interest := interests[index].(map[string]interface{})
+
+	variables["flight"] = "y"
+	r := rand.Int()
+	if r%2 == 0 {
+		variables["flight"] = nil
+	}
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
@@ -38,8 +51,6 @@ func TMSendPaymentLink(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.Infof("Successfully completed job")
-	acmejob.JobVariables[job.Type] <- variables
-
+	log.Infof("Successfully completed job for ", interest)
 	acmejob.JobStatuses.Close(job.Type)
 }

@@ -1,4 +1,4 @@
-package acme
+package handlers
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-func TMAskForRent(client worker.JobClient, job entities.Job) {
+func STChangeOfferStatus(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -18,9 +18,6 @@ func TMAskForRent(client worker.JobClient, job entities.Job) {
 		acmejob.FailJob(client, job)
 		return
 	}
-
-	variables["rent_status"] = "Ok"
-	variables["next_rent_company_to_check"] = 42
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
@@ -40,7 +37,5 @@ func TMAskForRent(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Infof("Successfully completed job")
-	acmejob.JobVariables[job.Type] <- variables
-
 	acmejob.JobStatuses.Close(job.Type)
 }
