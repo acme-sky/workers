@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="_tTv5YOycEeiHGOQ2NkJZNQ" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn2:message id="Message_1xarj71" name="Location, time (two hours before the booked flight)" />
   <bpmn2:message id="Message_107k5vl" name="Location, time (two hours before the booked flight)" />
   <bpmn2:message id="Message_08leiq3" />
   <bpmn2:message id="Message_0b5zlnr" name="Distance" />
@@ -31,6 +32,7 @@
     <bpmn2:participant id="Participant_0kxhh1o" name="Bank" />
     <bpmn2:participant id="Participant_0ppbbgq" name="GeoDistance service" />
     <bpmn2:participant id="Participant_0zdkyus" name="Rent service" />
+    <bpmn2:messageFlow id="MessageFlow_0lr1w1e" sourceRef="Participant_06qakjv" targetRef="Participant_1b5swk6" messageRef="Message_1xarj71" />
     <bpmn2:messageFlow id="MessageFlow_1m8u40f" sourceRef="Participant_06qakjv" targetRef="Participant_0zdkyus" messageRef="Message_107k5vl" />
     <bpmn2:messageFlow id="MessageFlow_1es55u7" sourceRef="Participant_06qakjv" targetRef="Participant_0ppbbgq" messageRef="Message_08leiq3" />
     <bpmn2:messageFlow id="MessageFlow_0x7u1bf" sourceRef="Participant_0ppbbgq" targetRef="Participant_06qakjv" messageRef="Message_0b5zlnr" />
@@ -80,7 +82,7 @@
       <bpmn2:incoming>Flow_1gbx077</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="Flow_1gbx077" sourceRef="ChoreographyTask_15zbyls" targetRef="Event_0a2pfrd" />
-    <bpmn2:choreographyTask id="ChoreographyTask_1rwsocq" name="Search flights based on users interests" initiatingParticipantRef="Participant_06qakjv" loopType="MultiInstanceParallel">
+    <bpmn2:choreographyTask id="ChoreographyTask_1rwsocq" name="Search flights based on users interests" initiatingParticipantRef="Participant_06qakjv" loopType="MultiInstanceSequential">
       <bpmn2:incoming>Flow_0938tun</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0nhfinf</bpmn2:outgoing>
       <bpmn2:participantRef>Participant_06qakjv</bpmn2:participantRef>
@@ -97,7 +99,7 @@
       <bpmn2:outgoing>Flow_0938tun</bpmn2:outgoing>
       <bpmn2:timerEventDefinition id="TimerEventDefinition_1gyh99x" />
     </bpmn2:startEvent>
-    <bpmn2:choreographyTask id="ChoreographyTask_0haw83z" name="Send flight token" initiatingParticipantRef="Participant_06qakjv">
+    <bpmn2:choreographyTask id="ChoreographyTask_0haw83z" name="Send flight recap with token" initiatingParticipantRef="Participant_06qakjv">
       <bpmn2:incoming>Flow_1pc45by</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1p7lqk7</bpmn2:outgoing>
       <bpmn2:participantRef>Participant_06qakjv</bpmn2:participantRef>
@@ -118,7 +120,7 @@
       <bpmn2:incoming>Flow_06sixb2</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1pc45by</bpmn2:outgoing>
     </bpmn2:inclusiveGateway>
-    <bpmn2:choreographyTask id="ChoreographyTask_1xr9jbr" name="Send flight token" initiatingParticipantRef="Participant_1t7tmdu">
+    <bpmn2:choreographyTask id="ChoreographyTask_1xr9jbr" name="Send message with flight recap and token" initiatingParticipantRef="Participant_1t7tmdu">
       <bpmn2:incoming>Flow_1p7lqk7</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1rnqp8z</bpmn2:outgoing>
       <bpmn2:participantRef>Participant_1t7tmdu</bpmn2:participantRef>
@@ -126,7 +128,7 @@
       <bpmn2:messageFlowRef>MessageFlow_0kcyr8q</bpmn2:messageFlowRef>
     </bpmn2:choreographyTask>
     <bpmn2:sequenceFlow id="Flow_1rnqp8z" sourceRef="ChoreographyTask_1xr9jbr" targetRef="Event_1tow3yg" />
-    <bpmn2:choreographyTask id="ChoreographyTask_1ihf04q" name="Send last-minute offers" initiatingParticipantRef="Participant_09g0el5" loopType="MultiInstanceParallel">
+    <bpmn2:choreographyTask id="ChoreographyTask_1ihf04q" name="Send last-minute offers" initiatingParticipantRef="Participant_09g0el5" loopType="MultiInstanceSequential">
       <bpmn2:incoming>Flow_1a8xuwz</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1s4x5zc</bpmn2:outgoing>
       <bpmn2:participantRef>Participant_09g0el5</bpmn2:participantRef>
@@ -197,12 +199,12 @@
       </bpmn2:choreographyTask>
       <bpmn2:sequenceFlow id="Flow_1fxqyuf" sourceRef="ChoreographyTask_0k1ao8o" targetRef="Event_0u4fwxf" />
     </bpmn2:subChoreography>
-    <bpmn2:sequenceFlow id="Flow_1ccttyw" sourceRef="Gateway_066v0vj" targetRef="SubChoreography_0uhq6x0" />
+    <bpmn2:sequenceFlow id="Flow_1ccttyw" name="Yes" sourceRef="Gateway_066v0vj" targetRef="SubChoreography_0uhq6x0" />
     <bpmn2:sequenceFlow id="Flow_1wntou0" sourceRef="SubChoreography_0uhq6x0" targetRef="SubChoreography_0groli8" />
     <bpmn2:exclusiveGateway id="Gateway_0v4nvyp" name="Price is &#62; 1000€?">
       <bpmn2:incoming>Flow_1i9w6f8</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1hngqkk</bpmn2:outgoing>
-      <bpmn2:outgoing>Flow_0u8usxq</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1xlgxpu</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:choreographyTask id="ChoreographyTask_1vu3ytg" name="Calculate distance between user address and airport address" initiatingParticipantRef="Participant_06qakjv">
       <bpmn2:incoming>Flow_1hngqkk</bpmn2:incoming>
@@ -213,14 +215,10 @@
       <bpmn2:messageFlowRef>MessageFlow_0tq5l2g</bpmn2:messageFlowRef>
     </bpmn2:choreographyTask>
     <bpmn2:sequenceFlow id="Flow_1hngqkk" name="Yes" sourceRef="Gateway_0v4nvyp" targetRef="ChoreographyTask_1vu3ytg" />
-    <bpmn2:endEvent id="Event_0my6018">
-      <bpmn2:incoming>Flow_0u8usxq</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="Flow_0u8usxq" name="No" sourceRef="Gateway_0v4nvyp" targetRef="Event_0my6018" />
     <bpmn2:exclusiveGateway id="Gateway_1cwk10t" name="Distance is &#60; 30km?">
       <bpmn2:incoming>Flow_13s6s27</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1lpjlnk</bpmn2:outgoing>
-      <bpmn2:outgoing>Flow_1740u4u</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_09smix5</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="Flow_13s6s27" sourceRef="ChoreographyTask_1vu3ytg" targetRef="Gateway_1cwk10t" />
     <bpmn2:subChoreography id="SubChoreography_0groli8" initiatingParticipantRef="Participant_1b5swk6">
@@ -269,23 +267,31 @@
       <bpmn2:messageFlowRef>MessageFlow_1es55u7</bpmn2:messageFlowRef>
       <bpmn2:messageFlowRef>MessageFlow_0x7u1bf</bpmn2:messageFlowRef>
     </bpmn2:choreographyTask>
-    <bpmn2:sequenceFlow id="Flow_1lpjlnk" sourceRef="Gateway_1cwk10t" targetRef="ChoreographyTask_1eljmyu" />
-    <bpmn2:endEvent id="Event_1j53rlr">
-      <bpmn2:incoming>Flow_1740u4u</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="Flow_1740u4u" name="No" sourceRef="Gateway_1cwk10t" targetRef="Event_1j53rlr" />
+    <bpmn2:sequenceFlow id="Flow_1lpjlnk" name="Yes" sourceRef="Gateway_1cwk10t" targetRef="ChoreographyTask_1eljmyu" />
     <bpmn2:choreographyTask id="ChoreographyTask_0r283bo" name="Book a trip" initiatingParticipantRef="Participant_06qakjv">
       <bpmn2:incoming>Flow_1khnd5i</bpmn2:incoming>
-      <bpmn2:outgoing>Flow_1ass96f</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_18bmlnt</bpmn2:outgoing>
       <bpmn2:participantRef>Participant_06qakjv</bpmn2:participantRef>
       <bpmn2:participantRef>Participant_0zdkyus</bpmn2:participantRef>
       <bpmn2:messageFlowRef>MessageFlow_1m8u40f</bpmn2:messageFlowRef>
     </bpmn2:choreographyTask>
     <bpmn2:sequenceFlow id="Flow_1khnd5i" sourceRef="ChoreographyTask_1eljmyu" targetRef="ChoreographyTask_0r283bo" />
-    <bpmn2:endEvent id="Event_0til0wc">
-      <bpmn2:incoming>Flow_1ass96f</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="Flow_1ass96f" sourceRef="ChoreographyTask_0r283bo" targetRef="Event_0til0wc" />
+    <bpmn2:exclusiveGateway id="Gateway_14vvn9x">
+      <bpmn2:incoming>Flow_1xlgxpu</bpmn2:incoming>
+      <bpmn2:incoming>Flow_09smix5</bpmn2:incoming>
+      <bpmn2:incoming>Flow_18bmlnt</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1pc5div</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:choreographyTask id="ChoreographyTask_0zq22jl" name="Send journey response" initiatingParticipantRef="Participant_06qakjv">
+      <bpmn2:incoming>Flow_1pc5div</bpmn2:incoming>
+      <bpmn2:participantRef>Participant_06qakjv</bpmn2:participantRef>
+      <bpmn2:participantRef>Participant_1b5swk6</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>MessageFlow_0lr1w1e</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:sequenceFlow id="Flow_1xlgxpu" sourceRef="Gateway_0v4nvyp" targetRef="Gateway_14vvn9x" />
+    <bpmn2:sequenceFlow id="Flow_09smix5" sourceRef="Gateway_1cwk10t" targetRef="Gateway_14vvn9x" />
+    <bpmn2:sequenceFlow id="Flow_18bmlnt" sourceRef="ChoreographyTask_0r283bo" targetRef="Gateway_14vvn9x" />
+    <bpmn2:sequenceFlow id="Flow_1pc5div" sourceRef="Gateway_14vvn9x" targetRef="ChoreographyTask_0zq22jl" />
   </bpmn2:choreography>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Choreography_1" bpmnElement="ACMESky">
@@ -464,6 +470,9 @@
       <bpmndi:BPMNEdge id="Flow_1ccttyw_di" bpmnElement="Flow_1ccttyw">
         <di:waypoint x="559" y="970" />
         <di:waypoint x="610" y="970" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="576" y="952" width="18" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1wntou0_di" bpmnElement="Flow_1wntou0">
         <di:waypoint x="1150" y="970" />
@@ -489,16 +498,6 @@
         <di:waypoint x="2079" y="970" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1987" y="953" width="18" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_0my6018_di" bpmnElement="Event_0my6018">
-        <dc:Bounds x="1949" y="1042" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0u8usxq_di" bpmnElement="Flow_0u8usxq">
-        <di:waypoint x="1967" y="995" />
-        <di:waypoint x="1967" y="1042" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1979" y="1016" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_1cwk10t_di" bpmnElement="Gateway_1cwk10t" isMarkerVisible="true">
@@ -555,15 +554,8 @@
       <bpmndi:BPMNEdge id="Flow_1lpjlnk_di" bpmnElement="Flow_1lpjlnk">
         <di:waypoint x="2345" y="970" />
         <di:waypoint x="2409" y="970" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_1j53rlr_di" bpmnElement="Event_1j53rlr">
-        <dc:Bounds x="2302" y="1042" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_1740u4u_di" bpmnElement="Flow_1740u4u">
-        <di:waypoint x="2320" y="995" />
-        <di:waypoint x="2320" y="1042" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2328" y="1002" width="15" height="14" />
+          <dc:Bounds x="2351" y="953" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ChoreographyTask_0r283bo_di" bpmnElement="ChoreographyTask_0r283bo">
@@ -579,15 +571,40 @@
         <di:waypoint x="2551" y="970" />
         <di:waypoint x="2599" y="970" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_0til0wc_di" bpmnElement="Event_0til0wc">
-        <dc:Bounds x="2792" y="952" width="36" height="36" />
+      <bpmndi:BPMNShape id="Gateway_14vvn9x_di" bpmnElement="Gateway_14vvn9x" isMarkerVisible="true">
+        <dc:Bounds x="2805" y="945" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_1ass96f_di" bpmnElement="Flow_1ass96f">
+      <bpmndi:BPMNShape id="ChoreographyTask_0zq22jl_di" bpmnElement="ChoreographyTask_0zq22jl">
+        <dc:Bounds x="2920" y="914" width="140" height="112" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_18988sf" bpmnElement="Participant_06qakjv" isMessageVisible="false" participantBandKind="top_initiating" choreographyActivityShape="ChoreographyTask_0zq22jl_di">
+        <dc:Bounds x="2920" y="914" width="140" height="20" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_09ntfo5" bpmnElement="Participant_1b5swk6" isMessageVisible="false" participantBandKind="bottom_non_initiating" choreographyActivityShape="ChoreographyTask_0zq22jl_di">
+        <dc:Bounds x="2920" y="1006" width="140" height="20" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1xlgxpu_di" bpmnElement="Flow_1xlgxpu">
+        <di:waypoint x="1967" y="995" />
+        <di:waypoint x="1967" y="1150" />
+        <di:waypoint x="2830" y="1150" />
+        <di:waypoint x="2830" y="995" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09smix5_di" bpmnElement="Flow_09smix5">
+        <di:waypoint x="2320" y="995" />
+        <di:waypoint x="2320" y="1150" />
+        <di:waypoint x="2830" y="1150" />
+        <di:waypoint x="2830" y="995" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18bmlnt_di" bpmnElement="Flow_18bmlnt">
         <di:waypoint x="2741" y="970" />
-        <di:waypoint x="2792" y="970" />
+        <di:waypoint x="2805" y="970" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pc5div_di" bpmnElement="Flow_1pc5div">
+        <di:waypoint x="2855" y="970" />
+        <di:waypoint x="2919" y="970" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_02u56wf_di" bpmnElement="TextAnnotation_02u56wf">
-        <dc:Bounds x="1180" y="170" width="100" height="70" />
+        <dc:Bounds x="1180" y="170" width="100.00000678671123" height="70.0024717202268" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1jcs7wk_di" bpmnElement="Association_1jcs7wk">
         <di:waypoint x="1186" y="303" />
