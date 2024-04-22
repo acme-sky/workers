@@ -5,6 +5,7 @@ go 1.22.0
 require (
 	github.com/camunda/zeebe/clients/go/v8 v8.5.0
 	github.com/charmbracelet/log v0.4.0
+	github.com/rabbitmq/amqp091-go v1.9.0
 )
 
 require (

@@ -6,6 +6,7 @@ import (
 
 	handlers "github.com/acme-sky/bpmn/workers/internal/handlers/acmesky"
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
+	"github.com/acme-sky/bpmn/workers/pkg/message"
 )
 
 var quit = make(chan os.Signal, 1)
@@ -18,6 +19,10 @@ func main() {
 	go func() {
 		<-quit
 		os.Exit(1)
+	}()
+
+	go func() {
+		message.MessageBroker()
 	}()
 
 	jobs := []acmejob.Job{
