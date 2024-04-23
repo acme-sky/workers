@@ -6,7 +6,7 @@ import (
 
 	handlers "github.com/acme-sky/bpmn/workers/internal/handlers/acmesky"
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
-	"github.com/acme-sky/bpmn/workers/pkg/message"
+	"github.com/acme-sky/bpmn/workers/internal/message"
 )
 
 var quit = make(chan os.Signal, 1)
