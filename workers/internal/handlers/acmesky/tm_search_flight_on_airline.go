@@ -47,7 +47,7 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.Infof("Successfully completed job for ", interest)
+	log.Infof("Successfully completed job for %v", interest)
 	acmejob.JobVariables[job.Type] <- variables
 	acmejob.JobStatuses.Close(job.Type)
 }

@@ -51,6 +51,6 @@ func STCheckFlightForAnInterest(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.Infof("Successfully completed job for ", interest)
+	log.Infof("Successfully completed job for %v", interest)
 	acmejob.JobStatuses.Close(job.Type)
 }

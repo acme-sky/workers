@@ -61,7 +61,7 @@ func TMAskPaymentLinkAfter(client *zbc.Client, ctx context.Context) {
 		if _, err := res.Send(ctx); err != nil {
 			log.Infof(err.Error())
 		} else {
-			log.Infof("Sent message to `CM_Payment_Response` with correlation key = `0` and ", variables)
+			log.Infof("Sent message to `CM_Payment_Response` with correlation key = `0` and %v", variables)
 		}
 	}
 }
