@@ -1,3 +1,3 @@
 # ACME Sky
 
-![Screenshot](./screenshot.png)
+![Screenshot](./assets/screenshot.png)
