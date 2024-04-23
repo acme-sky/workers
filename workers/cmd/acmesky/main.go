@@ -22,7 +22,7 @@ func main() {
 	}()
 
 	go func() {
-		message.MessageBroker()
+		message.MessageBroker(client)
 	}()
 
 	jobs := []acmejob.Job{
