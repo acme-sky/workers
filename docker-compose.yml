@@ -9,6 +9,8 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - camunda
 
   zeebe: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
     image: camunda/zeebe:${CAMUNDA_PLATFORM_VERSION}
@@ -35,7 +37,7 @@ services:
     volumes:
       - zeebe:/usr/local/zeebe/data
     networks:
-      - default
+      - camunda
     depends_on:
       - elasticsearch
 
@@ -57,7 +59,7 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - default
+      - camunda
     depends_on:
       - zeebe
       - elasticsearch
@@ -80,7 +82,7 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - default
+      - camunda
     depends_on:
       - zeebe
       - elasticsearch
@@ -106,7 +108,7 @@ services:
       start_period: 30s
     env_file: connector-secrets.txt
     networks:
-      - default
+      - camunda
     depends_on:
       - zeebe
       - operate
@@ -137,7 +139,7 @@ services:
     volumes:
       - elastic:/usr/share/elasticsearch/data
     networks:
-      - default
+      - camunda
 
   kibana:
     image: docker.elastic.co/kibana/kibana:${ELASTIC_VERSION}
@@ -147,7 +149,7 @@ services:
     volumes:
       - kibana:/usr/share/kibana/data
     networks:
-      - default
+      - camunda
     depends_on:
       - elasticsearch
     profiles:
@@ -162,7 +164,7 @@ services:
       - PROCESS_ID=Process_ACME
       - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672/
     networks:
-      - default
+      - camunda
     depends_on:
       zeebe:
         condition: service_healthy
@@ -181,3 +183,6 @@ volumes:
   zeebe:
   elastic:
   kibana:
+
+networks:
+  camunda:
