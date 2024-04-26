@@ -4,9 +4,9 @@ import (
 	"os"
 	"os/signal"
 
-	handlers "github.com/acme-sky/bpmn/workers/internal/handlers/acmesky"
-	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
-	"github.com/acme-sky/bpmn/workers/internal/message"
+	handlers "github.com/acme-sky/workers/internal/handlers/acmesky"
+	acmejob "github.com/acme-sky/workers/internal/job"
+	"github.com/acme-sky/workers/internal/message"
 	"github.com/charmbracelet/log"
 	"github.com/getsentry/sentry-go"
 )

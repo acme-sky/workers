@@ -6,7 +6,7 @@ import (
 	"github.com/charmbracelet/log"
 	"math/rand"
 
-	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
+	acmejob "github.com/acme-sky/workers/internal/job"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"

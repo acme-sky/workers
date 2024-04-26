@@ -4,8 +4,8 @@ import (
 	"os"
 	"os/signal"
 
-	handlers "github.com/acme-sky/bpmn/workers/internal/handlers/user"
-	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
+	handlers "github.com/acme-sky/workers/internal/handlers/user"
+	acmejob "github.com/acme-sky/workers/internal/job"
 )
 
 var quit = make(chan os.Signal, 1)
