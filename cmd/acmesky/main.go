@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/acme-sky/workers/internal/db"
 	handlers "github.com/acme-sky/workers/internal/handlers/acmesky"
 	acmejob "github.com/acme-sky/workers/internal/job"
 	"github.com/acme-sky/workers/internal/message"
@@ -20,6 +21,12 @@ func main() {
 	})
 	if err != nil {
 		log.Errorf("sentry.Init: %s", err)
+	}
+
+	if _, err := db.InitDb(os.Getenv("DATABASE_DSN")); err != nil {
+		log.Fatalf("failed to connect database. err %v", err)
+
+		return
 	}
 
 	client := acmejob.CreateClient("Process_ACME")
