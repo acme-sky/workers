@@ -7,11 +7,21 @@ import (
 	handlers "github.com/acme-sky/bpmn/workers/internal/handlers/acmesky"
 	acmejob "github.com/acme-sky/bpmn/workers/internal/job"
 	"github.com/acme-sky/bpmn/workers/internal/message"
+	"github.com/charmbracelet/log"
+	"github.com/getsentry/sentry-go"
 )
 
 var quit = make(chan os.Signal, 1)
 
 func main() {
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn:              os.Getenv("SENTRY_DSN"),
+		TracesSampleRate: 0.7,
+	})
+	if err != nil {
+		log.Errorf("sentry.Init: %s", err)
+	}
+
 	client := acmejob.CreateClient("Process_ACME")
 	defer (*client).Close()
 

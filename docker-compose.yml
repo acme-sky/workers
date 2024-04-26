@@ -160,9 +160,10 @@ services:
     container_name: acmesky-workers
     environment:
       - ZEEBE_ADDRESS=zeebe:26500
-      - BPMN_FILE=bpmn/acmesky.bpmn
+      - BPMN_FILE=${BPMN_FILE}
       - PROCESS_ID=Process_ACME
       - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672/
+      - SENTRY_DSN=${SENTRY_DSN}
     networks:
       - camunda
     depends_on:
