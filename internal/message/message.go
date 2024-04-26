@@ -65,8 +65,16 @@ func MessageBroker(client *zbc.Client) {
 	for d := range msgs {
 		var body MessageBody
 		if err := json.Unmarshal(d.Body, &body); err != nil {
-			log.Errorf("Error on a received message: %s", err.Error())
+			log.Errorf("Error on a received message: %s %s %v", err.Error(), d.Body, body)
 			continue
+		}
+		instance, err := (*client).NewCreateInstanceCommand().BPMNProcessId("Process_ACME").LatestVersion().VariablesFromMap(body.Payload)
+		if err != nil {
+			panic(err)
+		}
+
+		if _, err := instance.Send(ctx); err != nil {
+			panic(err)
 		}
 		res, err := (*client).NewPublishMessageCommand().MessageName(body.Name).CorrelationKey(body.CorrelationKey).VariablesFromMap(body.Payload)
 
