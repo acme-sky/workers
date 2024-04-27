@@ -24,7 +24,6 @@ type MessageBody struct {
 
 // Instance a RabbitMQ message broker for messaging management
 func MessageBroker(client *zbc.Client) {
-	log.SetPrefix("[RabbitMQ]")
 	ctx := context.Background()
 	conn, err := amqp.Dial(os.Getenv("RABBITMQ_URI"))
 
@@ -77,7 +76,7 @@ func MessageBroker(client *zbc.Client) {
 			if _, err := res.Send(ctx); err != nil {
 				log.Error(err.Error())
 			} else {
-				log.Infof("Sent message to `%s` with correlation key = `%s` with payload = `%v`\n", body.Name, body.CorrelationKey, body.Payload)
+				log.Infof("[RabbitMQ] Sent message to `%s` with correlation key = `%s` with payload = `%v`\n", body.Name, body.CorrelationKey, body.Payload)
 			}
 		}
 		d.Ack(false)

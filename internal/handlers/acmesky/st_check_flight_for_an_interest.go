@@ -40,8 +40,6 @@ func STCheckFlightForAnInterest(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.SetPrefix(fmt.Sprintf("[%s] [%d] ", job.Type, jobKey))
-
 	log.Debug("Processing data:", variables)
 
 	ctx := context.Background()

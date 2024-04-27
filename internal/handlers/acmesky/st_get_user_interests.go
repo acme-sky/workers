@@ -27,8 +27,6 @@ func STGetUserInterests(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.SetPrefix(fmt.Sprintf("[%s] [%d] ", job.Type, jobKey))
-
 	log.Debug("Processing data:", variables)
 
 	ctx := context.Background()
@@ -38,6 +36,6 @@ func STGetUserInterests(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.Infof("Successfully completed job")
+	log.Infof("[%s] [%d] Successfully completed job", job.Type, jobKey)
 	acmejob.JobStatuses.Close(job.Type, 0)
 }
