@@ -1,76 +1,215 @@
 {
   "components": [
     {
-      "values": [
+      "components": [
         {
-          "label": "CTA",
-          "value": "1"
+          "values": [
+            {
+              "label": "CTA",
+              "value": "1"
+            },
+            {
+              "label": "BLQ",
+              "value": "2"
+            },
+            {
+              "label": "CPH",
+              "value": "3"
+            }
+          ],
+          "label": "Departaure airport",
+          "type": "select",
+          "layout": {
+            "row": "Row_1lkq4lr",
+            "columns": null
+          },
+          "id": "Field_04r8kr1",
+          "key": "flight1_departaure_airport_id",
+          "validate": {
+            "required": true
+          }
         },
         {
-          "label": "BLQ",
-          "value": "2"
+          "subtype": "date",
+          "dateLabel": "Departaure time",
+          "label": "Date time",
+          "type": "datetime",
+          "layout": {
+            "row": "Row_1lkq4lr",
+            "columns": null
+          },
+          "id": "Field_0qu3kyo",
+          "key": "flight1_departaure_time",
+          "validate": {
+            "required": true
+          }
         },
         {
-          "label": "CPH",
-          "value": "3"
+          "values": [
+            {
+              "label": "CTA",
+              "value": "1"
+            },
+            {
+              "label": "BLQ",
+              "value": "2"
+            },
+            {
+              "label": "CPH",
+              "value": "3"
+            }
+          ],
+          "label": "Arrival airport",
+          "type": "select",
+          "layout": {
+            "row": "Row_1nf5804",
+            "columns": null
+          },
+          "id": "Field_05vm4p0",
+          "key": "flight1_arrival_airport_id",
+          "validate": {
+            "required": true
+          }
+        },
+        {
+          "subtype": "date",
+          "dateLabel": "Arrival time",
+          "label": "Date time",
+          "type": "datetime",
+          "layout": {
+            "row": "Row_1nf5804",
+            "columns": null
+          },
+          "id": "Field_0db60v3",
+          "key": "flight1_arrival_time",
+          "validate": {
+            "required": true
+          }
         }
       ],
-      "label": "Departaure airport",
-      "type": "select",
+      "showOutline": true,
+      "label": "Departaure flight",
+      "type": "group",
       "layout": {
-        "row": "Row_0vql3cv",
-        "columns": null
+        "row": "Row_11ztcmt",
+        "columns": 16
       },
-      "id": "Field_04r8kr1",
-      "key": "departaure_airport_id"
+      "id": "Field_1s6mdj5"
     },
     {
-      "subtype": "date",
-      "dateLabel": "Departaure time",
-      "label": "Date time",
-      "type": "datetime",
+      "label": "Separator",
+      "type": "separator",
       "layout": {
-        "row": "Row_0vql3cv",
+        "row": "Row_0t8k09e",
         "columns": null
       },
-      "id": "Field_0qu3kyo",
-      "key": "departaure_time"
+      "id": "Field_0qeokt4"
     },
     {
-      "values": [
+      "text": "## Add a return flight",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_0kb8yvu",
+        "columns": null
+      },
+      "id": "Field_1igcfo5"
+    },
+    {
+      "components": [
         {
-          "label": "CTA",
-          "value": "1"
+          "values": [
+            {
+              "label": "CTA",
+              "value": "1"
+            },
+            {
+              "label": "BLQ",
+              "value": "2"
+            },
+            {
+              "label": "CPH",
+              "value": "3"
+            }
+          ],
+          "label": "Departaure airport",
+          "type": "select",
+          "layout": {
+            "row": "Row_1lkq4lx",
+            "columns": null
+          },
+          "id": "Field_04r8kr2",
+          "key": "flight2_departaure_airport_id",
+          "validate": {
+            "required": false
+          }
         },
         {
-          "label": "BLQ",
-          "value": "2"
+          "subtype": "date",
+          "dateLabel": "Departaure time",
+          "label": "Date time",
+          "type": "datetime",
+          "layout": {
+            "row": "Row_1lkq4lx",
+            "columns": null
+          },
+          "id": "Field_0qu331o",
+          "key": "flight2_departaure_time",
+          "validate": {
+            "required": false
+          }
         },
         {
-          "label": "CPH",
-          "value": "3"
+          "values": [
+            {
+              "label": "CTA",
+              "value": "1"
+            },
+            {
+              "label": "BLQ",
+              "value": "2"
+            },
+            {
+              "label": "CPH",
+              "value": "3"
+            }
+          ],
+          "label": "Arrival airport",
+          "type": "select",
+          "layout": {
+            "row": "Row_1nf9804",
+            "columns": null
+          },
+          "id": "Field_05vm1p0",
+          "key": "flight2_arrival_airport_id",
+          "validate": {
+            "required": false
+          }
+        },
+        {
+          "subtype": "date",
+          "dateLabel": "Arrival time",
+          "label": "Date time",
+          "type": "datetime",
+          "layout": {
+            "row": "Row_1nf9804",
+            "columns": null
+          },
+          "id": "Field_0312313",
+          "key": "flight2_arrival_time",
+          "validate": {
+            "required": false
+          }
         }
       ],
-      "label": "Arrival airport",
-      "type": "select",
+      "showOutline": true,
+      "label": "Group",
+      "type": "group",
       "layout": {
-        "row": "Row_0sgv2ff",
+        "row": "Row_1a9q8u7",
         "columns": null
       },
-      "id": "Field_05vm4p0",
-      "key": "arrival_airport_id"
-    },
-    {
-      "subtype": "date",
-      "dateLabel": "Arrival time",
-      "label": "Date time",
-      "type": "datetime",
-      "layout": {
-        "row": "Row_0sgv2ff",
-        "columns": null
-      },
-      "id": "Field_0db60v3",
-      "key": "arrival_time"
+      "id": "Field_1mz831p"
     }
   ],
   "type": "default",

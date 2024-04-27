@@ -9,6 +9,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
+// Task used to book a journey in an airline company.
 func TMBookJourney(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 

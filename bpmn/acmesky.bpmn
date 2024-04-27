@@ -159,7 +159,7 @@
     </bpmn:serviceTask>
     <bpmn:startEvent id="Start_Flight_Manager_New_Offer" name="Received an offer">
       <bpmn:outgoing>Flow_1htessf</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1qn70rz" messageRef="Message_0qr0q4c" />
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1qn70rz" messageRef="Message_3o41756" />
     </bpmn:startEvent>
     <bpmn:subProcess id="Activity_Foreach_Interest" name="For each available flight">
       <bpmn:incoming>Flow_15s8hw1</bpmn:incoming>
@@ -647,76 +647,215 @@
       <zeebe:userTaskForm id="UserTaskForm_0u7i0sk">{
   "components": [
     {
-      "values": [
+      "components": [
         {
-          "label": "CTA",
-          "value": "1"
+          "values": [
+            {
+              "label": "CTA",
+              "value": "1"
+            },
+            {
+              "label": "BLQ",
+              "value": "2"
+            },
+            {
+              "label": "CPH",
+              "value": "3"
+            }
+          ],
+          "label": "Departaure airport",
+          "type": "select",
+          "layout": {
+            "row": "Row_1lkq4lr",
+            "columns": null
+          },
+          "id": "Field_04r8kr1",
+          "key": "flight1_departaure_airport_id",
+          "validate": {
+            "required": true
+          }
         },
         {
-          "label": "BLQ",
-          "value": "2"
+          "subtype": "date",
+          "dateLabel": "Departaure time",
+          "label": "Date time",
+          "type": "datetime",
+          "layout": {
+            "row": "Row_1lkq4lr",
+            "columns": null
+          },
+          "id": "Field_0qu3kyo",
+          "key": "flight1_departaure_time",
+          "validate": {
+            "required": true
+          }
         },
         {
-          "label": "CPH",
-          "value": "3"
+          "values": [
+            {
+              "label": "CTA",
+              "value": "1"
+            },
+            {
+              "label": "BLQ",
+              "value": "2"
+            },
+            {
+              "label": "CPH",
+              "value": "3"
+            }
+          ],
+          "label": "Arrival airport",
+          "type": "select",
+          "layout": {
+            "row": "Row_1nf5804",
+            "columns": null
+          },
+          "id": "Field_05vm4p0",
+          "key": "flight1_arrival_airport_id",
+          "validate": {
+            "required": true
+          }
+        },
+        {
+          "subtype": "date",
+          "dateLabel": "Arrival time",
+          "label": "Date time",
+          "type": "datetime",
+          "layout": {
+            "row": "Row_1nf5804",
+            "columns": null
+          },
+          "id": "Field_0db60v3",
+          "key": "flight1_arrival_time",
+          "validate": {
+            "required": true
+          }
         }
       ],
-      "label": "Departaure airport",
-      "type": "select",
+      "showOutline": true,
+      "label": "Departaure flight",
+      "type": "group",
       "layout": {
-        "row": "Row_0vql3cv",
-        "columns": null
+        "row": "Row_11ztcmt",
+        "columns": 16
       },
-      "id": "Field_04r8kr1",
-      "key": "departaure_airport_id"
+      "id": "Field_1s6mdj5"
     },
     {
-      "subtype": "date",
-      "dateLabel": "Departaure time",
-      "label": "Date time",
-      "type": "datetime",
+      "label": "Separator",
+      "type": "separator",
       "layout": {
-        "row": "Row_0vql3cv",
+        "row": "Row_0t8k09e",
         "columns": null
       },
-      "id": "Field_0qu3kyo",
-      "key": "departaure_time"
+      "id": "Field_0qeokt4"
     },
     {
-      "values": [
+      "text": "## Add a return flight",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_0kb8yvu",
+        "columns": null
+      },
+      "id": "Field_1igcfo5"
+    },
+    {
+      "components": [
         {
-          "label": "CTA",
-          "value": "1"
+          "values": [
+            {
+              "label": "CTA",
+              "value": "1"
+            },
+            {
+              "label": "BLQ",
+              "value": "2"
+            },
+            {
+              "label": "CPH",
+              "value": "3"
+            }
+          ],
+          "label": "Departaure airport",
+          "type": "select",
+          "layout": {
+            "row": "Row_1lkq4lx",
+            "columns": null
+          },
+          "id": "Field_04r8kr2",
+          "key": "flight2_departaure_airport_id",
+          "validate": {
+            "required": false
+          }
         },
         {
-          "label": "BLQ",
-          "value": "2"
+          "subtype": "date",
+          "dateLabel": "Departaure time",
+          "label": "Date time",
+          "type": "datetime",
+          "layout": {
+            "row": "Row_1lkq4lx",
+            "columns": null
+          },
+          "id": "Field_0qu331o",
+          "key": "flight2_departaure_time",
+          "validate": {
+            "required": false
+          }
         },
         {
-          "label": "CPH",
-          "value": "3"
+          "values": [
+            {
+              "label": "CTA",
+              "value": "1"
+            },
+            {
+              "label": "BLQ",
+              "value": "2"
+            },
+            {
+              "label": "CPH",
+              "value": "3"
+            }
+          ],
+          "label": "Arrival airport",
+          "type": "select",
+          "layout": {
+            "row": "Row_1nf9804",
+            "columns": null
+          },
+          "id": "Field_05vm1p0",
+          "key": "flight2_arrival_airport_id",
+          "validate": {
+            "required": false
+          }
+        },
+        {
+          "subtype": "date",
+          "dateLabel": "Arrival time",
+          "label": "Date time",
+          "type": "datetime",
+          "layout": {
+            "row": "Row_1nf9804",
+            "columns": null
+          },
+          "id": "Field_0312313",
+          "key": "flight2_arrival_time",
+          "validate": {
+            "required": false
+          }
         }
       ],
-      "label": "Arrival airport",
-      "type": "select",
+      "showOutline": true,
+      "label": "Group",
+      "type": "group",
       "layout": {
-        "row": "Row_0sgv2ff",
+        "row": "Row_1a9q8u7",
         "columns": null
       },
-      "id": "Field_05vm4p0",
-      "key": "arrival_airport_id"
-    },
-    {
-      "subtype": "date",
-      "dateLabel": "Arrival time",
-      "label": "Date time",
-      "type": "datetime",
-      "layout": {
-        "row": "Row_0sgv2ff",
-        "columns": null
-      },
-      "id": "Field_0db60v3",
-      "key": "arrival_time"
+      "id": "Field_1mz831p"
     }
   ],
   "type": "default",
@@ -834,10 +973,14 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="TM_New_Request_Save_Flight" />
         <zeebe:ioMapping>
-          <zeebe:input source="=departaure_airport_id" target="departaure_airport_id" />
-          <zeebe:input source="=departaure_time" target="departaure_time" />
-          <zeebe:input source="=arrival_airport_id" target="arrival_airport_id" />
-          <zeebe:input source="=arrival_time" target="arrival_time" />
+          <zeebe:input source="=flight1_departaure_airport_id" target="flight1_departaure_airport_id" />
+          <zeebe:input source="=flight1_departaure_time" target="flight1_departaure_time" />
+          <zeebe:input source="=flight1_arrival_airport_id" target="flight1_arrival_airport_id" />
+          <zeebe:input source="=flight1_arrival_time" target="flight1_arrival_time" />
+          <zeebe:input source="=flight2_departaure_airport_id" target="flight2_departaure_airport_id" />
+          <zeebe:input source="=flight2_departaure_time" target="flight2_departaure_time" />
+          <zeebe:input source="=flight2_arrival_airport_id" target="flight2_arrival_airport_id" />
+          <zeebe:input source="=flight2_arrival_time" target="flight2_arrival_time" />
           <zeebe:output source="=departaure_airport_id" target="departaure_airport_id" />
           <zeebe:output source="=departaure_time" target="departaure_time" />
           <zeebe:output source="=arrival_airport_id" target="arrival_airport_id" />
@@ -918,6 +1061,7 @@
       <zeebe:subscription correlationKey="=&#34;0&#34;" />
     </bpmn:extensionElements>
   </bpmn:message>
+  <bpmn:message id="Message_3o41756" name="CM_Received_Last_Minute_Offer" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ACMESky">
       <bpmndi:BPMNShape id="Participant_1aiixuc_di" bpmnElement="Participant_ACME" isHorizontal="true">
@@ -973,19 +1117,12 @@
           <dc:Bounds x="256" y="1438" width="87" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_10ve1sc" bpmnElement="ST_Get_Available_Flights">
-        <dc:Bounds x="650" y="1110" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0ucq9hl_di" bpmnElement="TS_Check_Interests">
-        <dc:Bounds x="552" y="1132" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="538" y="1173" width="63" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_16hdy8m" bpmnElement="Activity_Foreach_Interest" isExpanded="true">
         <dc:Bounds x="800" y="1025" width="520" height="250" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0ergxdk" bpmnElement="Start_Check_Each_Interest">
+        <dc:Bounds x="832" y="1132" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_18lw8i9" bpmnElement="ST_Prepare_Offer">
         <dc:Bounds x="940" y="1110" width="100" height="80" />
@@ -995,9 +1132,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_09s2vw5" bpmnElement="End_Check_Each_Interest">
         <dc:Bounds x="1262" y="1132" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0ergxdk" bpmnElement="Start_Check_Each_Interest">
-        <dc:Bounds x="832" y="1132" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_1q1d7sh" bpmnElement="Flow_0b8q3aw">
         <di:waypoint x="1040" y="1150" />
@@ -1394,6 +1528,16 @@
       <bpmndi:BPMNShape id="Event_1xh39ie_di" bpmnElement="End_Check_Airline">
         <dc:Bounds x="1632" y="1457" width="36" height="36" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_10ve1sc" bpmnElement="ST_Get_Available_Flights">
+        <dc:Bounds x="650" y="1110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ucq9hl_di" bpmnElement="TS_Check_Interests">
+        <dc:Bounds x="552" y="1132" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="538" y="1173" width="63" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0ieguxi_di" bpmnElement="Event_0jl8r24">
         <dc:Bounds x="4050" y="701" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -1403,10 +1547,6 @@
       <bpmndi:BPMNEdge id="BPMNEdge_0xsv16z" bpmnElement="Flow_066ca6d">
         <di:waypoint x="1320" y="1150" />
         <di:waypoint x="1382" y="1150" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_1mnk5ly" bpmnElement="Flow_15s8hw1">
-        <di:waypoint x="750" y="1150" />
-        <di:waypoint x="800" y="1150" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0ckkzu4_di" bpmnElement="Flow_0ckkzu4">
         <di:waypoint x="1628" y="810" />
@@ -1499,6 +1639,10 @@
       <bpmndi:BPMNEdge id="Flow_0rlehj8_di" bpmnElement="Flow_0rlehj8">
         <di:waypoint x="847" y="1475" />
         <di:waypoint x="880" y="1475" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1mnk5ly" bpmnElement="Flow_15s8hw1">
+        <di:waypoint x="750" y="1150" />
+        <di:waypoint x="800" y="1150" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0rpwl97_di" bpmnElement="Flow_0rpwl97">
         <di:waypoint x="588" y="1150" />
@@ -1761,11 +1905,6 @@
         <di:waypoint x="269" y="1300" />
         <di:waypoint x="390" y="1435" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_0yuwuum_di" bpmnElement="DataInputAssociation_0yuwuum">
-        <di:waypoint x="294" y="1220" />
-        <di:waypoint x="700" y="1220" />
-        <di:waypoint x="700" y="1190" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_03ysw1z_di" bpmnElement="DataInputAssociation_03ysw1z">
         <di:waypoint x="990" y="835" />
         <di:waypoint x="990" y="1110" />
@@ -1790,6 +1929,11 @@
         <di:waypoint x="271" y="1075" />
         <di:waypoint x="370" y="1340" />
         <di:waypoint x="747" y="1459" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_0yuwuum_di" bpmnElement="DataInputAssociation_0yuwuum">
+        <di:waypoint x="294" y="1220" />
+        <di:waypoint x="700" y="1220" />
+        <di:waypoint x="700" y="1190" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0tb22zr_di" bpmnElement="DataInputAssociation_0tb22zr">
         <di:waypoint x="1001" y="505" />

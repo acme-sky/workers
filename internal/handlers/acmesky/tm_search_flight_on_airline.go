@@ -41,7 +41,39 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 	for i := 0; i < len(interests); i++ {
 		interest := interests[i].(map[string]interface{})
 		user := interest["user"].(map[string]interface{})
-		response, err := http.MakeRequest(endpoint, interest)
+
+		payload := map[string]interface{}{
+			"departaure_airport": interest["flight1_departaure_airport"].(string),
+			"departaure_time":    interest["flight1_departaure_time"].(string),
+			"arrival_airport":    interest["flight1_arrival_airport"].(string),
+			"arrival_time":       interest["flight1_arrival_time"].(string),
+		}
+
+		response, err := http.MakeRequest(endpoint, payload)
+
+		if err != nil {
+			log.Errorf("Error for airline `%s`: %s", airline, err.Error())
+		} else {
+			if response.Count > 0 {
+				for _, data := range response.Data {
+					data["user_id"] = user["ID"]
+					flights = append(flights, data)
+				}
+			}
+		}
+
+		if interest["flight2_departaure_airport"] == nil {
+			continue
+		}
+
+		payload = map[string]interface{}{
+			"departaure_airport": interest["flight2_departaure_airport"].(string),
+			"departaure_time":    interest["flight2_departaure_time"].(string),
+			"arrival_airport":    interest["flight2_arrival_airport"].(string),
+			"arrival_time":       interest["flight2_arrival_time"].(string),
+		}
+
+		response, err = http.MakeRequest(endpoint, payload)
 
 		if err != nil {
 			log.Errorf("Error for airline `%s`: %s", airline, err.Error())
@@ -54,7 +86,6 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 				flights = append(flights, data)
 			}
 		}
-
 	}
 
 	variables["flights"] = flights

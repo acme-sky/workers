@@ -36,13 +36,13 @@ func MakeRequest(endpoint string, body map[string]interface{}) (*ResponseBody, e
 		return nil, err
 	}
 
-	if res.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("HTTP request returned a status %d", res.StatusCode))
-	}
-
 	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Could not read response body: %s", err.Error()))
+	}
+
+	if res.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("HTTP request returned a status %d and response `%s`", res.StatusCode, resBody))
 	}
 
 	var responseBody ResponseBody

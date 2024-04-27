@@ -8,7 +8,7 @@
         "columns": null
       },
       "id": "Field_1dch8qa",
-      "key": "offer_text"
+      "key": "token"
     }
   ],
   "type": "default",
