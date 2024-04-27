@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"github.com/charmbracelet/log"
 	"math/rand"
 
