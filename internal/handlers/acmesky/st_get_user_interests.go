@@ -30,7 +30,7 @@ func STGetUserInterests(client worker.JobClient, job entities.Job) {
 	db, _ := db.GetDb()
 	var interests []models.Interest
 
-	if found := db.Where("departaure_time::date >= now()::date").Find(&interests); found == nil {
+	if found := db.Where("departaure_time::date >= now()::date").Preload("User").Find(&interests); found == nil {
 		log.Errorf("[%s] [%d] Interests not found", job.Type, jobKey)
 		acmejob.FailJob(client, job)
 		return
