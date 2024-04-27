@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"github.com/charmbracelet/log"
 
 	acmejob "github.com/acme-sky/workers/internal/job"
