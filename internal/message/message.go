@@ -68,14 +68,7 @@ func MessageBroker(client *zbc.Client) {
 			log.Errorf("Error on a received message: %s %s %v", err.Error(), d.Body, body)
 			continue
 		}
-		instance, err := (*client).NewCreateInstanceCommand().BPMNProcessId("Process_ACME").LatestVersion().VariablesFromMap(body.Payload)
-		if err != nil {
-			panic(err)
-		}
 
-		if _, err := instance.Send(ctx); err != nil {
-			panic(err)
-		}
 		res, err := (*client).NewPublishMessageCommand().MessageName(body.Name).CorrelationKey(body.CorrelationKey).VariablesFromMap(body.Payload)
 
 		if err != nil {
