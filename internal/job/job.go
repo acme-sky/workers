@@ -38,10 +38,10 @@ func (sm *jobStatusesMap) Set(key string, value chan int) {
 // This function should closes the channel but, since we have an issue here,
 // just edit the value.
 // FIXME: should close the channel `close(sm.m[key])`
-func (sm *jobStatusesMap) Close(key string) {
+func (sm *jobStatusesMap) Close(key string, value int) {
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
-	sm.m[key] <- 0
+	sm.m[key] <- value
 }
 
 // Get the value for the map with a `key`
@@ -136,10 +136,16 @@ func (job *Job) Handle(client *zbc.Client) {
 	// worker.Close()
 	// worker.AwaitClose()
 
-	JobStatuses.Get(job.Name)
-	<-ch
+	value, _ := JobStatuses.Get(job.Name)
+	pid := <-value
+	ch <- pid
+	if pid != 0 {
+		if _, err := (*client).NewCancelInstanceCommand().ProcessInstanceKey(int64(pid)).Send(ctx); err != nil {
+			log.Errorf("Error canceling the instance: %s", err.Error())
+		}
+	}
 
-	// HandleJob(client, job)
+	job.Handle(client)
 }
 
 // Job used in case of a failure. Create a new `FailJobCommand` and retry. In
@@ -200,7 +206,6 @@ func CreateClient(pid string) *zbc.Client {
 	if result, err = instance.Send(ctx); err != nil {
 		panic(err)
 	}
-
 	log.Infof(result.String())
 
 	return &client

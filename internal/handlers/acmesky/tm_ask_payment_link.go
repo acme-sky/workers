@@ -42,7 +42,7 @@ func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 	acmejob.JobVariables[job.Type] <- variables
 	acmejob.JobAfter[job.Type] <- 0
 
-	acmejob.JobStatuses.Close(job.Type)
+	acmejob.JobStatuses.Close(job.Type, 0)
 }
 
 // Simulate a response from Bank participant

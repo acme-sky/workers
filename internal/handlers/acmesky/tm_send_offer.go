@@ -44,5 +44,5 @@ func TMSendOffer(client worker.JobClient, job entities.Job) {
 	log.Infof("Successfully completed job")
 	acmejob.JobVariables[job.Type] <- payload
 
-	acmejob.JobStatuses.Close(job.Type)
+	acmejob.JobStatuses.Close(job.Type, 0)
 }

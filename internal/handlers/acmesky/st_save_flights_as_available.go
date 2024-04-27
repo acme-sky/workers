@@ -37,5 +37,5 @@ func STSaveFlightsAsAvailable(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Infof("Successfully completed job")
-	acmejob.JobStatuses.Close(job.Type)
+	acmejob.JobStatuses.Close(job.Type, 0)
 }
