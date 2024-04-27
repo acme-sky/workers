@@ -10,6 +10,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     networks:
+      - default
       - camunda
 
   zeebe: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
@@ -155,6 +156,20 @@ services:
     profiles:
       - kibana
 
+  postgres:
+    image: postgres:16-alpine
+    container_name: acmesky-workers-postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - default
+      - camunda
+
   workers:
     image: acmesky-workers
     container_name: acmesky-workers
@@ -164,9 +179,12 @@ services:
       - PROCESS_ID=Process_ACME
       - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672/
       - SENTRY_DSN=${SENTRY_DSN}
+      - DATABASE_DSN=${DATABASE_DSN}
     networks:
       - camunda
     depends_on:
+      postgres:
+        condition: service_started
       zeebe:
         condition: service_healthy
       rabbitmq:
@@ -184,6 +202,7 @@ volumes:
   zeebe:
   elastic:
   kibana:
+  postgres-data:
 
 networks:
   camunda:
