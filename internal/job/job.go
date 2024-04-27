@@ -16,11 +16,11 @@ import (
 // A safer map using a mutex system to avoid concurrent writes
 type jobStatusesMap struct {
 	mu sync.Mutex
-	m  map[string](chan int)
+	m  map[string](chan int64)
 }
 
 // Map used to sync jobs
-var JobStatuses = jobStatusesMap{m: make(map[string](chan int))}
+var JobStatuses = jobStatusesMap{m: make(map[string](chan int64))}
 
 // Map used to sync variables for jobs
 var JobVariables = make(map[string](chan map[string]interface{}))
@@ -29,7 +29,7 @@ var JobVariables = make(map[string](chan map[string]interface{}))
 var JobAfter = make(map[string](chan int))
 
 // Set function for a `key` in the map
-func (sm *jobStatusesMap) Set(key string, value chan int) {
+func (sm *jobStatusesMap) Set(key string, value chan int64) {
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
 	sm.m[key] = value
@@ -38,14 +38,14 @@ func (sm *jobStatusesMap) Set(key string, value chan int) {
 // This function should closes the channel but, since we have an issue here,
 // just edit the value.
 // FIXME: should close the channel `close(sm.m[key])`
-func (sm *jobStatusesMap) Close(key string, value int) {
+func (sm *jobStatusesMap) Close(key string, value int64) {
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
 	sm.m[key] <- value
 }
 
 // Get the value for the map with a `key`
-func (sm *jobStatusesMap) Get(key string) (chan int, bool) {
+func (sm *jobStatusesMap) Get(key string) (chan int64, bool) {
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
 	value, ok := sm.m[key]
@@ -85,7 +85,7 @@ func (job *Job) Handle(client *zbc.Client) {
 	ctx := context.Background()
 
 	// Start all the channel used to sync status, variables and after function
-	ch := make(chan int, 1)
+	ch := make(chan int64, 1)
 	JobStatuses.Set(job.Name, ch)
 
 	JobVariables[job.Name] = make(chan map[string]interface{}, 1)
@@ -140,7 +140,7 @@ func (job *Job) Handle(client *zbc.Client) {
 	pid := <-value
 	ch <- pid
 	if pid != 0 {
-		if _, err := (*client).NewCancelInstanceCommand().ProcessInstanceKey(int64(pid)).Send(ctx); err != nil {
+		if _, err := (*client).NewCancelInstanceCommand().ProcessInstanceKey(pid).Send(ctx); err != nil {
 			log.Errorf("Error canceling the instance: %s", err.Error())
 		}
 	}
@@ -154,10 +154,12 @@ func FailJob(client worker.JobClient, job entities.Job) {
 	log.Error("Failed to complete job", "job", job.GetKey())
 
 	ctx := context.Background()
-	_, err := client.NewFailJobCommand().JobKey(job.GetKey()).Retries(job.Retries - 1).Send(ctx)
+	_, err := client.NewFailJobCommand().JobKey(job.GetKey()).Retries(0).Send(ctx)
 	if err != nil {
-		panic(err)
+		log.Errorf("Error %s", err.Error())
 	}
+
+	JobStatuses.Close(job.Type, job.ProcessInstanceKey)
 }
 
 // Main function whcih creates a new Zeebe client.
