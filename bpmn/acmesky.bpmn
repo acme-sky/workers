@@ -677,7 +677,8 @@
           "key": "flight1_departaure_time",
           "validate": {
             "required": true
-          }
+          },
+          "disallowPassedDates": true
         },
         {
           "values": [
@@ -719,7 +720,8 @@
           "key": "flight1_arrival_time",
           "validate": {
             "required": true
-          }
+          },
+          "disallowPassedDates": true
         }
       ],
       "showOutline": true,
@@ -792,7 +794,8 @@
           "key": "flight2_departaure_time",
           "validate": {
             "required": false
-          }
+          },
+          "disallowPassedDates": true
         },
         {
           "values": [
@@ -834,7 +837,8 @@
           "key": "flight2_arrival_time",
           "validate": {
             "required": false
-          }
+          },
+          "disallowPassedDates": true
         }
       ],
       "showOutline": true,
