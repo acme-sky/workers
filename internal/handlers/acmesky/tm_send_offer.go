@@ -9,6 +9,9 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
+// Send Task activity which sends offer informations to Prontogram participant.
+// It copies `offer` environment variable to the object that will be sent via
+// the message.
 func TMSendOffer(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
@@ -18,18 +21,11 @@ func TMSendOffer(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	payload := variables
-	payload["message"] = "Hello John Doe, this is the offer token for your flight from <b>BLQ</b> to <b>CPH</b> in date April 10th 11:10 - April 10th 13:30.<br><a href=\"#\" target=\"_blank\">1234</a>"
-	payload["expired"] = "1712855681"
-	payload["user"] = "sa"
-
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
 		acmejob.FailJob(client, job)
 		return
 	}
-
-	log.Debug("Processing data:", variables)
 
 	ctx := context.Background()
 	_, err = request.Send(ctx)
@@ -39,7 +35,7 @@ func TMSendOffer(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Infof("[%s] [%d] Successfully completed job", job.Type, jobKey)
-	acmejob.JobVariables[job.Type] <- payload
 
+	acmejob.JobVariables[job.Type] <- variables["offer"].(map[string]interface{})
 	acmejob.JobStatuses.Close(job.Type, 0)
 }

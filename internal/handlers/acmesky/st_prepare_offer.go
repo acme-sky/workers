@@ -62,6 +62,8 @@ func STPrepareOffer(client worker.JobClient, job entities.Job) {
 		}
 	}
 
+	variables["offer"] = offer
+
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
 		acmejob.FailJob(client, job)
