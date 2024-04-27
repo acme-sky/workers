@@ -25,15 +25,15 @@ func STGetAvailableFlights(client worker.JobClient, job entities.Job) {
 	}
 
 	db, _ := db.GetDb()
-	var interests []models.Interest
+	var available_flights []models.AvailableFlight
 
-	if found := db.Where("departaure_time::date >= now()::date").Find(&interests); found == nil {
+	if found := db.Where("departaure_time::date >= now()::date AND offer_sent = false").Preload("User").Find(&available_flights); found == nil {
 		log.Errorf("[%s] [%d] Interests not found", job.Type, jobKey)
 		acmejob.FailJob(client, job)
 		return
 	}
 
-	variables["interests"] = interests
+	variables["available_flights"] = available_flights
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
