@@ -14,7 +14,15 @@ import (
 )
 
 // Service Task raised by ACMESky Profile lame.
-// Save flight interest for an user.
+// Save flight interest for an user. It wants a payload like:
+//
+// {
+// "departaure_airport": "CTA",
+// "departuare_time":    "2024-04-26T21:50:00Z",
+// "arrival_airport":    "CPH",
+// "arrival_time":       "2024-04-27T01:50:00Z",
+// "user_id":            1,
+// }
 func STSaveFlight(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
