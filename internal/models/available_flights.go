@@ -18,6 +18,7 @@ type AvailableFlight struct {
 	ArrivalTime       time.Time `gorm:"column:arrival_time" json:"arrival_time"`
 	ArrivalAirport    string    `gorm:"column:arrival_airport" json:"arrival_airport"`
 	Code              string    `gorm:"column:code" json:"code"`
+	Cost              float32   `gorm:"column:cost" json:"cost"`
 	UserId            int       `json:"-"`
 	User              User      `gorm:"foreignKey:UserId" json:"user"`
 }
@@ -29,6 +30,7 @@ type AvailableFlightInput struct {
 	ArrivalTime       time.Time `json:"arrival_time" binding:"required"`
 	ArrivalAirport    string    `json:"arrival_airport" binding:"required"`
 	Code              string    `gorm:"column:code" json:"code"`
+	Cost              float32   `gorm:"column:cost" json:"cost"`
 	UserId            int       `json:"user_id" binding:"required"`
 }
 
@@ -73,6 +75,7 @@ func NewAvailableFlight(in AvailableFlightInput) AvailableFlight {
 		ArrivalTime:       in.ArrivalTime,
 		ArrivalAirport:    in.ArrivalAirport,
 		Code:              in.Code,
+		Cost:              in.Cost,
 		UserId:            in.UserId,
 	}
 }

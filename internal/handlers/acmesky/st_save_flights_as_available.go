@@ -39,8 +39,8 @@ func STSaveFlightsAsAvailable(client worker.JobClient, job entities.Job) {
 		}
 
 		var available_flight models.AvailableFlight
-		if found := db.Where("code = ? AND departaure_airport = ? AND arrival_airport = ? AND departaure_time = ? AND arrival_time = ?",
-			input.Code, input.DepartaureAirport, input.ArrivalAirport, input.DepartaureTime, input.ArrivalTime).First(&available_flight).Error; found == nil {
+		if found := db.Where("code = ? AND cost = ? AND departaure_airport = ? AND arrival_airport = ? AND departaure_time = ? AND arrival_time = ?",
+			input.Code, input.Cost, input.DepartaureAirport, input.ArrivalAirport, input.DepartaureTime, input.ArrivalTime).First(&available_flight).Error; found == nil {
 			log.Warnf("[%s] [%d] Skip an already saved flight", job.Type, jobKey)
 			continue
 		}
