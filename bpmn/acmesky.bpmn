@@ -123,6 +123,9 @@
     <bpmn:serviceTask id="ST_Retrieve_Offer" name="Retrieve offer">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="ST_Retrieve_Offer" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=token" target="token" />
+        </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_09p4d93</bpmn:incoming>
       <bpmn:outgoing>Flow_1xpmumi</bpmn:outgoing>
@@ -230,10 +233,10 @@
       <bpmn:outgoing>Flow_0s4t45f</bpmn:outgoing>
       <bpmn:sequenceFlow id="Flow_0rd90dd" sourceRef="ST_Change_Offer_Status" targetRef="End_Check_Offer" />
       <bpmn:sequenceFlow id="Flow_0uf9jdp" sourceRef="EG_Check_Offer_Is_Good" targetRef="EE_Check_Offer">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=token_is_valid = false</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=offer_id = nil</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_0d3u10h" name="Yes" sourceRef="EG_Check_Offer_Is_Good" targetRef="ST_Change_Offer_Status">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=token_is_valid = true</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=offer_id != nil</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_0206tn2" sourceRef="Start_Check_Offer" targetRef="EG_Check_Offer_Is_Good" />
       <bpmn:serviceTask id="ST_Change_Offer_Status" name="Change offer status">
@@ -736,7 +739,7 @@
         "columns": null
       },
       "id": "Field_1dch8qa",
-      "key": "offer_text"
+      "key": "token"
     }
   ],
   "type": "default",

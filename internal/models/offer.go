@@ -17,6 +17,7 @@ type Offer struct {
 	Message   string    `gorm:"column:message" json:"message"`
 	Expired   string    `gorm:"column:expired" json:"expired"`
 	Token     string    `gorm:"column:token" json:"token"`
+	IsUsed    bool      `gorm:"column:is_used" json:"is_user"`
 	UserId    int       `json:"-"`
 	User      User      `gorm:"foreignKey:UserId" json:"user"`
 }
@@ -70,8 +71,9 @@ func NewOffer(in OfferInput) Offer {
 	return Offer{
 		CreatedAt: time.Now(),
 		Message:   message,
-		Expired:   time.Now().Add(time.Hour * time.Duration(offerValidationTime)).Format("20060102150405"),
+		Expired:   strconv.FormatInt(time.Now().Add(time.Hour*time.Duration(offerValidationTime)).Unix(), 10),
 		Token:     token,
+		IsUsed:    false,
 		UserId:    in.UserId,
 	}
 }
