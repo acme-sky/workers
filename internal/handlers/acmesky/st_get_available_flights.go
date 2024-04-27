@@ -13,9 +13,9 @@ import (
 )
 
 // Service Task raised by ACMESky Interests Manager lame every 1 hour.
-// Get interests info from the database and save them in a new env variable read
+// Get available flights info from the database and save them in a new env variable read
 // by "Activity_Foreach_Interest".
-func STGetInterests(client worker.JobClient, job entities.Job) {
+func STGetAvailableFlights(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -49,7 +49,7 @@ func STGetInterests(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Infof("[%s] [%d] Successfully completed job", job.Type, jobKey)
-	acmejob.JobVariables[job.Type] <- variables
 
+	acmejob.JobVariables[job.Type] <- variables
 	acmejob.JobStatuses.Close(job.Type, 0)
 }

@@ -12,7 +12,7 @@ import (
 // Interest model
 type Interest struct {
 	Id                uint      `gorm:"column:id" json:"id"`
-	CreatedAt         time.Time `gorm:"column:created_at" json:"crated_at"`
+	CreatedAt         time.Time `gorm:"column:created_at" json:"created_at"`
 	DepartaureTime    time.Time `gorm:"column:departaure_time" json:"departaure_time"`
 	DepartaureAirport string    `gorm:"column:departaure_airport" json:"departaure_airport"`
 	ArrivalTime       time.Time `gorm:"column:arrival_time" json:"arrival_time"`

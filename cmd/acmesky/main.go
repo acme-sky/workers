@@ -48,8 +48,7 @@ func main() {
 		{Name: "TM_Ack_Flight_Request_Save", Handler: handlers.TMAckFlightRequestSave, Message: &acmejob.MessageCommand{Name: "CM_Ack_Flight_Request_Save", CorrelationKey: "0"}},
 
 		// Interests manager lane
-		{Name: "ST_Get_Interests", Handler: handlers.STGetInterests},
-		{Name: "ST_Check_Flight_For_An_Interest", Handler: handlers.STCheckFlightForAnInterest},
+		{Name: "ST_Get_Available_Flights", Handler: handlers.STGetAvailableFlights},
 		{Name: "ST_Prepare_Offer", Handler: handlers.STPrepareOffer},
 		{Name: "TM_Send_Offer", Handler: handlers.TMSendOffer, Message: &acmejob.MessageCommand{Name: "CM_New_Message_For_Prontogram", CorrelationKey: "0"}},
 

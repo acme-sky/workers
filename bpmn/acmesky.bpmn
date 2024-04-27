@@ -59,9 +59,9 @@
       </bpmn:lane>
       <bpmn:lane id="Lane_0nrkxij" name="Interests management">
         <bpmn:flowNodeRef>End_Check_Interests</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>TS_Check_Interests</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ST_Get_Interests</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_Foreach_Interest</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ST_Get_Available_Flights</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TS_Check_Interests</bpmn:flowNodeRef>
         <bpmn:childLaneSet id="LaneSet_146b69j" />
       </bpmn:lane>
       <bpmn:lane id="Lane_08pvrfu" name="User profile">
@@ -89,8 +89,6 @@
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="Flow_066ca6d" sourceRef="Activity_Foreach_Interest" targetRef="End_Check_Interests" />
-    <bpmn:sequenceFlow id="Flow_0rpwl97" sourceRef="TS_Check_Interests" targetRef="ST_Get_Interests" />
-    <bpmn:sequenceFlow id="Flow_15s8hw1" sourceRef="ST_Get_Interests" targetRef="Activity_Foreach_Interest" />
     <bpmn:sequenceFlow id="Flow_0ckkzu4" sourceRef="CM_Check_Offer" targetRef="Event_1pqdi5r" />
     <bpmn:sequenceFlow id="Flow_1ggiirr" sourceRef="TS_Check_Airline" targetRef="ST_Get_User_Interests" />
     <bpmn:sequenceFlow id="Flow_0uv1725" sourceRef="Activity_Foreach_AirlineService" targetRef="End_Check_Airline" />
@@ -160,34 +158,22 @@
       <bpmn:outgoing>Flow_1htessf</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1qn70rz" messageRef="Message_0qr0q4c" />
     </bpmn:startEvent>
-    <bpmn:subProcess id="Activity_Foreach_Interest" name="For each interest">
+    <bpmn:subProcess id="Activity_Foreach_Interest" name="For each available flight">
       <bpmn:incoming>Flow_15s8hw1</bpmn:incoming>
       <bpmn:outgoing>Flow_066ca6d</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true">
         <bpmn:extensionElements>
-          <zeebe:loopCharacteristics inputCollection="=interests" />
+          <zeebe:loopCharacteristics inputCollection="=available_flights" />
         </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:startEvent id="Start_Check_Each_Interest">
-        <bpmn:outgoing>Flow_1u6sjen</bpmn:outgoing>
+        <bpmn:outgoing>Flow_01gu6fv</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:serviceTask id="ST_Check_Flight_For_An_Interest" name="Check if a good flight is available for this interest">
-        <bpmn:extensionElements>
-          <zeebe:taskDefinition type="ST_Check_Flight_For_An_Interest" />
-        </bpmn:extensionElements>
-        <bpmn:incoming>Flow_1u6sjen</bpmn:incoming>
-        <bpmn:outgoing>Flow_17oa3fe</bpmn:outgoing>
-        <bpmn:property id="Property_0n9n9xq" name="__targetRef_placeholder" />
-        <bpmn:dataInputAssociation id="DataInputAssociation_0yuwuum">
-          <bpmn:sourceRef>DB_Available_Flights</bpmn:sourceRef>
-          <bpmn:targetRef>Property_0n9n9xq</bpmn:targetRef>
-        </bpmn:dataInputAssociation>
-      </bpmn:serviceTask>
       <bpmn:serviceTask id="ST_Prepare_Offer" name="Prepare an offer">
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="ST_Prepare_Offer" />
         </bpmn:extensionElements>
-        <bpmn:incoming>Flow_10jlgcy</bpmn:incoming>
+        <bpmn:incoming>Flow_01gu6fv</bpmn:incoming>
         <bpmn:outgoing>Flow_0b8q3aw</bpmn:outgoing>
         <bpmn:property id="Property_015v3wi" name="__targetRef_placeholder" />
         <bpmn:dataInputAssociation id="DataInputAssociation_03ysw1z">
@@ -207,23 +193,10 @@
       </bpmn:sendTask>
       <bpmn:endEvent id="End_Check_Each_Interest">
         <bpmn:incoming>Flow_1xm6mep</bpmn:incoming>
-        <bpmn:incoming>Flow_0m2o3uy</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_1u6sjen" sourceRef="Start_Check_Each_Interest" targetRef="ST_Check_Flight_For_An_Interest" />
-      <bpmn:sequenceFlow id="Flow_17oa3fe" sourceRef="ST_Check_Flight_For_An_Interest" targetRef="EG_Flight_Is_Available" />
-      <bpmn:sequenceFlow id="Flow_10jlgcy" name="Yes" sourceRef="EG_Flight_Is_Available" targetRef="ST_Prepare_Offer">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=flight != null</bpmn:conditionExpression>
-      </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_0b8q3aw" sourceRef="ST_Prepare_Offer" targetRef="TM_Send_Offer" />
       <bpmn:sequenceFlow id="Flow_1xm6mep" sourceRef="TM_Send_Offer" targetRef="End_Check_Each_Interest" />
-      <bpmn:exclusiveGateway id="EG_Flight_Is_Available" name="Flight is available?">
-        <bpmn:incoming>Flow_17oa3fe</bpmn:incoming>
-        <bpmn:outgoing>Flow_10jlgcy</bpmn:outgoing>
-        <bpmn:outgoing>Flow_0m2o3uy</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_0m2o3uy" name="No" sourceRef="EG_Flight_Is_Available" targetRef="End_Check_Each_Interest">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=flight = null</bpmn:conditionExpression>
-      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_01gu6fv" sourceRef="Start_Check_Each_Interest" targetRef="ST_Prepare_Offer" />
     </bpmn:subProcess>
     <bpmn:endEvent id="End_ACME_UserProfile">
       <bpmn:incoming>Flow_1qmul68</bpmn:incoming>
@@ -248,24 +221,6 @@
       <bpmn:outgoing>Flow_1qmul68</bpmn:outgoing>
     </bpmn:sendTask>
     <bpmn:dataStoreReference id="DB_Available_Flights" name="Available flights" />
-    <bpmn:serviceTask id="ST_Get_Interests" name="Get interests">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="ST_Get_Interests" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0rpwl97</bpmn:incoming>
-      <bpmn:outgoing>Flow_15s8hw1</bpmn:outgoing>
-      <bpmn:property id="Property_02a3u88" name="__targetRef_placeholder" />
-      <bpmn:dataInputAssociation id="DataInputAssociation_1ikohrl">
-        <bpmn:sourceRef>DB_Interests</bpmn:sourceRef>
-        <bpmn:targetRef>Property_02a3u88</bpmn:targetRef>
-      </bpmn:dataInputAssociation>
-    </bpmn:serviceTask>
-    <bpmn:startEvent id="TS_Check_Interests" name="Every 1 hour">
-      <bpmn:outgoing>Flow_0rpwl97</bpmn:outgoing>
-      <bpmn:timerEventDefinition id="TimerEventDefinition_1up6sed">
-        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/PT1H</bpmn:timeCycle>
-      </bpmn:timerEventDefinition>
-    </bpmn:startEvent>
     <bpmn:endEvent id="End_Check_Interests">
       <bpmn:incoming>Flow_066ca6d</bpmn:incoming>
     </bpmn:endEvent>
@@ -545,7 +500,7 @@
       <bpmn:outgoing>Flow_0uv1725</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true">
         <bpmn:extensionElements>
-          <zeebe:loopCharacteristics inputCollection="=interests" />
+          <zeebe:loopCharacteristics inputCollection="=airlines" />
         </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:startEvent id="Start_Check_Each_Airline">
@@ -565,7 +520,7 @@
       </bpmn:exclusiveGateway>
       <bpmn:sequenceFlow id="Flow_1acshm1" sourceRef="TM_Search_Flights_On_Airline" targetRef="EG_Flight_Found" />
       <bpmn:sequenceFlow id="Flow_15d482w" name="Yes" sourceRef="EG_Flight_Found" targetRef="ST_Save_Flights_As_Available">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=flight_is_found = true</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=flights != []</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:serviceTask id="ST_Save_Flights_As_Available" name="Save flights as available">
         <bpmn:extensionElements>
@@ -584,7 +539,7 @@
         <bpmn:incoming>Flow_0mlxip4</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_1d7ebte" name="No" sourceRef="EG_Flight_Found" targetRef="End_Check_Each_Airline">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=flight_is_found = false</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=flights = []</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_0mlxip4" sourceRef="ST_Save_Flights_As_Available" targetRef="End_Check_Each_Airline" />
       <bpmn:sequenceFlow id="Flow_04x2okx" sourceRef="Start_Check_Each_Airline" targetRef="TM_Search_Flights_On_Airline" />
@@ -605,6 +560,26 @@
     <bpmn:endEvent id="End_Check_Airline">
       <bpmn:incoming>Flow_0uv1725</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_15s8hw1" sourceRef="ST_Get_Available_Flights" targetRef="Activity_Foreach_Interest" />
+    <bpmn:sequenceFlow id="Flow_0rpwl97" sourceRef="TS_Check_Interests" targetRef="ST_Get_Available_Flights" />
+    <bpmn:serviceTask id="ST_Get_Available_Flights" name="Get available flights">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="ST_Get_Available_Flights" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0rpwl97</bpmn:incoming>
+      <bpmn:outgoing>Flow_15s8hw1</bpmn:outgoing>
+      <bpmn:property id="Property_1sjrqe5" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_0yuwuum">
+        <bpmn:sourceRef>DB_Available_Flights</bpmn:sourceRef>
+        <bpmn:targetRef>Property_1sjrqe5</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="TS_Check_Interests" name="Every 1 hour">
+      <bpmn:outgoing>Flow_0rpwl97</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1up6sed">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/PT1H</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
   </bpmn:process>
   <bpmn:process id="Process_Prontogram" name="sd_prontogram" isExecutable="true">
     <bpmn:sequenceFlow id="Flow_0a080if" sourceRef="TM_Propagate_Message_From_Prontogram" targetRef="End_Prontogram" />
@@ -995,15 +970,18 @@
           <dc:Bounds x="256" y="1438" width="87" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_16hdy8m" bpmnElement="Activity_Foreach_Interest" isExpanded="true">
-        <dc:Bounds x="570" y="1025" width="750" height="250" />
+      <bpmndi:BPMNShape id="BPMNShape_10ve1sc" bpmnElement="ST_Get_Available_Flights">
+        <dc:Bounds x="650" y="1110" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0ergxdk" bpmnElement="Start_Check_Each_Interest">
-        <dc:Bounds x="592" y="1132" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_0ucq9hl_di" bpmnElement="TS_Check_Interests">
+        <dc:Bounds x="552" y="1132" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="538" y="1173" width="63" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1bicj1t" bpmnElement="ST_Check_Flight_For_An_Interest">
-        <dc:Bounds x="680" y="1110" width="100" height="80" />
+      <bpmndi:BPMNShape id="BPMNShape_16hdy8m" bpmnElement="Activity_Foreach_Interest" isExpanded="true">
+        <dc:Bounds x="800" y="1025" width="520" height="250" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_18lw8i9" bpmnElement="ST_Prepare_Offer">
@@ -1015,27 +993,9 @@
       <bpmndi:BPMNShape id="BPMNShape_09s2vw5" bpmnElement="End_Check_Each_Interest">
         <dc:Bounds x="1262" y="1132" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0ntoi0k_di" bpmnElement="EG_Flight_Is_Available" isMarkerVisible="true">
-        <dc:Bounds x="835" y="1125" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="835" y="1095" width="50" height="27" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNShape id="BPMNShape_0ergxdk" bpmnElement="Start_Check_Each_Interest">
+        <dc:Bounds x="832" y="1132" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_02xkhnt" bpmnElement="Flow_1u6sjen">
-        <di:waypoint x="628" y="1150" />
-        <di:waypoint x="680" y="1150" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_132p95o" bpmnElement="Flow_17oa3fe">
-        <di:waypoint x="780" y="1150" />
-        <di:waypoint x="835" y="1150" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_0vtrg14" bpmnElement="Flow_10jlgcy">
-        <di:waypoint x="885" y="1150" />
-        <di:waypoint x="940" y="1150" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="903" y="1132" width="19" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_1q1d7sh" bpmnElement="Flow_0b8q3aw">
         <di:waypoint x="1040" y="1150" />
         <di:waypoint x="1100" y="1150" />
@@ -1044,14 +1004,9 @@
         <di:waypoint x="1200" y="1150" />
         <di:waypoint x="1262" y="1150" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0m2o3uy_di" bpmnElement="Flow_0m2o3uy">
-        <di:waypoint x="860" y="1175" />
-        <di:waypoint x="860" y="1210" />
-        <di:waypoint x="1280" y="1210" />
-        <di:waypoint x="1280" y="1168" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1063" y="1192" width="15" height="14" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNEdge id="Flow_01gu6fv_di" bpmnElement="Flow_01gu6fv">
+        <di:waypoint x="868" y="1150" />
+        <di:waypoint x="940" y="1150" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0obogj1_di" bpmnElement="End_ACME_UserProfile">
         <dc:Bounds x="779" y="792" width="36" height="36" />
@@ -1066,16 +1021,6 @@
         <dc:Bounds x="244" y="1195" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="230" y="1171" width="77" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_10ve1sc" bpmnElement="ST_Get_Interests">
-        <dc:Bounds x="424" y="1110" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0ucq9hl_di" bpmnElement="TS_Check_Interests">
-        <dc:Bounds x="332" y="1132" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="318" y="1173" width="63" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0ex04eq" bpmnElement="End_Check_Interests">
@@ -1456,13 +1401,9 @@
         <di:waypoint x="1320" y="1150" />
         <di:waypoint x="1382" y="1150" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0rpwl97_di" bpmnElement="Flow_0rpwl97">
-        <di:waypoint x="368" y="1150" />
-        <di:waypoint x="424" y="1150" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_1mnk5ly" bpmnElement="Flow_15s8hw1">
-        <di:waypoint x="524" y="1150" />
-        <di:waypoint x="570" y="1150" />
+        <di:waypoint x="750" y="1150" />
+        <di:waypoint x="800" y="1150" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0ckkzu4_di" bpmnElement="Flow_0ckkzu4">
         <di:waypoint x="1628" y="810" />
@@ -1555,6 +1496,10 @@
       <bpmndi:BPMNEdge id="Flow_0rlehj8_di" bpmnElement="Flow_0rlehj8">
         <di:waypoint x="847" y="1475" />
         <di:waypoint x="880" y="1475" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rpwl97_di" bpmnElement="Flow_0rpwl97">
+        <di:waypoint x="588" y="1150" />
+        <di:waypoint x="650" y="1150" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1iv87gq_di" bpmnElement="Participant_Prontogram" isHorizontal="true">
         <dc:Bounds x="900" y="400" width="700" height="163" />
@@ -1815,8 +1760,8 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0yuwuum_di" bpmnElement="DataInputAssociation_0yuwuum">
         <di:waypoint x="294" y="1220" />
-        <di:waypoint x="650" y="1220" />
-        <di:waypoint x="710" y="1190" />
+        <di:waypoint x="700" y="1220" />
+        <di:waypoint x="700" y="1190" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_03ysw1z_di" bpmnElement="DataInputAssociation_03ysw1z">
         <di:waypoint x="990" y="835" />
@@ -1825,11 +1770,6 @@
       <bpmndi:BPMNEdge id="DataInputAssociation_0kqnlnq_di" bpmnElement="DataInputAssociation_0kqnlnq">
         <di:waypoint x="294" y="1027" />
         <di:waypoint x="471" y="850" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_1ikohrl_di" bpmnElement="DataInputAssociation_1ikohrl">
-        <di:waypoint x="294" y="1053" />
-        <di:waypoint x="460" y="1070" />
-        <di:waypoint x="471" y="1110" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_1ca9uca_di" bpmnElement="DataInputAssociation_1ca9uca">
         <di:waypoint x="1015" y="806" />
