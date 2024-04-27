@@ -2,8 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/charmbracelet/log"
 
 	"github.com/acme-sky/workers/internal/db"
@@ -38,14 +36,12 @@ func STSaveFlight(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.SetPrefix(fmt.Sprintf("[%s] [%d] ", job.Type, jobKey))
-
 	db, _ := db.GetDb()
 
 	input, err := models.ValidateInterest(db, variables)
 
 	if err != nil {
-		log.Errorf("Error validating interest: %s", err.Error())
+		log.Errorf("[%s] [%d] Error validating interest: %s", job.Type, jobKey, err.Error())
 		acmejob.FailJob(client, job)
 		return
 	}
@@ -53,11 +49,11 @@ func STSaveFlight(client worker.JobClient, job entities.Job) {
 	interest := models.NewInterest(*input)
 
 	if created := db.Create(&interest); created == nil {
-		log.Errorf("Interest not saved")
+		log.Errorf("[%s] [%d] Interest not saved", job.Type, jobKey)
 		acmejob.FailJob(client, job)
 		return
 	} else {
-		log.Info("Interest saved")
+		log.Infof("[%s] [%d] Interest saved", job.Type, jobKey)
 	}
 
 	ctx := context.Background()
@@ -67,7 +63,7 @@ func STSaveFlight(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	log.Infof("Successfully completed job")
+	log.Infof("[%s] [%d] Successfully completed job", job.Type, jobKey)
 
 	acmejob.JobStatuses.Close(job.Type, 0)
 }
