@@ -72,6 +72,7 @@ func main() {
 		{Name: "TM_Journey_Rent_Error", Handler: handlers.TMJourneyRentError, Message: &acmejob.MessageCommand{Name: "CM_Journey", CorrelationKey: "0"}},
 
 		// User profile lane: flights manager
+		{Name: "ST_Save_Last_Minute_Offer", Handler: handlers.STSaveLastMinuteOffer},
 		{Name: "ST_Get_User_Interests", Handler: handlers.STGetUserInterests},
 		{Name: "TM_Search_Flights_On_Airline", Handler: handlers.TMSearchFlightsOnAirline},
 		{Name: "ST_Save_Flights_As_Available", Handler: handlers.STSaveFlightsAsAvailable},

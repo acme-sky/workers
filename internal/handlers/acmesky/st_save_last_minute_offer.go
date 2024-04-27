@@ -12,10 +12,9 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-// Service Task executed on "Activity_Foreach_AirlineService" loop in a case of
-// "Any flight found?" = "Yes".
-// It iterates all flights and save 'em as available.
-func STSaveFlightsAsAvailable(client worker.JobClient, job entities.Job) {
+// Service Task raised when an airline sends a "last minute" offer. It creates
+// an available flight to every user.
+func STSaveLastMinuteOffer(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -26,34 +25,40 @@ func STSaveFlightsAsAvailable(client worker.JobClient, job entities.Job) {
 
 	db, _ := db.GetDb()
 
-	flights := variables["flights"].([]interface{})
+	var users []models.User
 
-	for i := 0; i < len(flights); i++ {
-		flight := flights[i].(map[string]interface{})
-		departaure_airport := flight["departaure_airport"].(map[string]interface{})
-		flight["departaure_airport"] = departaure_airport["code"]
-		arrival_airport := flight["arrival_airport"].(map[string]interface{})
-		flight["arrival_airport"] = arrival_airport["code"]
+	flight := variables["flight"].(map[string]interface{})
+
+	db.Find(&users)
+
+	countSaved := 0
+	countNotSaved := 0
+	for _, user := range users {
+		flight["user_id"] = user.ID
 		input, err := models.ValidateAvailableFlight(db, flight)
 
 		if err != nil {
 			log.Errorf("[%s] [%d] Error validating flight: %s", job.Type, jobKey, err.Error())
-			continue
+			acmejob.FailJob(client, job)
+			return
 		}
 
 		var available_flight models.AvailableFlight
 		if found := db.Where("code = ? AND cost = ? AND departaure_airport = ? AND arrival_airport = ? AND departaure_time = ? AND arrival_time = ?",
 			input.Code, input.Cost, input.DepartaureAirport, input.ArrivalAirport, input.DepartaureTime, input.ArrivalTime).First(&available_flight).Error; found == nil {
 			log.Warnf("[%s] [%d] Skip an already saved flight", job.Type, jobKey)
+			countNotSaved++
 			continue
 		}
 
 		new_available_flight := models.NewAvailableFlight(*input)
 
-		if created := db.Create(&new_available_flight); created == nil {
-			log.Errorf("[%s] [%d] Available flight not saved", job.Type, jobKey)
+		if err := db.Create(&new_available_flight).Error; err != nil {
+			log.Errorf("[%s] [%d] Available flight not saved: %s", job.Type, jobKey, err.Error())
+			countNotSaved++
 		} else {
 			log.Infof("[%s] [%d] Available flight saved", job.Type, jobKey)
+			countSaved++
 		}
 	}
 
@@ -71,6 +76,7 @@ func STSaveFlightsAsAvailable(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Infof("[%s] [%d] Successfully completed job", job.Type, jobKey)
+	log.Infof("[%s] [%d] Created %d available flights and %d ignored", job.Type, jobKey, countSaved, countNotSaved)
 
 	acmejob.JobStatuses.Close(job.Type, 0)
 }
