@@ -48,6 +48,8 @@ func STSaveFlight(client worker.JobClient, job entities.Job) {
 		log.Errorf("Interest not saved")
 		acmejob.FailJob(client, job)
 		return
+	} else {
+		log.Info("Interest saved")
 	}
 
 	ctx := context.Background()
