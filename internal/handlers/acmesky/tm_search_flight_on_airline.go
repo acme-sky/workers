@@ -40,6 +40,7 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 	endpoint := fmt.Sprintf("%s/flights/filter/", airline)
 	for i := 0; i < len(interests); i++ {
 		interest := interests[i].(map[string]interface{})
+		interestId := int(interest["id"].(float64))
 		user := interest["user"].(map[string]interface{})
 
 		payload := map[string]interface{}{
@@ -57,6 +58,8 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 			if response.Count > 0 {
 				for _, data := range response.Data {
 					data["user_id"] = user["ID"]
+					data["airline"] = airline
+					data["interest_id"] = interestId
 					flights = append(flights, data)
 				}
 			}
@@ -83,6 +86,8 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 		if response.Count > 0 {
 			for _, data := range response.Data {
 				data["user_id"] = user["ID"]
+				data["airline"] = airline
+				data["interest_id"] = interestId
 				flights = append(flights, data)
 			}
 		}

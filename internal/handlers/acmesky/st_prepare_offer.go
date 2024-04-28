@@ -25,23 +25,38 @@ func STPrepareOffer(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	availableFlights := variables["available_flights"].([]interface{})
+	journeys := variables["journeys"].([]interface{})
 	index := int(variables["loopCounter"].(float64)) - 1
-	flight := availableFlights[index].(map[string]interface{})
 
 	db, _ := db.GetDb()
+	var journey models.Journey
 
-	user := flight["user"].(map[string]interface{})
+	if err := db.Where("id = ?", int(journeys[index].(float64))).Preload("User").Preload("Flight1").Preload("Flight2").First(&journey).Error; err != nil {
+		log.Errorf("[%s] [%d] Journey not found", job.Type, jobKey)
+		acmejob.FailJob(client, job)
+		return
+	}
 
 	body := models.OfferInput{
-		Fields: models.OfferInputFields{
-			Name:              user["Name"].(string),
-			DepartaureAirport: flight["departaure_airport"].(string),
-			ArrivalAirport:    flight["arrival_airport"].(string),
-			DepartaureTime:    flight["departaure_time"].(string),
-			ArrivalTime:       flight["arrival_time"].(string),
+		Flight1: models.OfferInputFields{
+			DepartaureAirport: journey.Flight1.DepartaureAirport,
+			ArrivalAirport:    journey.Flight1.ArrivalAirport,
+			DepartaureTime:    journey.Flight1.DepartaureTime.Format("02/01/2006 15:04"),
+			ArrivalTime:       journey.Flight1.ArrivalTime.Format("02/01/2006 15:04"),
+			Cost:              journey.Flight1.Cost,
 		},
-		UserId: int(user["ID"].(float64)),
+		UserId: journey.UserId,
+		Name:   journey.User.Name,
+	}
+
+	if journey.Flight2 != nil {
+		body.Flight2 = &models.OfferInputFields{
+			DepartaureAirport: journey.Flight2.DepartaureAirport,
+			ArrivalAirport:    journey.Flight2.ArrivalAirport,
+			DepartaureTime:    journey.Flight2.DepartaureTime.Format("02/01/2006 15:04"),
+			ArrivalTime:       journey.Flight2.ArrivalTime.Format("02/01/2006 15:04"),
+			Cost:              journey.Flight2.Cost,
+		}
 	}
 
 	offer := models.NewOffer(body)
@@ -53,12 +68,23 @@ func STPrepareOffer(client worker.JobClient, job entities.Job) {
 	} else {
 		log.Infof("[%s] [%d] Offer saved", job.Type, jobKey)
 		var flightInstance models.AvailableFlight
-		if err := db.Where("id = ?", int(flight["id"].(float64))).First(&flightInstance).Error; err != nil {
+		if err := db.Where("id = ?", journey.Flight1Id).First(&flightInstance).Error; err != nil {
 			log.Errorf("[%s] [%d] Error on getting flight %s", job.Type, jobKey, err.Error())
 		}
 		flightInstance.OfferSent = true
 		if err := db.Save(&flightInstance).Error; err != nil {
 			log.Errorf("[%s] [%d] Error on saving flight %s", job.Type, jobKey, err.Error())
+		}
+
+		if journey.Flight2 != nil {
+			var flightInstance models.AvailableFlight
+			if err := db.Where("id = ?", journey.Flight2Id).First(&flightInstance).Error; err != nil {
+				log.Errorf("[%s] [%d] Error on getting flight %s", job.Type, jobKey, err.Error())
+			}
+			flightInstance.OfferSent = true
+			if err := db.Save(&flightInstance).Error; err != nil {
+				log.Errorf("[%s] [%d] Error on saving flight %s", job.Type, jobKey, err.Error())
+			}
 		}
 	}
 

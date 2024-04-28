@@ -24,6 +24,7 @@ func InitDb(dsn string) (*gorm.DB, error) {
 			&models.Interest{},
 			&models.AvailableFlight{},
 			&models.Offer{},
+			&models.Journey{},
 		)
 	}
 

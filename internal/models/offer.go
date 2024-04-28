@@ -18,23 +18,26 @@ type Offer struct {
 	Message   string    `gorm:"column:message" json:"message"`
 	Expired   string    `gorm:"column:expired" json:"expired"`
 	Token     string    `gorm:"column:token" json:"token"`
+	Cost      float64   `gorm:"column:cost" json:"cost"`
 	IsUsed    bool      `gorm:"column:is_used" json:"is_user"`
 	UserId    int       `json:"-"`
 	User      User      `gorm:"foreignKey:UserId" json:"user"`
 }
 
 type OfferInputFields struct {
-	Name              string `binding:"required"`
-	DepartaureAirport string `binding:"required"`
-	ArrivalAirport    string `binding:"required"`
-	DepartaureTime    string `binding:"required"`
-	ArrivalTime       string `binding:"required"`
+	DepartaureAirport string  `binding:"required"`
+	ArrivalAirport    string  `binding:"required"`
+	DepartaureTime    string  `binding:"required"`
+	ArrivalTime       string  `binding:"required"`
+	Cost              float64 `binding:"required"`
 }
 
 // Struct used to get new data for an offer
 type OfferInput struct {
-	Fields OfferInputFields `json:"fields" binding:"required"`
-	UserId int              `json:"user_id" binding:"required"`
+	Name    string            `json:"name"`
+	Flight1 OfferInputFields  `json:"flight1" binding:"required"`
+	Flight2 *OfferInputFields `json:"flight2"`
+	UserId  int               `json:"user_id" binding:"required"`
 }
 
 // It validates data from `in` and returns a possible error or not
@@ -69,14 +72,29 @@ func NewOffer(in OfferInput) Offer {
 	token := randSeq(6)
 
 	message := fmt.Sprintf(
-		"Hello %s, this is the offer token for your flight from <b>%s</b> to <b>%s</b> in date %s - %s.<br><a href=\"#\" target=\"_blank\">%s</a>",
-		in.Fields.Name,
-		in.Fields.DepartaureAirport,
-		in.Fields.ArrivalAirport,
-		in.Fields.DepartaureTime,
-		in.Fields.ArrivalTime,
+		"Hello %s, this is the offer token for your flight from <b>%s</b> to <b>%s</b> in date %s - %s.",
+		in.Name,
+		in.Flight1.DepartaureAirport,
+		in.Flight1.ArrivalAirport,
+		in.Flight1.DepartaureTime,
+		in.Flight1.ArrivalTime,
+	)
+
+	if in.Flight2 != nil {
+		message = fmt.Sprintf("%s <br>You also have a return flight  from <b>%s</b> to <b>%s</b> in date %s - %s.",
+			message,
+			in.Flight2.DepartaureAirport,
+			in.Flight2.ArrivalAirport,
+			in.Flight2.DepartaureTime,
+			in.Flight2.ArrivalTime,
+		)
+	}
+
+	message = fmt.Sprintf("%s <br><a href=\"#\" target=\"_blank\">%s</a>",
+		message,
 		token,
 	)
+
 	return Offer{
 		CreatedAt: time.Now(),
 		Message:   message,
