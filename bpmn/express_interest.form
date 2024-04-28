@@ -24,7 +24,7 @@
             "columns": null
           },
           "id": "Field_04r8kr1",
-          "key": "flight1_departaure_airport_id",
+          "key": "flight1_departaure_airport",
           "validate": {
             "required": true
           }
@@ -67,7 +67,7 @@
             "columns": null
           },
           "id": "Field_05vm4p0",
-          "key": "flight1_arrival_airport_id",
+          "key": "flight1_arrival_airport",
           "validate": {
             "required": true
           }
@@ -141,7 +141,7 @@
             "columns": null
           },
           "id": "Field_04r8kr2",
-          "key": "flight2_departaure_airport_id",
+          "key": "flight2_departaure_airport",
           "validate": {
             "required": false
           }
@@ -184,7 +184,7 @@
             "columns": null
           },
           "id": "Field_05vm1p0",
-          "key": "flight2_arrival_airport_id",
+          "key": "flight2_arrival_airport",
           "validate": {
             "required": false
           }

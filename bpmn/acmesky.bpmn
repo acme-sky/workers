@@ -659,7 +659,7 @@
             "columns": null
           },
           "id": "Field_04r8kr1",
-          "key": "flight1_departaure_airport_id",
+          "key": "flight1_departaure_airport",
           "validate": {
             "required": true
           }
@@ -702,7 +702,7 @@
             "columns": null
           },
           "id": "Field_05vm4p0",
-          "key": "flight1_arrival_airport_id",
+          "key": "flight1_arrival_airport",
           "validate": {
             "required": true
           }
@@ -776,7 +776,7 @@
             "columns": null
           },
           "id": "Field_04r8kr2",
-          "key": "flight2_departaure_airport_id",
+          "key": "flight2_departaure_airport",
           "validate": {
             "required": false
           }
@@ -819,7 +819,7 @@
             "columns": null
           },
           "id": "Field_05vm1p0",
-          "key": "flight2_arrival_airport_id",
+          "key": "flight2_arrival_airport",
           "validate": {
             "required": false
           }
@@ -1108,12 +1108,6 @@
         <dc:Bounds x="281" y="1457" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="256" y="1438" width="87" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_05d2ju8_di" bpmnElement="CM_Check_Offer">
-        <dc:Bounds x="1692" y="792" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1668" y="835" width="85" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_16hdy8m" bpmnElement="Activity_Foreach_Interest" isExpanded="true">
@@ -1529,6 +1523,12 @@
         <dc:Bounds x="552" y="1132" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="538" y="1173" width="63" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_05d2ju8_di" bpmnElement="CM_Check_Offer">
+        <dc:Bounds x="1692" y="792" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1668" y="835" width="85" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0ieguxi_di" bpmnElement="Event_0jl8r24">

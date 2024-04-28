@@ -45,6 +45,16 @@ type InterestInput struct {
 func ValidateInterest(db *gorm.DB, variables map[string]interface{}) (*InterestInput, error) {
 	var in *InterestInput
 
+	for _, i := range []string{"flight1_departaure_time", "flight1_arrival_time", "flight2_departaure_time", "flight2_arrival_time"} {
+		if variables[i] != nil && len(variables[i].(string)) == 10 {
+			variables[i] = fmt.Sprintf("%sT00:00:00Z", variables[i])
+		}
+	}
+
+	if variables["user_id"] == nil {
+		variables["user_id"] = 1
+	}
+
 	jsonData, err := json.Marshal(variables)
 
 	if err != nil {
@@ -77,7 +87,7 @@ func ValidateInterest(db *gorm.DB, variables map[string]interface{}) (*InterestI
 		if (*in.Flight2DepartaureTime).Equal(*in.Flight2ArrivalTime) || (*in.Flight2DepartaureTime).After(*in.Flight2ArrivalTime) {
 			return nil, errors.New("`flight2`: `departaure_time` can't be after or the same `arrival_time`")
 		}
-	} else if in.Flight2DepartaureAirport == nil || in.Flight2DepartaureTime == nil || in.Flight2ArrivalAirport == nil || in.Flight2ArrivalTime == nil {
+	} else if !(in.Flight2DepartaureAirport == nil || in.Flight2DepartaureTime == nil || in.Flight2ArrivalAirport == nil || in.Flight2ArrivalTime == nil) {
 		return nil, errors.New("`flight2`: all fields must be nil or filled")
 	}
 
