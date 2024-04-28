@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . .
 RUN go mod download
 
-RUN CGO_ENABLED=0 GOOS=linux go build cmd/acmesky/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build cmd/main.go
 
 # Run the exe file
 FROM debian:bookworm-slim as run
