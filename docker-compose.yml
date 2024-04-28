@@ -176,10 +176,11 @@ services:
     environment:
       - ZEEBE_ADDRESS=zeebe:26500
       - BPMN_FILE=${BPMN_FILE}
-      - PROCESS_ID=Process_ACME
+      - PROCESS_ID=Process_User
       - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672/
       - SENTRY_DSN=${SENTRY_DSN}
       - DATABASE_DSN=${DATABASE_DSN}
+      - AIRLINES=http://acmesky-airlineservice-api:8080/v1
     networks:
       - camunda
     depends_on:
