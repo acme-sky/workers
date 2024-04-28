@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/acme-sky/workers/internal/config"
 	"github.com/acme-sky/workers/internal/db"
 	acmeskyHandlers "github.com/acme-sky/workers/internal/handlers/acmesky"
 	prontogramHandlers "github.com/acme-sky/workers/internal/handlers/prontogram"
@@ -17,21 +18,32 @@ import (
 var quit = make(chan os.Signal, 1)
 
 func main() {
+	// Read environment variables and stops execution if any errors occur
+	if err := config.LoadConfig(); err != nil {
+		log.Printf("failed to load config. err %v", err)
+
+		return
+	}
+
+	// Ignore error because if it failed on loading, it should raised an error
+	// above.
+	conf, _ := config.GetConfig()
+
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn:              os.Getenv("SENTRY_DSN"),
+		Dsn:              conf.String("sentry.dsn"),
 		TracesSampleRate: 0.7,
 	})
 	if err != nil {
 		log.Errorf("sentry.Init: %s", err)
 	}
 
-	if _, err := db.InitDb(os.Getenv("DATABASE_DSN")); err != nil {
+	if _, err := db.InitDb(conf.String("database.dsn")); err != nil {
 		log.Fatalf("failed to connect database. err %v", err)
 
 		return
 	}
 
-	client := acmejob.CreateClient("Process_User")
+	client := acmejob.CreateClient(conf.String("process.id"))
 	defer (*client).Close()
 
 	signal.Notify(quit, os.Interrupt)

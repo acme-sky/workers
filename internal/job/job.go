@@ -2,9 +2,11 @@ package job
 
 import (
 	"context"
-	"github.com/charmbracelet/log"
-	"os"
+	"strings"
 	"sync"
+
+	"github.com/acme-sky/workers/internal/config"
+	"github.com/charmbracelet/log"
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/commands"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
@@ -165,16 +167,23 @@ func FailJob(client worker.JobClient, job entities.Job) {
 // Main function whcih creates a new Zeebe client.
 // If called with the parameter `pid`, that value will be run as `ProcessId`
 func CreateClient(pid string) *zbc.Client {
+	var err error
+
 	// Load some variables from the environment
-	ZeebeAddr := os.Getenv("ZEEBE_ADDRESS")
-	BPMNFile := os.Getenv("BPMN_FILE")
-	ProcessId := os.Getenv("PROCESS_ID")
+	conf, err := config.GetConfig()
+
+	if err != nil {
+		log.Fatalf("Error loading the config: %s", err.Error())
+	}
+
+	ZeebeAddr := conf.String("zeebe.address")
+	BPMNFile := conf.String("bpmn.file")
+	ProcessId := conf.String("process.id")
 
 	if len(pid) != 0 {
 		ProcessId = pid
 	}
 
-	var err error
 	var client zbc.Client
 
 	if client, err = zbc.NewClient(&zbc.ClientConfig{
@@ -196,7 +205,7 @@ func CreateClient(pid string) *zbc.Client {
 
 	// Airlines must be loaded for the first time as variables 'cause the timer
 	// trigger executed every hour.
-	variables := map[string]interface{}{"airlines": []int{1, 2, 3}}
+	variables := map[string]interface{}{"airlines": strings.Split(conf.String("airlines"), ",")}
 
 	var instance commands.CreateInstanceCommandStep3
 	if instance, err = client.NewCreateInstanceCommand().BPMNProcessId(ProcessId).LatestVersion().VariablesFromMap(variables); err != nil {

@@ -3,8 +3,8 @@ package message
 import (
 	"context"
 	"encoding/json"
-	"os"
 
+	"github.com/acme-sky/workers/internal/config"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 	"github.com/charmbracelet/log"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -25,7 +25,15 @@ type MessageBody struct {
 // Instance a RabbitMQ message broker for messaging management
 func MessageBroker(client *zbc.Client) {
 	ctx := context.Background()
-	conn, err := amqp.Dial(os.Getenv("RABBITMQ_URI"))
+
+	conf, err := config.GetConfig()
+
+	if err != nil {
+		log.Warnf("[RabbitMQ] Error loading the config: %s", err.Error())
+		return
+	}
+
+	conn, err := amqp.Dial(conf.String("rabbitmq.uri"))
 
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %s", err.Error())

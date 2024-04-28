@@ -3,10 +3,11 @@ package models
 import (
 	"fmt"
 	"math/rand"
-	"os"
 	"strconv"
 	"time"
 
+	"github.com/acme-sky/workers/internal/config"
+	"github.com/charmbracelet/log"
 	"gorm.io/gorm"
 )
 
@@ -55,7 +56,15 @@ func randSeq(n int) string {
 // Returns a new Offer with the data from `in`. It should be called after
 // `ValidateOffer(..., in)` method
 func NewOffer(in OfferInput) Offer {
-	offerValidationTime, _ := strconv.Atoi(os.Getenv("OFFER_VALIDATION_TIME"))
+	var offerValidationTime int
+
+	conf, err := config.GetConfig()
+	if err != nil {
+		log.Warnf("Can't load config for OFFER_VALIDATION_TIME, so use '24' by default %s", err.Error())
+		offerValidationTime = 24
+	} else {
+		offerValidationTime = conf.Int("offer.validation.time")
+	}
 
 	token := randSeq(6)
 
