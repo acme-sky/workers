@@ -35,7 +35,7 @@ func STCreateJourneys(client worker.JobClient, job entities.Job) {
 
 	interests := make(map[int][]models.AvailableFlight)
 
-	var journeys []uint
+	var journeys []uint = []uint{}
 
 	for _, flight := range available_flights {
 		if flight.InterestId != nil {
