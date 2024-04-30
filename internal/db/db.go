@@ -20,11 +20,12 @@ func InitDb(dsn string) (*gorm.DB, error) {
 
 	if err == nil {
 		db.AutoMigrate(
-			&models.User{},
-			&models.Interest{},
 			&models.AvailableFlight{},
-			&models.Offer{},
+			&models.Interest{},
 			&models.Journey{},
+			&models.Offer{},
+			&models.Rent{},
+			&models.User{},
 		)
 	}
 

@@ -84,7 +84,7 @@ func TMComputeDistanceUserAirport(client worker.JobClient, job entities.Job) {
 		return
 	}
 	variables["distance"] = distance.GetDistance() / 1000
-	log.Info("[%s] [%d] Found a distance of: %d km", job.Type, jobKey, variables["distance"])
+	log.Infof("[%s] [%d] Found a distance of: %d km", job.Type, jobKey, variables["distance"])
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
