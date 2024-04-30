@@ -54,7 +54,13 @@ func STCreateJourneys(client worker.JobClient, job entities.Job) {
 				return
 			}
 
-			journey := models.NewJourney(*input)
+			var journey models.Journey
+			if found := db.Where("flight1_id = ? AND cost = ? AND user_id = ?", input.Flight1Id, input.Cost, input.UserId).First(&journey).Error; found == nil {
+				log.Warnf("[%s] [%d] Skip an already saved journey", job.Type, jobKey)
+				continue
+			}
+
+			journey = models.NewJourney(*input)
 			if err := db.Create(&journey).Error; err != nil {
 				log.Errorf("[%s] [%d] Journey not saved: %s", job.Type, jobKey, err.Error())
 			} else {
@@ -90,8 +96,14 @@ func STCreateJourneys(client worker.JobClient, job entities.Job) {
 			return
 		}
 
-		journey := models.NewJourney(*input)
-		if err := db.Preload("AvailableFlight").Preload("User").Create(&journey).Error; err != nil {
+		var journey models.Journey
+		if found := db.Where("flight1_id = ? AND flight2_id = ? AND cost = ? AND user_id = ?", input.Flight1Id, input.Flight2Id, input.Cost, input.UserId).First(&journey).Error; found == nil {
+			log.Warnf("[%s] [%d] Skip an already saved journey", job.Type, jobKey)
+			continue
+		}
+
+		journey = models.NewJourney(*input)
+		if err := db.Create(&journey).Error; err != nil {
 			log.Errorf("[%s] [%d] Journey not saved: %s", job.Type, jobKey, err.Error())
 		} else {
 			log.Infof("[%s] [%d] Journey saved", job.Type, jobKey)
