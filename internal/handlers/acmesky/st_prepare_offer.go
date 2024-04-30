@@ -31,7 +31,7 @@ func STPrepareOffer(client worker.JobClient, job entities.Job) {
 	db, _ := db.GetDb()
 	var journey models.Journey
 
-	if err := db.Where("id = ?", int(journeys[index].(float64))).Preload("User").Preload("Flight1").Preload("Flight2").First(&journey).Error; err != nil {
+	if err := db.Where("id = ?", int(journeys[index].(float64))).Preload("User").First(&journey).Error; err != nil {
 		log.Errorf("[%s] [%d] Journey not found", job.Type, jobKey)
 		acmejob.FailJob(client, job)
 		return
