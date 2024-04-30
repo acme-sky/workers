@@ -28,6 +28,18 @@ type JourneyResponseBody struct {
 	Email            string                 `json:"email"`
 }
 
+type PaymentResponseBody struct {
+	Id          string  `json:"id"`
+	Owner       string  `json:"owner"`
+	Amount      float64 `json:"amount"`
+	Description string  `json:"description"`
+	Callback    string  `json:"callback"`
+	Paid        bool    `json:"paid"`
+	// We use string here instead of time.Time because we do not want to fix the
+	// parsing error
+	CreatedAt string `json:"created_at"`
+}
+
 // Make a new request to an endpoint with a `body` and returns a response body
 // or an error.
 func MakeRequest(endpoint string, body map[string]interface{}) (*ResponseBody, error) {
@@ -136,6 +148,46 @@ func NewJourneyRequest(endpoint string, body map[string]interface{}, auth string
 	}
 
 	var responseBody JourneyResponseBody
+	if err := json.Unmarshal(resBody, &responseBody); err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not unmarshal response body: %s", err))
+	}
+
+	return &responseBody, nil
+}
+
+// Make a new request to an endpoint with a `body` for a new payment bank. `auth` is
+// the API token.
+func NewPaymentRequest(endpoint string, body map[string]interface{}, auth string) (*PaymentResponseBody, error) {
+	jsonBody, _ := json.Marshal(body)
+	bodyReader := bytes.NewReader(jsonBody)
+
+	req, err := http.NewRequest(http.MethodPost, endpoint, bodyReader)
+
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("X-API-TOKEN", auth)
+
+	httpClient := http.Client{
+		Timeout: 30 * time.Second,
+	}
+
+	res, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not read response body: %s", err.Error()))
+	}
+
+	if res.StatusCode != 201 {
+		return nil, errors.New(fmt.Sprintf("HTTP request returned a status %d and response `%s`", res.StatusCode, resBody))
+	}
+
+	var responseBody PaymentResponseBody
 	if err := json.Unmarshal(resBody, &responseBody); err != nil {
 		return nil, errors.New(fmt.Sprintf("Could not unmarshal response body: %s", err))
 	}

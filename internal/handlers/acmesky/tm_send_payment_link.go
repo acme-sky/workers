@@ -9,6 +9,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
+// This task sends the payment_link to the user
 func TMSendPaymentLink(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
@@ -18,15 +19,17 @@ func TMSendPaymentLink(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	variables["payment_link"] = "https://acmebank.cs.unibo.it/pay/0000-000-000"
+	if variables["payment_link"] != nil {
+		log.Errorf("[%s] [%d] `payment_link` is a not a valid variable to send", job.Type, jobKey)
+		acmejob.FailJob(client, job)
+		return
+	}
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
 		acmejob.FailJob(client, job)
 		return
 	}
-
-	log.Debug("Processing data:", variables)
 
 	ctx := context.Background()
 	_, err = request.Send(ctx)

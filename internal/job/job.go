@@ -27,9 +27,6 @@ var JobStatuses = jobStatusesMap{m: make(map[string](chan int64))}
 // Map used to sync variables for jobs
 var JobVariables = make(map[string](chan map[string]interface{}))
 
-// Map used to sync after function handler for jobs
-var JobAfter = make(map[string](chan int))
-
 // Set function for a `key` in the map
 func (sm *jobStatusesMap) Set(key string, value chan int64) {
 	sm.mu.Lock()
@@ -64,9 +61,6 @@ type MessageCommand struct {
 	CorrelationKey string
 }
 
-// Works as the same as JobHandler but it is called after the handler execution
-type AfterJobHandler func(*zbc.Client, context.Context)
-
 // The Job structure used by all the BPMN activities
 type Job struct {
 	// Name of the task
@@ -77,9 +71,6 @@ type Job struct {
 
 	// A possible message to send after the response of the hanlder
 	Message *MessageCommand
-
-	// A possibile function to be executed after the response of the handler
-	After AfterJobHandler
 }
 
 // Handle the job instance for the `client`
@@ -91,7 +82,6 @@ func (job *Job) Handle(client *zbc.Client) {
 	JobStatuses.Set(job.Name, ch)
 
 	JobVariables[job.Name] = make(chan map[string]interface{}, 1)
-	JobAfter[job.Name] = make(chan int, 1)
 
 	// TODO: study why multi-instance jobs does not fit this close-worker below
 	// worker := (*client).NewJobWorker().JobType(job.Name).Handler(job.Handler).Open()
@@ -118,20 +108,6 @@ func (job *Job) Handle(client *zbc.Client) {
 				log.Error(err.Error())
 			} else {
 				log.Infof("Sent message to `%s` with correlation key = `%s`\n", job.Message.Name, job.Message.CorrelationKey)
-			}
-		}
-	}
-
-	if job.After != nil {
-		// It waites until `JobAfter[job.Name]` returns a value. Then it
-		// publishes the message
-		select {
-		case _, ok := <-JobAfter[job.Name]:
-			if !ok {
-				log.Errorf("Channel JobAfter for %s is already closed\n", job.Name)
-				panic("Reuse of closed channel")
-			} else {
-				job.After(client, ctx)
 			}
 		}
 	}

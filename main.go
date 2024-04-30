@@ -84,7 +84,7 @@ func main() {
 		// User profile lane: book journey
 		// Message fields for TM_Book_Journey and TM_Ask_Payment_Link is `nil` because it comunicates with an hidden participant
 		{Name: "TM_Book_Journey", Handler: acmeskyHandlers.TMBookJourney},
-		{Name: "TM_Ask_Payment_Link", Handler: acmeskyHandlers.TMAskPaymentLink, After: acmeskyHandlers.TMAskPaymentLinkAfter},
+		{Name: "TM_Ask_Payment_Link", Handler: acmeskyHandlers.TMAskPaymentLink},
 		{Name: "TM_Send_Payment_Link", Handler: acmeskyHandlers.TMSendPaymentLink, Message: &acmejob.MessageCommand{Name: "CM_Received_Bank_Link", CorrelationKey: "0"}},
 		{Name: "ST_Offer_Still_Valid", Handler: acmeskyHandlers.STOfferStillValid},
 		{Name: "TM_Error_On_Book_Journey", Handler: acmeskyHandlers.TMErrorOnBookJourney, Message: &acmejob.MessageCommand{Name: "CM_Received_Bank_Error", CorrelationKey: "0"}},

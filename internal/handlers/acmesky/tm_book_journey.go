@@ -141,7 +141,7 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 	}
 
 	variables["flight_price"] = offer.Journey.Cost
-	log.Info("[%s] [%d] Created a new new journey on airline company website with ID = %d", job.Type, jobKey, journeyResponse.Id)
+	log.Infof("[%s] [%d] Created a new new journey on airline company website with ID = %d", job.Type, jobKey, journeyResponse.Id)
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {

@@ -2,15 +2,20 @@ package handlers
 
 import (
 	"context"
-	"github.com/charmbracelet/log"
-	"math/rand"
+	"fmt"
 
+	"github.com/charmbracelet/log"
+
+	"github.com/acme-sky/workers/internal/config"
+	"github.com/acme-sky/workers/internal/db"
+	"github.com/acme-sky/workers/internal/http"
 	acmejob "github.com/acme-sky/workers/internal/job"
+	"github.com/acme-sky/workers/internal/models"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
-	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 )
 
+// Task who creates a new payment link for an offer.
 func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
@@ -20,13 +25,51 @@ func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 		return
 	}
 
+	conf, _ := config.GetConfig()
+
+	db, _ := db.GetDb()
+	var offer models.Offer
+	if err := db.Where("id = ?", variables["offer_id"]).Preload("Journey").Preload("Journey.Flight1").Preload("Journey.Flight2").Preload("User").First(&offer).Error; err != nil {
+		log.Errorf("[%s] [%d] Offer not found", job.Type, jobKey)
+		acmejob.FailJob(client, job)
+		return
+	}
+
+	endpoint := fmt.Sprintf("%s/payments/", conf.String("bank.endpoint"))
+	payload := map[string]interface{}{
+		"owner":    fmt.Sprintf("%s <%s>", offer.User.Name, offer.User.Email),
+		"amount":   offer.Journey.Cost,
+		"callback": fmt.Sprintf("%s/%d", conf.String("bank.callback"), offer.JourneyId),
+	}
+
+	if offer.Journey.Flight2 != nil {
+		payload["description"] = fmt.Sprintf("Flights from %s to %s and from %s to %s",
+			offer.Journey.Flight1.DepartaureAirport,
+			offer.Journey.Flight1.ArrivalAirport,
+			offer.Journey.Flight2.DepartaureAirport,
+			offer.Journey.Flight2.ArrivalAirport)
+	} else {
+		payload["description"] = fmt.Sprintf("Flight from %s to %s",
+			offer.Journey.Flight1.DepartaureAirport,
+			offer.Journey.Flight1.ArrivalAirport)
+	}
+
+	response, err := http.NewPaymentRequest(endpoint, payload, conf.String("bank.token"))
+
+	if err != nil {
+		log.Errorf("[%s] [%d] Error for offer `%d`: %s", job.Type, jobKey, offer.Id, err.Error())
+		acmejob.FailJob(client, job)
+		return
+	}
+
+	variables["payment_link"] = fmt.Sprintf("%s/%s/pay/", conf.String("bank.endpoint"), response.Id)
+	variables["flight_price"] = offer.Journey.Cost
+
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
 		acmejob.FailJob(client, job)
 		return
 	}
-
-	log.Debug("Processing data:", variables)
 
 	ctx := context.Background()
 	_, err = request.Send(ctx)
@@ -37,28 +80,6 @@ func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 
 	log.Infof("[%s] [%d] Successfully completed job", job.Type, jobKey)
 	acmejob.JobVariables[job.Type] <- variables
-	acmejob.JobAfter[job.Type] <- 0
 
 	acmejob.JobStatuses.Close(job.Type, 0)
-}
-
-// Simulate a response from Bank participant
-func TMAskPaymentLinkAfter(client *zbc.Client, ctx context.Context) {
-	variables := map[string]interface{}{"payment_status": "ERR"}
-
-	if rand.Int()%2 == 0 {
-		variables["payment_status"] = "ERR"
-	}
-
-	res, err := (*client).NewPublishMessageCommand().MessageName("CM_Payment_Response").CorrelationKey("0").VariablesFromMap(variables)
-
-	if err != nil {
-		log.Infof(err.Error())
-	} else {
-		if _, err := res.Send(ctx); err != nil {
-			log.Infof(err.Error())
-		} else {
-			log.Infof("Sent message to `CM_Payment_Response` with correlation key = `0` and %v", variables)
-		}
-	}
 }
