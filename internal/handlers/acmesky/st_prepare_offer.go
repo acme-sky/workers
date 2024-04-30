@@ -45,8 +45,9 @@ func STPrepareOffer(client worker.JobClient, job entities.Job) {
 			ArrivalTime:       journey.Flight1.ArrivalTime.Format("02/01/2006 15:04"),
 			Cost:              journey.Flight1.Cost,
 		},
-		UserId: journey.UserId,
-		Name:   journey.User.Name,
+		JourneyId: int(journey.Id),
+		UserId:    journey.UserId,
+		Name:      journey.User.Name,
 	}
 
 	if journey.Flight2 != nil {

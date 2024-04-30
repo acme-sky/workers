@@ -18,8 +18,9 @@ type Offer struct {
 	Message   string    `gorm:"column:message" json:"message"`
 	Expired   string    `gorm:"column:expired" json:"expired"`
 	Token     string    `gorm:"column:token" json:"token"`
-	Cost      float64   `gorm:"column:cost" json:"cost"`
 	IsUsed    bool      `gorm:"column:is_used" json:"is_user"`
+	JourneyId int       `json:"-"`
+	Journey   Journey   `gorm:"foreignKey:JourneyId" json:"journey"`
 	UserId    int       `json:"-"`
 	User      User      `gorm:"foreignKey:UserId" json:"user"`
 }
@@ -34,10 +35,11 @@ type OfferInputFields struct {
 
 // Struct used to get new data for an offer
 type OfferInput struct {
-	Name    string            `json:"name"`
-	Flight1 OfferInputFields  `json:"flight1" binding:"required"`
-	Flight2 *OfferInputFields `json:"flight2"`
-	UserId  int               `json:"user_id" binding:"required"`
+	Name      string            `json:"name"`
+	Flight1   OfferInputFields  `json:"flight1" binding:"required"`
+	Flight2   *OfferInputFields `json:"flight2"`
+	JourneyId int               `json:"journey_id" binding:"required"`
+	UserId    int               `json:"user_id" binding:"required"`
 }
 
 // It validates data from `in` and returns a possible error or not
@@ -72,26 +74,33 @@ func NewOffer(in OfferInput) Offer {
 	token := randSeq(6)
 
 	message := fmt.Sprintf(
-		"Hello %s, this is the offer token for your flight from <b>%s</b> to <b>%s</b> in date %s - %s.",
+		"Hello %s, this is the offer token for your flight from <b>%s</b> to <b>%s</b> in date %s - %s for %.2f€.",
 		in.Name,
 		in.Flight1.DepartaureAirport,
 		in.Flight1.ArrivalAirport,
 		in.Flight1.DepartaureTime,
 		in.Flight1.ArrivalTime,
+		in.Flight1.Cost,
 	)
 
+	cost := in.Flight1.Cost
+
 	if in.Flight2 != nil {
-		message = fmt.Sprintf("%s <br>You also have a return flight  from <b>%s</b> to <b>%s</b> in date %s - %s.",
+		message = fmt.Sprintf("%s <br>You also have a return flight  from <b>%s</b> to <b>%s</b> in date %s - %s for %.2f€.",
 			message,
 			in.Flight2.DepartaureAirport,
 			in.Flight2.ArrivalAirport,
 			in.Flight2.DepartaureTime,
 			in.Flight2.ArrivalTime,
+			in.Flight2.Cost,
 		)
+
+		cost += in.Flight2.Cost
 	}
 
-	message = fmt.Sprintf("%s <br><a href=\"#\" target=\"_blank\">%s</a>",
+	message = fmt.Sprintf("%s <br>The total for your journey is %.2f€. <br><a href=\"#\" target=\"_blank\">%s</a>",
 		message,
+		cost,
 		token,
 	)
 
@@ -101,6 +110,7 @@ func NewOffer(in OfferInput) Offer {
 		Expired:   strconv.FormatInt(time.Now().Add(time.Hour*time.Duration(offerValidationTime)).Unix(), 10),
 		Token:     token,
 		IsUsed:    false,
+		JourneyId: in.JourneyId,
 		UserId:    in.UserId,
 	}
 }
