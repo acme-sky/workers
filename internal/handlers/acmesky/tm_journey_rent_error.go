@@ -9,6 +9,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
+// Make a message request to the user for "journey receipt but rent error"
 func TMJourneyRentError(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
@@ -23,8 +24,6 @@ func TMJourneyRentError(client worker.JobClient, job entities.Job) {
 		acmejob.FailJob(client, job)
 		return
 	}
-
-	log.Debug("Processing data:", variables)
 
 	ctx := context.Background()
 	_, err = request.Send(ctx)

@@ -40,6 +40,15 @@ type PaymentResponseBody struct {
 	CreatedAt string `json:"created_at"`
 }
 
+type AirportInfoResponseBody struct {
+	Id        uint    `json:"id"`
+	Name      string  `json:"name"`
+	Code      string  `json:"code"`
+	Location  string  `json:"location"`
+	Latitude  float32 `json:"latitude"`
+	Longitude float32 `json:"longitude"`
+}
+
 // Make a new request to an endpoint with a `body` and returns a response body
 // or an error.
 func MakeRequest(endpoint string, body map[string]interface{}) (*ResponseBody, error) {
@@ -188,6 +197,30 @@ func NewPaymentRequest(endpoint string, body map[string]interface{}, auth string
 	}
 
 	var responseBody PaymentResponseBody
+	if err := json.Unmarshal(resBody, &responseBody); err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not unmarshal response body: %s", err))
+	}
+
+	return &responseBody, nil
+}
+
+// Make a new request to an endpoint to get info about an airport.
+func GetAirportInfo(endpoint string) (*AirportInfoResponseBody, error) {
+	res, err := http.Get(endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not read response body: %s", err.Error()))
+	}
+
+	if res.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("HTTP request returned a status %d and response `%s`", res.StatusCode, resBody))
+	}
+
+	var responseBody AirportInfoResponseBody
 	if err := json.Unmarshal(resBody, &responseBody); err != nil {
 		return nil, errors.New(fmt.Sprintf("Could not unmarshal response body: %s", err))
 	}

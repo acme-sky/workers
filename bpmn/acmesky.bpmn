@@ -19,8 +19,8 @@
     <bpmn:messageFlow id="Flow_1mf9ie3" sourceRef="Participant_Rent" targetRef="TM_Ask_For_Rent" />
     <bpmn:messageFlow id="Flow_020v9in" sourceRef="TM_Find_Nearest_Available_Rent_Company" targetRef="Participant_Geolocation" />
     <bpmn:messageFlow id="Flow_057on4g" sourceRef="Participant_Geolocation" targetRef="TM_Find_Nearest_Available_Rent_Company" />
-    <bpmn:messageFlow id="Flow_01fwi9s" sourceRef="TM_Computer_Distance_User_Airport" targetRef="Participant_Geolocation" />
-    <bpmn:messageFlow id="Flow_11v886u" sourceRef="Participant_Geolocation" targetRef="TM_Computer_Distance_User_Airport" />
+    <bpmn:messageFlow id="Flow_01fwi9s" sourceRef="TM_Compute_Distance_User_Airport" targetRef="Participant_Geolocation" />
+    <bpmn:messageFlow id="Flow_11v886u" sourceRef="Participant_Geolocation" targetRef="TM_Compute_Distance_User_Airport" />
     <bpmn:messageFlow id="Flow_0eonj29" sourceRef="Participant_Bank" targetRef="Event_0wdh6he" />
     <bpmn:messageFlow id="Flow_0055psj" sourceRef="TM_Error_On_Book_Journey" targetRef="CM_Received_Bank_Error" />
     <bpmn:messageFlow id="Flow_00yxmjl" sourceRef="TM_Error_On_Check_Offer" targetRef="CM_Received_Bank_Error" />
@@ -327,7 +327,7 @@
       <bpmn:endEvent id="End_Book_Journey">
         <bpmn:incoming>Flow_0kuzdys</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:exclusiveGateway id="EG_Payment_Success" name="Payment success?">
+      <bpmn:exclusiveGateway id="EG_Payment_Success" name="Payment success?" default="Flow_1xgd3n1">
         <bpmn:incoming>Flow_1kig1jb</bpmn:incoming>
         <bpmn:outgoing>Flow_1xgd3n1</bpmn:outgoing>
         <bpmn:outgoing>Flow_01oh7g4</bpmn:outgoing>
@@ -349,9 +349,7 @@
       <bpmn:sequenceFlow id="Flow_0kpaa08" sourceRef="PG_Send_Payment_Link_Start" targetRef="Event_0wdh6he" />
       <bpmn:sequenceFlow id="Flow_1kig1jb" sourceRef="Event_0wdh6he" targetRef="EG_Payment_Success" />
       <bpmn:sequenceFlow id="Flow_0kuzdys" sourceRef="PG_Send_Payment_Link_End" targetRef="End_Book_Journey" />
-      <bpmn:sequenceFlow id="Flow_1xgd3n1" name="No" sourceRef="EG_Payment_Success" targetRef="EE_Payment">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=payment_status != "Ok"</bpmn:conditionExpression>
-      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_1xgd3n1" name="No" sourceRef="EG_Payment_Success" targetRef="EE_Payment" />
       <bpmn:sequenceFlow id="Flow_01oh7g4" name="Yes" sourceRef="EG_Payment_Success" targetRef="PG_Send_Payment_Link_End">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=payment_status = "OK"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
@@ -422,16 +420,16 @@
           <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">=PT30S</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:intermediateCatchEvent>
-      <bpmn:sendTask id="TM_Computer_Distance_User_Airport" name="Compute distance user-airport">
+      <bpmn:sendTask id="TM_Compute_Distance_User_Airport" name="Compute distance user-airport">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="TM_Computer_Distance_User_Airport" />
+          <zeebe:taskDefinition type="TM_Compute_Distance_User_Airport" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1ajjpq1</bpmn:incoming>
         <bpmn:outgoing>Flow_08h7gb2</bpmn:outgoing>
       </bpmn:sendTask>
-      <bpmn:sequenceFlow id="Flow_08h7gb2" sourceRef="TM_Computer_Distance_User_Airport" targetRef="EG_Distance_Less_Than_30km" />
+      <bpmn:sequenceFlow id="Flow_08h7gb2" sourceRef="TM_Compute_Distance_User_Airport" targetRef="EG_Distance_Less_Than_30km" />
       <bpmn:sequenceFlow id="Flow_1i8vff5" sourceRef="TE_30s_Distance_Airport" targetRef="EG_Loop_Rent" />
-      <bpmn:boundaryEvent id="Event_078zn83" attachedToRef="TM_Computer_Distance_User_Airport">
+      <bpmn:boundaryEvent id="Event_078zn83" attachedToRef="TM_Compute_Distance_User_Airport">
         <bpmn:outgoing>Flow_05e47ko</bpmn:outgoing>
         <bpmn:errorEventDefinition id="ErrorEventDefinition_104ycy0" />
       </bpmn:boundaryEvent>
@@ -441,7 +439,7 @@
         <bpmn:incoming>Flow_0ye5jwj</bpmn:incoming>
         <bpmn:outgoing>Flow_1ajjpq1</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_1ajjpq1" sourceRef="EG_Loop_Rent" targetRef="TM_Computer_Distance_User_Airport" />
+      <bpmn:sequenceFlow id="Flow_1ajjpq1" sourceRef="EG_Loop_Rent" targetRef="TM_Compute_Distance_User_Airport" />
       <bpmn:startEvent id="Start_Rent_Service">
         <bpmn:outgoing>Flow_0ye5jwj</bpmn:outgoing>
       </bpmn:startEvent>
@@ -1133,21 +1131,6 @@
           <dc:Bounds x="256" y="1438" width="87" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1vdq7fa_di" bpmnElement="Event_1vdq7fa" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
-        <dc:Bounds x="779" y="632" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_15gzw5g_di" bpmnElement="Activity_0caef9i" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
-        <dc:Bounds x="870" y="610" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0em1zuc_di" bpmnElement="Event_0em1zuc" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
-        <dc:Bounds x="1032" y="632" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DataStoreReference_1bsvx5n_di" bpmnElement="DataStoreReference_1bsvx5n">
-        <dc:Bounds x="385" y="1025" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="387" y="1003" width="46" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_16hdy8m" bpmnElement="Activity_Foreach_Journey" isExpanded="true">
         <dc:Bounds x="800" y="1025" width="520" height="250" />
         <bpmndi:BPMNLabel />
@@ -1383,7 +1366,7 @@
           <dc:Bounds x="5240" y="694" width="57" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0k14vde_di" bpmnElement="TM_Computer_Distance_User_Airport">
+      <bpmndi:BPMNShape id="Activity_0k14vde_di" bpmnElement="TM_Compute_Distance_User_Airport">
         <dc:Bounds x="5228" y="770" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
@@ -1567,6 +1550,21 @@
         <dc:Bounds x="1692" y="792" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1668" y="835" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1vdq7fa_di" bpmnElement="Event_1vdq7fa" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="779" y="632" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_15gzw5g_di" bpmnElement="Activity_0caef9i" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="870" y="610" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0em1zuc_di" bpmnElement="Event_0em1zuc" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1032" y="632" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_1bsvx5n_di" bpmnElement="DataStoreReference_1bsvx5n">
+        <dc:Bounds x="385" y="1025" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="387" y="1003" width="46" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0ieguxi_di" bpmnElement="Event_0jl8r24">
@@ -1963,6 +1961,11 @@
         <di:waypoint x="700" y="1220" />
         <di:waypoint x="700" y="1190" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_0zzoevr_di" bpmnElement="DataInputAssociation_0zzoevr">
+        <di:waypoint x="435" y="1050" />
+        <di:waypoint x="700" y="1050" />
+        <di:waypoint x="700" y="1110" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0tb22zr_di" bpmnElement="DataInputAssociation_0tb22zr">
         <di:waypoint x="1001" y="505" />
         <di:waypoint x="1010" y="527" />
@@ -2095,11 +2098,6 @@
       <bpmndi:BPMNEdge id="Flow_04g2o5z_di" bpmnElement="Flow_04g2o5z">
         <di:waypoint x="1150" y="1110" />
         <di:waypoint x="1150" y="498" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_0zzoevr_di" bpmnElement="DataInputAssociation_0zzoevr">
-        <di:waypoint x="435" y="1050" />
-        <di:waypoint x="700" y="1050" />
-        <di:waypoint x="700" y="1110" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

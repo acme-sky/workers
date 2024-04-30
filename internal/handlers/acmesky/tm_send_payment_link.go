@@ -19,7 +19,7 @@ func TMSendPaymentLink(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	if variables["payment_link"] != nil {
+	if variables["payment_link"] == nil {
 		log.Errorf("[%s] [%d] `payment_link` is a not a valid variable to send", job.Type, jobKey)
 		acmejob.FailJob(client, job)
 		return

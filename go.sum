@@ -1,3 +1,5 @@
+github.com/acme-sky/geodistance-api v0.0.0-20240430172918-82d1991cdf9f h1:cdidp+mqYQLspkf1oPNi76CHE9xA3NJCSBgF/on/gxc=
+github.com/acme-sky/geodistance-api v0.0.0-20240430172918-82d1991cdf9f/go.mod h1:l2vd6NctcHlym6EsoYxwYMFSjTbEqz+HeEXVA/Z76/U=
 github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 h1:zV3ejI06GQ59hwDQAvmK1qxOQGB3WuVTRoY0okPTAv0=
 github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496/go.mod h1:oGkLhpf+kjZl6xBf758TQhh5XrAeiJv/7FRz/2spLIg=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=

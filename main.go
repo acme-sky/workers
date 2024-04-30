@@ -89,7 +89,7 @@ func main() {
 		{Name: "ST_Offer_Still_Valid", Handler: acmeskyHandlers.STOfferStillValid},
 		{Name: "TM_Error_On_Book_Journey", Handler: acmeskyHandlers.TMErrorOnBookJourney, Message: &acmejob.MessageCommand{Name: "CM_Received_Bank_Error", CorrelationKey: "0"}},
 		{Name: "TM_Journey", Handler: acmeskyHandlers.TMJourney, Message: &acmejob.MessageCommand{Name: "CM_Journey", CorrelationKey: "0"}},
-		{Name: "TM_Computer_Distance_User_Airport", Handler: acmeskyHandlers.TMComputerDistanceUserAirport},
+		{Name: "TM_Compute_Distance_User_Airport", Handler: acmeskyHandlers.TMComputeDistanceUserAirport},
 		{Name: "TM_Find_Nearest_Available_Rent_Company", Handler: acmeskyHandlers.TMFindNearestAvailableRentCompany},
 		{Name: "TM_Ask_For_Rent", Handler: acmeskyHandlers.TMAskForRent},
 		{Name: "TM_Journey_And_Rent", Handler: acmeskyHandlers.TMJourneyAndRent, Message: &acmejob.MessageCommand{Name: "CM_Journey_And_Rent", CorrelationKey: "0"}},

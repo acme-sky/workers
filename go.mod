@@ -3,12 +3,14 @@ module github.com/acme-sky/workers
 go 1.22.0
 
 require (
+	github.com/acme-sky/geodistance-api v0.0.0-20240430172918-82d1991cdf9f
 	github.com/camunda/zeebe/clients/go/v8 v8.5.0
 	github.com/charmbracelet/log v0.4.0
 	github.com/getsentry/sentry-go v0.27.0
 	github.com/knadh/koanf/providers/env v0.1.0
 	github.com/knadh/koanf/v2 v2.1.1
 	github.com/rabbitmq/amqp091-go v1.9.0
+	google.golang.org/grpc v1.62.1
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.10
 )
@@ -51,7 +53,6 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240123012728-ef4313101c80 // indirect
-	google.golang.org/grpc v1.62.1 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
