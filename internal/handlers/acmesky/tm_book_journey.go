@@ -46,8 +46,8 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 	endpoint := fmt.Sprintf("%s/flights/filter/", flight1.Airline)
 	payload := map[string]interface{}{
 		"code":               flight1.Code,
-		"departaure_airport": flight1.DepartaureAirport,
-		"departaure_time":    flight1.DepartaureTime,
+		"departure_airport": flight1.DepartureAirport,
+		"departure_time":    flight1.DepartureTime,
 		"arrival_airport":    flight1.ArrivalAirport,
 		"arrival_time":       flight1.ArrivalTime,
 	}
@@ -78,8 +78,8 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 		endpoint := fmt.Sprintf("%s/flights/filter/", flight2.Airline)
 		payload := map[string]interface{}{
 			"code":               flight2.Code,
-			"departaure_airport": flight2.DepartaureAirport,
-			"departaure_time":    flight2.DepartaureTime,
+			"departure_airport": flight2.DepartureAirport,
+			"departure_time":    flight2.DepartureTime,
 			"arrival_airport":    flight2.ArrivalAirport,
 			"arrival_time":       flight2.ArrivalTime,
 		}
@@ -124,7 +124,7 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 
 	endpoint = fmt.Sprintf("%s/journeys/", flight1.Airline)
 	payload = map[string]interface{}{
-		"departaure_flight_id": flight1_id,
+		"departure_flight_id": flight1_id,
 		"cost":                 offer.Journey.Cost,
 		"email":                offer.User.Email,
 	}

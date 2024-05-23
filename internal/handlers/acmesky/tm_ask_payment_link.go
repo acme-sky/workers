@@ -44,13 +44,13 @@ func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 
 	if offer.Journey.Flight2 != nil {
 		payload["description"] = fmt.Sprintf("Flights from %s to %s and from %s to %s",
-			offer.Journey.Flight1.DepartaureAirport,
+			offer.Journey.Flight1.DepartureAirport,
 			offer.Journey.Flight1.ArrivalAirport,
-			offer.Journey.Flight2.DepartaureAirport,
+			offer.Journey.Flight2.DepartureAirport,
 			offer.Journey.Flight2.ArrivalAirport)
 	} else {
 		payload["description"] = fmt.Sprintf("Flight from %s to %s",
-			offer.Journey.Flight1.DepartaureAirport,
+			offer.Journey.Flight1.DepartureAirport,
 			offer.Journey.Flight1.ArrivalAirport)
 	}
 

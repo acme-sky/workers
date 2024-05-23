@@ -14,8 +14,8 @@ type AvailableFlight struct {
 	Id                uint      `gorm:"column:id" json:"id"`
 	CreatedAt         time.Time `gorm:"column:created_at" json:"created_at"`
 	Airline           string    `gorm:"column:airline" json:"airline"`
-	DepartaureTime    time.Time `gorm:"column:departaure_time" json:"departaure_time"`
-	DepartaureAirport string    `gorm:"column:departaure_airport" json:"departaure_airport"`
+	DepartureTime    time.Time `gorm:"column:departure_time" json:"departure_time"`
+	DepartureAirport string    `gorm:"column:departure_airport" json:"departure_airport"`
 	ArrivalTime       time.Time `gorm:"column:arrival_time" json:"arrival_time"`
 	ArrivalAirport    string    `gorm:"column:arrival_airport" json:"arrival_airport"`
 	Code              string    `gorm:"column:code" json:"code"`
@@ -30,8 +30,8 @@ type AvailableFlight struct {
 // Struct used to get new data for a flight
 type AvailableFlightInput struct {
 	Airline           string    `json:"airline" binding:"required"`
-	DepartaureTime    time.Time `json:"departaure_time" binding:"required"`
-	DepartaureAirport string    `json:"departaure_airport" binding:"required"`
+	DepartureTime    time.Time `json:"departure_time" binding:"required"`
+	DepartureAirport string    `json:"departure_airport" binding:"required"`
 	ArrivalTime       time.Time `json:"arrival_time" binding:"required"`
 	ArrivalAirport    string    `json:"arrival_airport" binding:"required"`
 	Code              string    `json:"code" binding:"required"`
@@ -61,12 +61,12 @@ func ValidateAvailableFlight(db *gorm.DB, variables map[string]interface{}) (*Av
 		return nil, errors.New("`user_id` does not exist.")
 	}
 
-	if in.DepartaureAirport == in.ArrivalAirport {
-		return nil, errors.New("`departaure_airport` can't be equals to `arrival_airport`")
+	if in.DepartureAirport == in.ArrivalAirport {
+		return nil, errors.New("`departure_airport` can't be equals to `arrival_airport`")
 	}
 
-	if in.DepartaureTime.Equal(in.ArrivalTime) || in.DepartaureTime.After(in.ArrivalTime) {
-		return nil, errors.New("`departaure_time` can't be after or the same `arrival_time`")
+	if in.DepartureTime.Equal(in.ArrivalTime) || in.DepartureTime.After(in.ArrivalTime) {
+		return nil, errors.New("`departure_time` can't be after or the same `arrival_time`")
 	}
 
 	return in, nil
@@ -78,8 +78,8 @@ func NewAvailableFlight(in AvailableFlightInput) AvailableFlight {
 	return AvailableFlight{
 		CreatedAt:         time.Now(),
 		Airline:           in.Airline,
-		DepartaureTime:    in.DepartaureTime,
-		DepartaureAirport: in.DepartaureAirport,
+		DepartureTime:    in.DepartureTime,
+		DepartureAirport: in.DepartureAirport,
 		ArrivalTime:       in.ArrivalTime,
 		ArrivalAirport:    in.ArrivalAirport,
 		Code:              in.Code,

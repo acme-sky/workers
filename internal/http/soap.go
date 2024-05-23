@@ -32,9 +32,9 @@ func MakeRentRequest(rent models.Rent, offer models.Offer) (*BookRentResponse, e
 
 	params := gosoap.Params{
 		"PickupAddress": *offer.User.Address,
-		"Address":       offer.Journey.Flight1.DepartaureAirport,
+		"Address":       offer.Journey.Flight1.DepartureAirport,
 		"CustomerName":  offer.User.Name,
-		"PickupDate":    offer.Journey.Flight1.DepartaureTime.Add(-2 * time.Hour),
+		"PickupDate":    offer.Journey.Flight1.DepartureTime.Add(-2 * time.Hour),
 	}
 
 	res, err := soap.Call("BookRent", params)

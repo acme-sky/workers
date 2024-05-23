@@ -673,21 +673,21 @@
               "value": "3"
             }
           ],
-          "label": "Departaure airport",
+          "label": "Departure airport",
           "type": "select",
           "layout": {
             "row": "Row_1lkq4lr",
             "columns": null
           },
           "id": "Field_04r8kr1",
-          "key": "flight1_departaure_airport",
+          "key": "flight1_departure_airport",
           "validate": {
             "required": true
           }
         },
         {
           "subtype": "date",
-          "dateLabel": "Departaure time",
+          "dateLabel": "Departure time",
           "label": "Date time",
           "type": "datetime",
           "layout": {
@@ -695,7 +695,7 @@
             "columns": null
           },
           "id": "Field_0qu3kyo",
-          "key": "flight1_departaure_time",
+          "key": "flight1_departure_time",
           "validate": {
             "required": true
           },
@@ -746,7 +746,7 @@
         }
       ],
       "showOutline": true,
-      "label": "Departaure flight",
+      "label": "Departure flight",
       "type": "group",
       "layout": {
         "row": "Row_11ztcmt",
@@ -790,21 +790,21 @@
               "value": "3"
             }
           ],
-          "label": "Departaure airport",
+          "label": "Departure airport",
           "type": "select",
           "layout": {
             "row": "Row_1lkq4lx",
             "columns": null
           },
           "id": "Field_04r8kr2",
-          "key": "flight2_departaure_airport",
+          "key": "flight2_departure_airport",
           "validate": {
             "required": false
           }
         },
         {
           "subtype": "date",
-          "dateLabel": "Departaure time",
+          "dateLabel": "Departure time",
           "label": "Date time",
           "type": "datetime",
           "layout": {
@@ -812,7 +812,7 @@
             "columns": null
           },
           "id": "Field_0qu331o",
-          "key": "flight2_departaure_time",
+          "key": "flight2_departure_time",
           "validate": {
             "required": false
           },
@@ -987,16 +987,16 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="TM_New_Request_Save_Flight" />
         <zeebe:ioMapping>
-          <zeebe:input source="=flight1_departaure_airport_id" target="flight1_departaure_airport_id" />
-          <zeebe:input source="=flight1_departaure_time" target="flight1_departaure_time" />
+          <zeebe:input source="=flight1_departure_airport_id" target="flight1_departure_airport_id" />
+          <zeebe:input source="=flight1_departure_time" target="flight1_departure_time" />
           <zeebe:input source="=flight1_arrival_airport_id" target="flight1_arrival_airport_id" />
           <zeebe:input source="=flight1_arrival_time" target="flight1_arrival_time" />
-          <zeebe:input source="=flight2_departaure_airport_id" target="flight2_departaure_airport_id" />
-          <zeebe:input source="=flight2_departaure_time" target="flight2_departaure_time" />
+          <zeebe:input source="=flight2_departure_airport_id" target="flight2_departure_airport_id" />
+          <zeebe:input source="=flight2_departure_time" target="flight2_departure_time" />
           <zeebe:input source="=flight2_arrival_airport_id" target="flight2_arrival_airport_id" />
           <zeebe:input source="=flight2_arrival_time" target="flight2_arrival_time" />
-          <zeebe:output source="=departaure_airport_id" target="departaure_airport_id" />
-          <zeebe:output source="=departaure_time" target="departaure_time" />
+          <zeebe:output source="=departure_airport_id" target="departure_airport_id" />
+          <zeebe:output source="=departure_time" target="departure_time" />
           <zeebe:output source="=arrival_airport_id" target="arrival_airport_id" />
           <zeebe:output source="=arrival_time" target="arrival_time" />
         </zeebe:ioMapping>

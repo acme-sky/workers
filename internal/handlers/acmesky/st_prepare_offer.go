@@ -39,9 +39,9 @@ func STPrepareOffer(client worker.JobClient, job entities.Job) {
 
 	body := models.OfferInput{
 		Flight1: models.OfferInputFields{
-			DepartaureAirport: journey.Flight1.DepartaureAirport,
+			DepartureAirport: journey.Flight1.DepartureAirport,
 			ArrivalAirport:    journey.Flight1.ArrivalAirport,
-			DepartaureTime:    journey.Flight1.DepartaureTime.Format("02/01/2006 15:04"),
+			DepartureTime:    journey.Flight1.DepartureTime.Format("02/01/2006 15:04"),
 			ArrivalTime:       journey.Flight1.ArrivalTime.Format("02/01/2006 15:04"),
 			Cost:              journey.Flight1.Cost,
 		},
@@ -52,9 +52,9 @@ func STPrepareOffer(client worker.JobClient, job entities.Job) {
 
 	if journey.Flight2 != nil {
 		body.Flight2 = &models.OfferInputFields{
-			DepartaureAirport: journey.Flight2.DepartaureAirport,
+			DepartureAirport: journey.Flight2.DepartureAirport,
 			ArrivalAirport:    journey.Flight2.ArrivalAirport,
-			DepartaureTime:    journey.Flight2.DepartaureTime.Format("02/01/2006 15:04"),
+			DepartureTime:    journey.Flight2.DepartureTime.Format("02/01/2006 15:04"),
 			ArrivalTime:       journey.Flight2.ArrivalTime.Format("02/01/2006 15:04"),
 			Cost:              journey.Flight2.Cost,
 		}

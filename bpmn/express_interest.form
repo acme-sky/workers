@@ -17,21 +17,21 @@
               "value": "3"
             }
           ],
-          "label": "Departaure airport",
+          "label": "Departure airport",
           "type": "select",
           "layout": {
             "row": "Row_1lkq4lr",
             "columns": null
           },
           "id": "Field_04r8kr1",
-          "key": "flight1_departaure_airport",
+          "key": "flight1_departure_airport",
           "validate": {
             "required": true
           }
         },
         {
           "subtype": "date",
-          "dateLabel": "Departaure time",
+          "dateLabel": "Departure time",
           "label": "Date time",
           "type": "datetime",
           "layout": {
@@ -39,7 +39,7 @@
             "columns": null
           },
           "id": "Field_0qu3kyo",
-          "key": "flight1_departaure_time",
+          "key": "flight1_departure_time",
           "validate": {
             "required": true
           },
@@ -90,7 +90,7 @@
         }
       ],
       "showOutline": true,
-      "label": "Departaure flight",
+      "label": "Departure flight",
       "type": "group",
       "layout": {
         "row": "Row_11ztcmt",
@@ -134,21 +134,21 @@
               "value": "3"
             }
           ],
-          "label": "Departaure airport",
+          "label": "Departure airport",
           "type": "select",
           "layout": {
             "row": "Row_1lkq4lx",
             "columns": null
           },
           "id": "Field_04r8kr2",
-          "key": "flight2_departaure_airport",
+          "key": "flight2_departure_airport",
           "validate": {
             "required": false
           }
         },
         {
           "subtype": "date",
-          "dateLabel": "Departaure time",
+          "dateLabel": "Departure time",
           "label": "Date time",
           "type": "datetime",
           "layout": {
@@ -156,7 +156,7 @@
             "columns": null
           },
           "id": "Field_0qu331o",
-          "key": "flight2_departaure_time",
+          "key": "flight2_departure_time",
           "validate": {
             "required": false
           },

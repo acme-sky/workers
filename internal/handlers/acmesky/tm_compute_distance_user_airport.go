@@ -19,7 +19,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-// Task used to find distance between departaure airport and user.
+// Task used to find distance between departure airport and user.
 func TMComputeDistanceUserAirport(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
@@ -66,10 +66,10 @@ func TMComputeDistanceUserAirport(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	endpoint := fmt.Sprintf("%s/airports/code/%s/", offer.Journey.Flight1.Airline, offer.Journey.Flight1.DepartaureAirport)
+	endpoint := fmt.Sprintf("%s/airports/code/%s/", offer.Journey.Flight1.Airline, offer.Journey.Flight1.DepartureAirport)
 	airport, err := http.GetAirportInfo(endpoint)
 	if err != nil {
-		log.Errorf("[%s] [%d] Can't find info for departaure airport: %s", job.Type, jobKey, err.Error())
+		log.Errorf("[%s] [%d] Can't find info for departure airport: %s", job.Type, jobKey, err.Error())
 		acmejob.FailJob(client, job)
 		return
 	}

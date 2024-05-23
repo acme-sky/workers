@@ -26,9 +26,9 @@ type Offer struct {
 }
 
 type OfferInputFields struct {
-	DepartaureAirport string  `binding:"required"`
+	DepartureAirport string  `binding:"required"`
 	ArrivalAirport    string  `binding:"required"`
-	DepartaureTime    string  `binding:"required"`
+	DepartureTime    string  `binding:"required"`
 	ArrivalTime       string  `binding:"required"`
 	Cost              float64 `binding:"required"`
 }
@@ -76,9 +76,9 @@ func NewOffer(in OfferInput) Offer {
 	message := fmt.Sprintf(
 		"Hello %s, this is the offer token for your flight from <b>%s</b> to <b>%s</b> in date %s - %s for %.2f€.",
 		in.Name,
-		in.Flight1.DepartaureAirport,
+		in.Flight1.DepartureAirport,
 		in.Flight1.ArrivalAirport,
-		in.Flight1.DepartaureTime,
+		in.Flight1.DepartureTime,
 		in.Flight1.ArrivalTime,
 		in.Flight1.Cost,
 	)
@@ -88,9 +88,9 @@ func NewOffer(in OfferInput) Offer {
 	if in.Flight2 != nil {
 		message = fmt.Sprintf("%s <br>You also have a return flight  from <b>%s</b> to <b>%s</b> in date %s - %s for %.2f€.",
 			message,
-			in.Flight2.DepartaureAirport,
+			in.Flight2.DepartureAirport,
 			in.Flight2.ArrivalAirport,
-			in.Flight2.DepartaureTime,
+			in.Flight2.DepartureTime,
 			in.Flight2.ArrivalTime,
 			in.Flight2.Cost,
 		)

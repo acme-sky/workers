@@ -27,7 +27,7 @@ func STCreateJourneys(client worker.JobClient, job entities.Job) {
 	db, _ := db.GetDb()
 	var available_flights []models.AvailableFlight
 
-	if found := db.Where("departaure_time::date >= now()::date AND offer_sent = false").Preload("User").Preload("Interest").Find(&available_flights); found == nil {
+	if found := db.Where("departure_time::date >= now()::date AND offer_sent = false").Preload("User").Preload("Interest").Find(&available_flights); found == nil {
 		log.Errorf("[%s] [%d] Interests not found", job.Type, jobKey)
 		acmejob.FailJob(client, job)
 		return

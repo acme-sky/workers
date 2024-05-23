@@ -17,7 +17,7 @@ import (
 // It makes a filter for airlines and set a variable `flight` is something is
 // found. A request could be:
 // curl -X POST <base>/flights/filter/ -H 'content-type: application/json' -H 'accept: application/json' \
-// -d '{"departaure_time":"2024-04-30T04:12:00+02:00","arrival_time":"2024-05-01T11:00:00+02:00","departaure_airport":"CPH","arrival_airport":"CTA"}'
+// -d '{"departure_time":"2024-04-30T04:12:00+02:00","arrival_time":"2024-05-01T11:00:00+02:00","departure_airport":"CPH","arrival_airport":"CTA"}'
 func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
@@ -44,8 +44,8 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 		user := interest["user"].(map[string]interface{})
 
 		payload := map[string]interface{}{
-			"departaure_airport": interest["flight1_departaure_airport"].(string),
-			"departaure_time":    interest["flight1_departaure_time"].(string),
+			"departure_airport": interest["flight1_departure_airport"].(string),
+			"departure_time":    interest["flight1_departure_time"].(string),
 			"arrival_airport":    interest["flight1_arrival_airport"].(string),
 			"arrival_time":       interest["flight1_arrival_time"].(string),
 		}
@@ -65,13 +65,13 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 			}
 		}
 
-		if interest["flight2_departaure_airport"] == nil {
+		if interest["flight2_departure_airport"] == nil {
 			continue
 		}
 
 		payload = map[string]interface{}{
-			"departaure_airport": interest["flight2_departaure_airport"].(string),
-			"departaure_time":    interest["flight2_departaure_time"].(string),
+			"departure_airport": interest["flight2_departure_airport"].(string),
+			"departure_time":    interest["flight2_departure_time"].(string),
 			"arrival_airport":    interest["flight2_arrival_airport"].(string),
 			"arrival_time":       interest["flight2_arrival_time"].(string),
 		}

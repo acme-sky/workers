@@ -30,8 +30,8 @@ func STSaveFlightsAsAvailable(client worker.JobClient, job entities.Job) {
 
 	for i := 0; i < len(flights); i++ {
 		flight := flights[i].(map[string]interface{})
-		departaure_airport := flight["departaure_airport"].(map[string]interface{})
-		flight["departaure_airport"] = departaure_airport["code"]
+		departure_airport := flight["departure_airport"].(map[string]interface{})
+		flight["departure_airport"] = departure_airport["code"]
 		arrival_airport := flight["arrival_airport"].(map[string]interface{})
 		flight["arrival_airport"] = arrival_airport["code"]
 		input, err := models.ValidateAvailableFlight(db, flight)
@@ -42,8 +42,8 @@ func STSaveFlightsAsAvailable(client worker.JobClient, job entities.Job) {
 		}
 
 		var available_flight models.AvailableFlight
-		if found := db.Where("code = ? AND cost = ? AND departaure_airport = ? AND arrival_airport = ? AND departaure_time = ? AND arrival_time = ?",
-			input.Code, input.Cost, input.DepartaureAirport, input.ArrivalAirport, input.DepartaureTime, input.ArrivalTime).First(&available_flight).Error; found == nil {
+		if found := db.Where("code = ? AND cost = ? AND departure_airport = ? AND arrival_airport = ? AND departure_time = ? AND arrival_time = ?",
+			input.Code, input.Cost, input.DepartureAirport, input.ArrivalAirport, input.DepartureTime, input.ArrivalTime).First(&available_flight).Error; found == nil {
 			log.Warnf("[%s] [%d] Skip an already saved flight", job.Type, jobKey)
 			continue
 		}
