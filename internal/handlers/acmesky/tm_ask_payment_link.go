@@ -62,8 +62,15 @@ func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	variables["payment_link"] = fmt.Sprintf("%s/%s/pay/", conf.String("bank.endpoint"), response.Id)
+	variables["payment_link"] = fmt.Sprintf("%s%s", conf.String("bank.payment.endpoint"), response.Id)
 	variables["flight_price"] = offer.Journey.Cost
+
+	offer.PaymentLink = variables["payment_link"].(string)
+	if err := db.Save(&offer).Error; err != nil {
+		log.Errorf("[%s] [%d] Error on saving offer %s", job.Type, jobKey, err.Error())
+		acmejob.FailJob(client, job)
+		return
+	}
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
