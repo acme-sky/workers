@@ -33,7 +33,9 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 
 	interests := variables["interests"].([]interface{})
 	if index < 0 || index >= len(interests) {
-		panic("Index out of range")
+		log.Errorf("Error for airline `%s`: index out of range %d", airline, index)
+		acmejob.FailJob(client, job)
+		return
 	}
 
 	flights := []map[string]interface{}{}
