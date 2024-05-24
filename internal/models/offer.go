@@ -27,10 +27,10 @@ type Offer struct {
 
 type OfferInputFields struct {
 	DepartureAirport string  `binding:"required"`
-	ArrivalAirport    string  `binding:"required"`
+	ArrivalAirport   string  `binding:"required"`
 	DepartureTime    string  `binding:"required"`
-	ArrivalTime       string  `binding:"required"`
-	Cost              float64 `binding:"required"`
+	ArrivalTime      string  `binding:"required"`
+	Cost             float64 `binding:"required"`
 }
 
 // Struct used to get new data for an offer

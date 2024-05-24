@@ -45,11 +45,11 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 
 	endpoint := fmt.Sprintf("%s/flights/filter/", flight1.Airline)
 	payload := map[string]interface{}{
-		"code":               flight1.Code,
+		"code":              flight1.Code,
 		"departure_airport": flight1.DepartureAirport,
 		"departure_time":    flight1.DepartureTime,
-		"arrival_airport":    flight1.ArrivalAirport,
-		"arrival_time":       flight1.ArrivalTime,
+		"arrival_airport":   flight1.ArrivalAirport,
+		"arrival_time":      flight1.ArrivalTime,
 	}
 
 	response, err := http.MakeRequest(endpoint, payload)
@@ -77,11 +77,11 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 	if flight2 != nil {
 		endpoint := fmt.Sprintf("%s/flights/filter/", flight2.Airline)
 		payload := map[string]interface{}{
-			"code":               flight2.Code,
+			"code":              flight2.Code,
 			"departure_airport": flight2.DepartureAirport,
 			"departure_time":    flight2.DepartureTime,
-			"arrival_airport":    flight2.ArrivalAirport,
-			"arrival_time":       flight2.ArrivalTime,
+			"arrival_airport":   flight2.ArrivalAirport,
+			"arrival_time":      flight2.ArrivalTime,
 		}
 
 		response, err := http.MakeRequest(endpoint, payload)
@@ -125,8 +125,8 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 	endpoint = fmt.Sprintf("%s/journeys/", flight1.Airline)
 	payload = map[string]interface{}{
 		"departure_flight_id": flight1_id,
-		"cost":                 offer.Journey.Cost,
-		"email":                offer.User.Email,
+		"cost":                offer.Journey.Cost,
+		"email":               offer.User.Email,
 	}
 
 	if flight2_id != 0 {

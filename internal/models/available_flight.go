@@ -11,34 +11,34 @@ import (
 
 // AvailableFlight model
 type AvailableFlight struct {
-	Id                uint      `gorm:"column:id" json:"id"`
-	CreatedAt         time.Time `gorm:"column:created_at" json:"created_at"`
-	Airline           string    `gorm:"column:airline" json:"airline"`
+	Id               uint      `gorm:"column:id" json:"id"`
+	CreatedAt        time.Time `gorm:"column:created_at" json:"created_at"`
+	Airline          string    `gorm:"column:airline" json:"airline"`
 	DepartureTime    time.Time `gorm:"column:departure_time" json:"departure_time"`
 	DepartureAirport string    `gorm:"column:departure_airport" json:"departure_airport"`
-	ArrivalTime       time.Time `gorm:"column:arrival_time" json:"arrival_time"`
-	ArrivalAirport    string    `gorm:"column:arrival_airport" json:"arrival_airport"`
-	Code              string    `gorm:"column:code" json:"code"`
-	Cost              float64   `gorm:"column:cost" json:"cost"`
-	InterestId        *int      `json:"-"`
-	Interest          *Interest `gorm:"foreignKey:InterestId;null" json:"interest"`
-	OfferSent         bool      `gorm:"column:offer_sent" json:"offer_sent"`
-	UserId            int       `json:"-"`
-	User              User      `gorm:"foreignKey:UserId" json:"user"`
+	ArrivalTime      time.Time `gorm:"column:arrival_time" json:"arrival_time"`
+	ArrivalAirport   string    `gorm:"column:arrival_airport" json:"arrival_airport"`
+	Code             string    `gorm:"column:code" json:"code"`
+	Cost             float64   `gorm:"column:cost" json:"cost"`
+	InterestId       *int      `json:"-"`
+	Interest         *Interest `gorm:"foreignKey:InterestId;null" json:"interest"`
+	OfferSent        bool      `gorm:"column:offer_sent" json:"offer_sent"`
+	UserId           int       `json:"-"`
+	User             User      `gorm:"foreignKey:UserId" json:"user"`
 }
 
 // Struct used to get new data for a flight
 type AvailableFlightInput struct {
-	Airline           string    `json:"airline" binding:"required"`
+	Airline          string    `json:"airline" binding:"required"`
 	DepartureTime    time.Time `json:"departure_time" binding:"required"`
 	DepartureAirport string    `json:"departure_airport" binding:"required"`
-	ArrivalTime       time.Time `json:"arrival_time" binding:"required"`
-	ArrivalAirport    string    `json:"arrival_airport" binding:"required"`
-	Code              string    `json:"code" binding:"required"`
-	Cost              float64   `json:"cost" binding:"required"`
-	InterestId        *int      `json:"interest_id"`
-	OfferSent         bool      `json:"offer_sent"`
-	UserId            int       `json:"user_id" binding:"required"`
+	ArrivalTime      time.Time `json:"arrival_time" binding:"required"`
+	ArrivalAirport   string    `json:"arrival_airport" binding:"required"`
+	Code             string    `json:"code" binding:"required"`
+	Cost             float64   `json:"cost" binding:"required"`
+	InterestId       *int      `json:"interest_id"`
+	OfferSent        bool      `json:"offer_sent"`
+	UserId           int       `json:"user_id" binding:"required"`
 }
 
 // It validates data from `in` and returns a possible error or not
@@ -76,16 +76,16 @@ func ValidateAvailableFlight(db *gorm.DB, variables map[string]interface{}) (*Av
 // `ValidateAvailableFlight(..., in)` method
 func NewAvailableFlight(in AvailableFlightInput) AvailableFlight {
 	return AvailableFlight{
-		CreatedAt:         time.Now(),
-		Airline:           in.Airline,
+		CreatedAt:        time.Now(),
+		Airline:          in.Airline,
 		DepartureTime:    in.DepartureTime,
 		DepartureAirport: in.DepartureAirport,
-		ArrivalTime:       in.ArrivalTime,
-		ArrivalAirport:    in.ArrivalAirport,
-		Code:              in.Code,
-		Cost:              in.Cost,
-		InterestId:        in.InterestId,
-		OfferSent:         false,
-		UserId:            in.UserId,
+		ArrivalTime:      in.ArrivalTime,
+		ArrivalAirport:   in.ArrivalAirport,
+		Code:             in.Code,
+		Cost:             in.Cost,
+		InterestId:       in.InterestId,
+		OfferSent:        false,
+		UserId:           in.UserId,
 	}
 }

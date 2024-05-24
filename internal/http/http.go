@@ -20,12 +20,12 @@ type AuthTokenBody struct {
 }
 
 type JourneyResponseBody struct {
-	Id               uint                   `json:"id"`
-	CreatedAt        time.Time              `json:"created_at"`
+	Id              uint                   `json:"id"`
+	CreatedAt       time.Time              `json:"created_at"`
 	DepartureFlight map[string]interface{} `json:"departure_flight"`
-	ArrivalFlight    map[string]interface{} `json:"arrival_flight"`
-	Cost             float64                `json:"cost"`
-	Email            string                 `json:"email"`
+	ArrivalFlight   map[string]interface{} `json:"arrival_flight"`
+	Cost            float64                `json:"cost"`
+	Email           string                 `json:"email"`
 }
 
 type PaymentResponseBody struct {

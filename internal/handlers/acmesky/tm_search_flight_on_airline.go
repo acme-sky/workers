@@ -46,8 +46,8 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 		payload := map[string]interface{}{
 			"departure_airport": interest["flight1_departure_airport"].(string),
 			"departure_time":    interest["flight1_departure_time"].(string),
-			"arrival_airport":    interest["flight1_arrival_airport"].(string),
-			"arrival_time":       interest["flight1_arrival_time"].(string),
+			"arrival_airport":   interest["flight1_arrival_airport"].(string),
+			"arrival_time":      interest["flight1_arrival_time"].(string),
 		}
 
 		response, err := http.MakeRequest(endpoint, payload)
@@ -72,8 +72,8 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 		payload = map[string]interface{}{
 			"departure_airport": interest["flight2_departure_airport"].(string),
 			"departure_time":    interest["flight2_departure_time"].(string),
-			"arrival_airport":    interest["flight2_arrival_airport"].(string),
-			"arrival_time":       interest["flight2_arrival_time"].(string),
+			"arrival_airport":   interest["flight2_arrival_airport"].(string),
+			"arrival_time":      interest["flight2_arrival_time"].(string),
 		}
 
 		response, err = http.MakeRequest(endpoint, payload)

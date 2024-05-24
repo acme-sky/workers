@@ -16,13 +16,13 @@ type Interest struct {
 
 	Flight1DepartureTime    time.Time `gorm:"column:flight1_departure_time" json:"flight1_departure_time"`
 	Flight1DepartureAirport string    `gorm:"column:flight1_departure_airport" json:"flight1_departure_airport"`
-	Flight1ArrivalTime       time.Time `gorm:"column:flight1_arrival_time" json:"flight1_arrival_time"`
-	Flight1ArrivalAirport    string    `gorm:"column:flight1_arrival_airport" json:"flight1_arrival_airport"`
+	Flight1ArrivalTime      time.Time `gorm:"column:flight1_arrival_time" json:"flight1_arrival_time"`
+	Flight1ArrivalAirport   string    `gorm:"column:flight1_arrival_airport" json:"flight1_arrival_airport"`
 
 	Flight2DepartureTime    *time.Time `gorm:"column:flight2_departure_time;null" json:"flight2_departure_time"`
 	Flight2DepartureAirport *string    `gorm:"column:flight2_departure_airport;null" json:"flight2_departure_airport"`
-	Flight2ArrivalTime       *time.Time `gorm:"column:flight2_arrival_time;null" json:"flight2_arrival_time"`
-	Flight2ArrivalAirport    *string    `gorm:"column:flight2_arrival_airport;null" json:"flight2_arrival_airport"`
+	Flight2ArrivalTime      *time.Time `gorm:"column:flight2_arrival_time;null" json:"flight2_arrival_time"`
+	Flight2ArrivalAirport   *string    `gorm:"column:flight2_arrival_airport;null" json:"flight2_arrival_airport"`
 
 	UserId int  `json:"-"`
 	User   User `gorm:"foreignKey:UserId" json:"user"`
@@ -32,13 +32,13 @@ type Interest struct {
 type InterestInput struct {
 	Flight1DepartureTime    time.Time  `json:"flight1_departure_time" binding:"required"`
 	Flight1DepartureAirport string     `json:"flight1_departure_airport" binding:"required"`
-	Flight1ArrivalTime       time.Time  `json:"flight1_arrival_time" binding:"required"`
-	Flight1ArrivalAirport    string     `json:"flight1_arrival_airport" binding:"required"`
+	Flight1ArrivalTime      time.Time  `json:"flight1_arrival_time" binding:"required"`
+	Flight1ArrivalAirport   string     `json:"flight1_arrival_airport" binding:"required"`
 	Flight2DepartureTime    *time.Time `json:"flight2_departure_time"`
 	Flight2DepartureAirport *string    `json:"flight2_departure_airport"`
-	Flight2ArrivalTime       *time.Time `json:"flight2_arrival_time"`
-	Flight2ArrivalAirport    *string    `json:"flight2_arrival_airport"`
-	UserId                   int        `json:"user_id" binding:"required"`
+	Flight2ArrivalTime      *time.Time `json:"flight2_arrival_time"`
+	Flight2ArrivalAirport   *string    `json:"flight2_arrival_airport"`
+	UserId                  int        `json:"user_id" binding:"required"`
 }
 
 // It validates data from `in` and returns a possible error or not
@@ -98,15 +98,15 @@ func ValidateInterest(db *gorm.DB, variables map[string]interface{}) (*InterestI
 // `ValidateInterest(..., in)` method
 func NewInterest(in InterestInput) Interest {
 	return Interest{
-		CreatedAt:                time.Now(),
+		CreatedAt:               time.Now(),
 		Flight1DepartureTime:    in.Flight1DepartureTime,
 		Flight1DepartureAirport: in.Flight1DepartureAirport,
-		Flight1ArrivalTime:       in.Flight1ArrivalTime,
-		Flight1ArrivalAirport:    in.Flight1ArrivalAirport,
+		Flight1ArrivalTime:      in.Flight1ArrivalTime,
+		Flight1ArrivalAirport:   in.Flight1ArrivalAirport,
 		Flight2DepartureTime:    in.Flight2DepartureTime,
 		Flight2DepartureAirport: in.Flight2DepartureAirport,
-		Flight2ArrivalTime:       in.Flight2ArrivalTime,
-		Flight2ArrivalAirport:    in.Flight2ArrivalAirport,
-		UserId:                   in.UserId,
+		Flight2ArrivalTime:      in.Flight2ArrivalTime,
+		Flight2ArrivalAirport:   in.Flight2ArrivalAirport,
+		UserId:                  in.UserId,
 	}
 }
