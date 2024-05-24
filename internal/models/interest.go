@@ -75,8 +75,8 @@ func ValidateInterest(db *gorm.DB, variables map[string]interface{}) (*InterestI
 		return nil, errors.New("`flight1`: `departure_airport` can't be equals to `arrival_airport`")
 	}
 
-	if in.Flight1DepartureTime.Equal(in.Flight1ArrivalTime) || in.Flight1DepartureTime.After(in.Flight1ArrivalTime) {
-		return nil, errors.New("`flight1`: `departure_time` can't be after or the same `arrival_time`")
+	if in.Flight1DepartureTime.After(in.Flight1ArrivalTime) {
+		return nil, errors.New("`flight1`: `departure_time` can't be after `arrival_time`")
 	}
 
 	if in.Flight2DepartureAirport != nil && in.Flight2DepartureTime != nil && in.Flight2ArrivalAirport != nil && in.Flight2ArrivalTime != nil {
@@ -84,8 +84,8 @@ func ValidateInterest(db *gorm.DB, variables map[string]interface{}) (*InterestI
 			return nil, errors.New("`flight2`: `departure_airport` can't be equals to `arrival_airport`")
 		}
 
-		if (*in.Flight2DepartureTime).Equal(*in.Flight2ArrivalTime) || (*in.Flight2DepartureTime).After(*in.Flight2ArrivalTime) {
-			return nil, errors.New("`flight2`: `departure_time` can't be after or the same `arrival_time`")
+		if (*in.Flight2DepartureTime).After(*in.Flight2ArrivalTime) {
+			return nil, errors.New("`flight2`: `departure_time` can't be after `arrival_time`")
 		}
 	} else if !(in.Flight2DepartureAirport == nil || in.Flight2DepartureTime == nil || in.Flight2ArrivalAirport == nil || in.Flight2ArrivalTime == nil) {
 		return nil, errors.New("`flight2`: all fields must be nil or filled")
