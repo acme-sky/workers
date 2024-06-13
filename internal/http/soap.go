@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -30,12 +31,18 @@ func MakeRentRequest(rent models.Rent, offer models.Offer) (*BookRentResponse, e
 		return nil, err
 	}
 
+	endpoint := fmt.Sprintf("%s/airports/code/%s/", offer.Journey.Flight1.Airline, offer.Journey.Flight1.DepartureAirport)
+	airport, err := GetAirportInfo(endpoint)
+	if err != nil {
+		log.Errorf("Can't find info for departure airport: %s", err.Error())
+		return nil, err
+	}
+
 	params := gosoap.Params{
 		"PickupAddress": *offer.User.Address,
-		// FIXME: add "address" field to airport with string
-		"Address":      offer.Journey.Flight1.DepartureAirport,
-		"CustomerName": offer.User.Name,
-		"PickupDate":   offer.Journey.Flight1.DepartureTime.Add(-2 * time.Hour).Format("02/01/2006 15:04"),
+		"Address":       airport.Location,
+		"CustomerName":  offer.User.Name,
+		"PickupDate":    offer.Journey.Flight1.DepartureTime.Add(-2 * time.Hour).Format("02/01/2006 15:04"),
 	}
 
 	res, err := soap.Call("BookRent", params)
