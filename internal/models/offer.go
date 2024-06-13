@@ -21,6 +21,7 @@ type Offer struct {
 	IsUsed      bool      `gorm:"column:is_used" json:"is_used"`
 	PaymentLink string    `gorm:"column:payment_link" json:"payment_link"`
 	PaymentPaid bool      `gorm:"column:payment_paid" json:"payment_paid"`
+	RentId      string    `gorm:"column:rent_id" json:"rent_id"`
 	JourneyId   int       `json:"-"`
 	Journey     Journey   `gorm:"foreignKey:JourneyId" json:"journey"`
 	UserId      int       `json:"-"`
@@ -114,6 +115,7 @@ func NewOffer(in OfferInput) Offer {
 		IsUsed:      false,
 		PaymentLink: "",
 		PaymentPaid: false,
+		RentId:      "",
 		JourneyId:   in.JourneyId,
 		UserId:      in.UserId,
 	}

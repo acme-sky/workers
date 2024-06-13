@@ -90,7 +90,7 @@ func main() {
 		{Name: "TM_Error_On_Book_Journey", Handler: acmeskyHandlers.TMErrorOnBookJourney, Message: &acmejob.MessageCommand{Name: "CM_Received_Bank_Error", CorrelationKey: "0"}},
 		{Name: "TM_Journey", Handler: acmeskyHandlers.TMJourney, Message: &acmejob.MessageCommand{Name: "CM_Journey", CorrelationKey: "0"}},
 		{Name: "TM_Compute_Distance_User_Airport", Handler: acmeskyHandlers.TMComputeDistanceUserAirport},
-		{Name: "TM_Find_Nearest_Available_Rent_Company", Handler: acmeskyHandlers.TMFindNearestAvailableRentCompany},
+		{Name: "ST_Sort_Rent_Services", Handler: acmeskyHandlers.STSortRentServices},
 		{Name: "TM_Ask_For_Rent", Handler: acmeskyHandlers.TMAskForRent},
 		{Name: "TM_Journey_And_Rent", Handler: acmeskyHandlers.TMJourneyAndRent, Message: &acmejob.MessageCommand{Name: "CM_Journey_And_Rent", CorrelationKey: "0"}},
 		{Name: "TM_Journey_Rent_Error", Handler: acmeskyHandlers.TMJourneyRentError, Message: &acmejob.MessageCommand{Name: "CM_Journey", CorrelationKey: "0"}},

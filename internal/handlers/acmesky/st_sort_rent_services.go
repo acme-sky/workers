@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"sort"
 	"time"
 
 	"github.com/charmbracelet/log"
@@ -17,8 +18,9 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-// Task used to find the nearest rent company to the user' address
-func TMFindNearestAvailableRentCompany(client worker.JobClient, job entities.Job) {
+// Service task used to sort all rent services with key the distance between
+// user and rent geolocalizations.
+func STSortRentServices(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -70,7 +72,12 @@ func TMFindNearestAvailableRentCompany(client worker.JobClient, job entities.Job
 		acmejob.FailJob(client, job)
 		return
 	}
-	var distances []int
+
+	type RentDistance struct {
+		Id       uint
+		Distance int
+	}
+	var distances []RentDistance
 
 	for _, rent := range rents {
 		distance, err := c.FindDistance(ctx, &pb.DistanceRequest{
@@ -78,29 +85,25 @@ func TMFindNearestAvailableRentCompany(client worker.JobClient, job entities.Job
 			Destination: &pb.MapPosition{Latitude: rent.Latitude, Longitude: rent.Longitude},
 		})
 		if err != nil {
-			log.Warn("[%s] [%d] Can't find distance for %s: %s", job.Type, jobKey, rent.Name, err.Error())
-			distances = append(distances, 9999999)
+			log.Warnf("[%s] [%d] Can't find distance for %s: %s", job.Type, jobKey, rent.Name, err.Error())
+			distances = append(distances, RentDistance{Id: rent.Id, Distance: 999999})
 			continue
 		}
-		distances = append(distances, int(distance.GetDistance()))
+		distances = append(distances, RentDistance{Id: rent.Id, Distance: int(distance.GetDistance())})
 	}
 
-	if len(distances) == 0 {
+	if len(rents) == 0 {
 		log.Errorf("[%s] [%d] There is no available rent company: %s", job.Type, jobKey, err.Error())
 		acmejob.FailJob(client, job)
 		return
 	}
 
-	var selectRentIndex = 0
-	var minRentDistance = distances[0]
-	for i := 1; i < len(distances); {
-		if distances[i] < minRentDistance {
-			minRentDistance = distances[i]
-			selectRentIndex = i
-		}
-	}
+	sort.Slice(distances, func(i, j int) bool {
+		return distances[i].Distance > distances[j].Distance
+	})
 
-	variables["rent_company"] = rents[selectRentIndex]
+	variables["rent_companies"] = distances
+	variables["rent_status"] = "No"
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
