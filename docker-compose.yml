@@ -180,9 +180,18 @@ services:
       - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672/
       - SENTRY_DSN=${SENTRY_DSN}
       - DATABASE_DSN=${DATABASE_DSN}
-      - AIRLINES=http://acmesky-airlineservice-api:8080/v1
+      - AIRLINES=${AIRLINES}
+      - AIRLINE_LOGIN_USERNAME=${AIRLINE_LOGIN_USERNAME}
+      - AIRLINE_LOGIN_PASSWORD=${AIRLINE_LOGIN_PASSWORD}
+      - OFFER_VALIDATION_TIME=${OFFER_VALIDATION_TIME}
+      - BANK_ENDPOINT=${BANK_ENDPOINT}
+      - BANK_PAYMENT_ENDPOINT=${BANK_PAYMENT_ENDPOINT}
+      - BANK_CALLBACK=${BANK_CALLBACK}
+      - BANK_TOKEN=${BANK_TOKEN}
+      - GEODISTANCE_API=${GEODISTANCE_API}
     networks:
       - camunda
+      - acmesky
     depends_on:
       postgres:
         condition: service_started
@@ -207,3 +216,5 @@ volumes:
 
 networks:
   camunda:
+  acmesky:
+    external: true
