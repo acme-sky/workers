@@ -10,6 +10,7 @@ require (
 	github.com/knadh/koanf/providers/env v0.1.0
 	github.com/knadh/koanf/v2 v2.1.1
 	github.com/rabbitmq/amqp091-go v1.9.0
+	github.com/tiaguinho/gosoap v1.4.4
 	google.golang.org/grpc v1.62.1
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.10
@@ -44,7 +45,6 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
-	github.com/tiaguinho/gosoap v1.4.4 // indirect
 	golang.org/x/crypto v0.22.0 // indirect
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 	golang.org/x/net v0.24.0 // indirect
