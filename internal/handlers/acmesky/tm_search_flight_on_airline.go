@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/charmbracelet/log"
@@ -30,7 +31,20 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 
 	airlines := variables["airlines"].([]interface{})
 	index := int(variables["loopCounter"].(float64)) - 1
-	airline := airlines[index].(models.Airline)
+
+	m := airlines[index]
+	jsonData, err := json.Marshal(m)
+	if err != nil {
+		fmt.Println("Error marshaling map to JSON:", err)
+		return
+	}
+
+	var airline models.Airline
+	err = json.Unmarshal(jsonData, &airline)
+	if err != nil {
+		fmt.Println("Error unmarshaling JSON to struct:", err)
+		return
+	}
 
 	interests := variables["interests"].([]interface{})
 
