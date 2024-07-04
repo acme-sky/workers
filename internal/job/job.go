@@ -2,10 +2,11 @@ package job
 
 import (
 	"context"
-	"strings"
 	"sync"
 
 	"github.com/acme-sky/workers/internal/config"
+	"github.com/acme-sky/workers/internal/db"
+	"github.com/acme-sky/workers/internal/models"
 	"github.com/charmbracelet/log"
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/commands"
@@ -179,9 +180,14 @@ func CreateClient(pid string) *zbc.Client {
 
 	log.Infof(response.String())
 
+	db, _ := db.GetDb()
+	var airlines models.Airline
+	if err := db.Find(&airlines).Error; err != nil {
+		panic("can't find airlines")
+	}
 	// Airlines must be loaded for the first time as variables 'cause the timer
 	// trigger executed every hour.
-	variables := map[string]interface{}{"airlines": strings.Split(conf.String("airlines"), ",")}
+	variables := map[string]interface{}{"airlines": airlines}
 
 	var instance commands.CreateInstanceCommandStep3
 	if instance, err = client.NewCreateInstanceCommand().BPMNProcessId(ProcessId).LatestVersion().VariablesFromMap(variables); err != nil {

@@ -6,7 +6,6 @@ import (
 
 	"github.com/charmbracelet/log"
 
-	"github.com/acme-sky/workers/internal/config"
 	"github.com/acme-sky/workers/internal/db"
 	"github.com/acme-sky/workers/internal/http"
 	acmejob "github.com/acme-sky/workers/internal/job"
@@ -43,7 +42,14 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 	// This flight ID refers to the airline flight ID
 	var flight2_id int = 0
 
-	endpoint := fmt.Sprintf("%s/flights/filter/", flight1.Airline)
+	var flight1Airline models.Airline
+	if err := db.Where("name = ?", flight1.Airline).First(&flight1Airline).Error; err != nil {
+		log.Errorf("[%s] [%d] Airline not found", job.Type, jobKey)
+		acmejob.FailJob(client, job)
+		return
+	}
+
+	endpoint := fmt.Sprintf("%s/flights/filter/", flight1Airline.Endpoint)
 	payload := map[string]interface{}{
 		"code":              flight1.Code,
 		"departure_airport": flight1.DepartureAirport,
@@ -55,7 +61,7 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 	response, err := http.MakeRequest(endpoint, payload)
 
 	if err != nil {
-		log.Errorf("[%s] [%d] Error for airline `%s`: %s", job.Type, jobKey, flight1.Airline, err.Error())
+		log.Errorf("[%s] [%d] Error for airline `%s`: %s", job.Type, jobKey, flight1Airline.Endpoint, err.Error())
 		acmejob.FailJob(client, job)
 		return
 	} else {
@@ -75,7 +81,13 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 	}
 
 	if flight2 != nil {
-		endpoint := fmt.Sprintf("%s/flights/filter/", flight2.Airline)
+		var flight2Airline models.Airline
+		if err := db.Where("name = ?", flight2.Airline).First(&flight2Airline).Error; err != nil {
+			log.Errorf("[%s] [%d] Airline not found", job.Type, jobKey)
+			acmejob.FailJob(client, job)
+			return
+		}
+		endpoint := fmt.Sprintf("%s/flights/filter/", flight2Airline.Endpoint)
 		payload := map[string]interface{}{
 			"code":              flight2.Code,
 			"departure_airport": flight2.DepartureAirport,
@@ -87,7 +99,7 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 		response, err := http.MakeRequest(endpoint, payload)
 
 		if err != nil {
-			log.Errorf("[%s] [%d] Error for airline `%s`: %s", job.Type, jobKey, flight2.Airline, err.Error())
+			log.Errorf("[%s] [%d] Error for airline `%s`: %s", job.Type, jobKey, flight2Airline.Endpoint, err.Error())
 			acmejob.FailJob(client, job)
 			return
 		} else {
@@ -107,12 +119,10 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 		}
 	}
 
-	conf, _ := config.GetConfig()
-
-	endpoint = fmt.Sprintf("%s/login/", flight1.Airline)
+	endpoint = fmt.Sprintf("%s/login/", flight1Airline.Endpoint)
 	payload = map[string]interface{}{
-		"username": conf.String("airline.login.username"),
-		"password": conf.String("airline.login.password"),
+		"username": flight1Airline.LoginUsername,
+		"password": flight1Airline.LoginPassword,
 	}
 
 	token, err := http.MakeLogin(endpoint, payload)
@@ -122,7 +132,7 @@ func TMBookJourney(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	endpoint = fmt.Sprintf("%s/journeys/", flight1.Airline)
+	endpoint = fmt.Sprintf("%s/journeys/", flight1Airline.Endpoint)
 	payload = map[string]interface{}{
 		"departure_flight_id": flight1_id,
 		"cost":                offer.Journey.Cost,

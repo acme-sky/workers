@@ -2,11 +2,9 @@ package handlers
 
 import (
 	"context"
-	"strings"
 
 	"github.com/charmbracelet/log"
 
-	"github.com/acme-sky/workers/internal/config"
 	"github.com/acme-sky/workers/internal/db"
 	acmejob "github.com/acme-sky/workers/internal/job"
 	"github.com/acme-sky/workers/internal/models"
@@ -38,15 +36,11 @@ func STGetUserInterests(client worker.JobClient, job entities.Job) {
 
 	variables["interests"] = interests
 
-	conf, err := config.GetConfig()
-
-	if err != nil {
-		log.Warnf("[%s] [%d] Error loading the config: %s", job.Type, jobKey, err.Error())
-		acmejob.FailJob(client, job)
-		return
+	var airlines models.Airline
+	if err := db.Find(&airlines).Error; err != nil {
+		panic("can't find airlines")
 	}
-
-	variables["airlines"] = strings.Split(conf.String("airlines"), ",")
+	variables["airlines"] = airlines
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {

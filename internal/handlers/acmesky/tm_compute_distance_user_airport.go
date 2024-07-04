@@ -66,7 +66,13 @@ func TMComputeDistanceUserAirport(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	endpoint := fmt.Sprintf("%s/airports/code/%s/", offer.Journey.Flight1.Airline, offer.Journey.Flight1.DepartureAirport)
+	var flight1Airline models.Airline
+	if err := db.Where("name = ?", offer.Journey.Flight1.Airline).First(&flight1Airline).Error; err != nil {
+		log.Errorf("[%s] [%d] Airline not found", job.Type, jobKey)
+		acmejob.FailJob(client, job)
+		return
+	}
+	endpoint := fmt.Sprintf("%s/airports/code/%s/", flight1Airline.Endpoint, offer.Journey.Flight1.DepartureAirport)
 	airport, err := http.GetAirportInfo(endpoint)
 	if err != nil {
 		log.Errorf("[%s] [%d] Can't find info for departure airport: %s", job.Type, jobKey, err.Error())

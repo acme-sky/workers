@@ -8,6 +8,7 @@ import (
 
 	"github.com/acme-sky/workers/internal/http"
 	acmejob "github.com/acme-sky/workers/internal/job"
+	"github.com/acme-sky/workers/internal/models"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
@@ -29,24 +30,24 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 
 	airlines := variables["airlines"].([]interface{})
 	index := int(variables["loopCounter"].(float64)) - 1
-	airline := airlines[index]
+	airline := airlines[index].(models.Airline)
 
 	interests := variables["interests"].([]interface{})
 
 	if len(interests) == 0 {
-		log.Warnf("Error for airline `%s`: there is no interest", airline)
+		log.Warnf("Error for airline `%s`: there is no interest", airline.Name)
 		acmejob.FailJob(client, job)
 		return
 	}
 
 	if index < 0 || index >= len(interests) {
-		log.Errorf("Error for airline `%s`: index out of range %d", airline, index)
+		log.Errorf("Error for airline `%s`: index out of range %d", airline.Name, index)
 		acmejob.FailJob(client, job)
 		return
 	}
 
 	flights := []map[string]interface{}{}
-	endpoint := fmt.Sprintf("%s/flights/filter/", airline)
+	endpoint := fmt.Sprintf("%s/flights/filter/", airline.Endpoint)
 	for i := 0; i < len(interests); i++ {
 		interest := interests[i].(map[string]interface{})
 		interestId := int(interest["id"].(float64))
@@ -62,12 +63,12 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 		response, err := http.MakeRequest(endpoint, payload)
 
 		if err != nil {
-			log.Errorf("Error for airline `%s`: %s", airline, err.Error())
+			log.Errorf("Error for airline `%s`: %s", airline.Name, err.Error())
 		} else {
 			if response.Count > 0 {
 				for _, data := range response.Data {
 					data["user_id"] = user["ID"]
-					data["airline"] = airline
+					data["airline"] = airline.Name
 					data["interest_id"] = interestId
 					flights = append(flights, data)
 				}
@@ -88,14 +89,14 @@ func TMSearchFlightsOnAirline(client worker.JobClient, job entities.Job) {
 		response, err = http.MakeRequest(endpoint, payload)
 
 		if err != nil {
-			log.Errorf("Error for airline `%s`: %s", airline, err.Error())
+			log.Errorf("Error for airline `%s`: %s", airline.Name, err.Error())
 			continue
 		}
 
 		if response.Count > 0 {
 			for _, data := range response.Data {
 				data["user_id"] = user["ID"]
-				data["airline"] = airline
+				data["airline"] = airline.Name
 				data["interest_id"] = interestId
 				flights = append(flights, data)
 			}
