@@ -45,7 +45,6 @@ func STSaveInfoOnProntogram(client worker.JobClient, job entities.Job) {
 	conf, _ := config.GetConfig()
 	endpoint := fmt.Sprintf("%s/sendMessage", conf.String("prontogram.endpoint"))
 
-	fmt.Println(endpoint)
 	expirationInt, _ := strconv.ParseInt(offer.Expired, 10, 64)
 	expirationDate := time.Unix(expirationInt, 0)
 	payload := http.ProntogramMessageRequest{
