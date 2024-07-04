@@ -181,7 +181,7 @@ func CreateClient(pid string) *zbc.Client {
 	log.Infof(response.String())
 
 	db, _ := db.GetDb()
-	var airlines models.Airline
+	var airlines []models.Airline
 	if err := db.Find(&airlines).Error; err != nil {
 		panic("can't find airlines")
 	}

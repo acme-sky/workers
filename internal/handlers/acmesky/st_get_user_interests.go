@@ -36,7 +36,7 @@ func STGetUserInterests(client worker.JobClient, job entities.Job) {
 
 	variables["interests"] = interests
 
-	var airlines models.Airline
+	var airlines []models.Airline
 	if err := db.Find(&airlines).Error; err != nil {
 		panic("can't find airlines")
 	}
