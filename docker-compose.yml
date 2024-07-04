@@ -160,6 +160,8 @@ services:
     image: postgres:16-alpine
     container_name: acmesky-workers-postgres
     restart: always
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -190,8 +192,6 @@ services:
       - camunda
       - acmesky
     depends_on:
-      postgres:
-        condition: service_started
       zeebe:
         condition: service_healthy
       rabbitmq:
