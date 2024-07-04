@@ -36,6 +36,6 @@ func TMSendOffer(client worker.JobClient, job entities.Job) {
 
 	log.Infof("[%s] [%d] Successfully completed job", job.Type, jobKey)
 
-	acmejob.JobVariables[job.Type] <- variables["offer"].(map[string]interface{})
+	acmejob.JobVariables[job.Type] <- variables
 	acmejob.JobStatuses.Close(job.Type, 0)
 }

@@ -613,7 +613,7 @@
       <bpmn:messageEventDefinition id="MessageEventDefinition_0z59sko" />
     </bpmn:endEvent>
   </bpmn:process>
-  <bpmn:process id="Process_Prontogram" name="sd_prontogram" isExecutable="false">
+  <bpmn:process id="Process_Prontogram" name="sd_prontogram" isExecutable="true">
     <bpmn:sequenceFlow id="Flow_0a080if" sourceRef="TM_Propagate_Message_From_Prontogram" targetRef="End_Prontogram" />
     <bpmn:sequenceFlow id="Flow_1r7wwko" sourceRef="ST_Save_Info_On_Prontogram" targetRef="TM_Propagate_Message_From_Prontogram" />
     <bpmn:serviceTask id="ST_Save_Info_On_Prontogram" name="Save info for historic purpose">

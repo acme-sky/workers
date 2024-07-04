@@ -89,6 +89,12 @@ func STPrepareOffer(client worker.JobClient, job entities.Job) {
 		}
 	}
 
+	// Preload user info
+	if err := db.Where("id = ?", offer.Id).Preload("User").First(&offer).Error; err != nil {
+		log.Errorf("[%s] [%d] Offer not found", job.Type, jobKey)
+		acmejob.FailJob(client, job)
+		return
+	}
 	variables["offer"] = offer
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
@@ -104,5 +110,7 @@ func STPrepareOffer(client worker.JobClient, job entities.Job) {
 	}
 
 	log.Infof("[%s] [%d] Successfully completed job", job.Type, jobKey)
+	acmejob.JobVariables[job.Type] <- variables
+
 	acmejob.JobStatuses.Close(job.Type, 0)
 }

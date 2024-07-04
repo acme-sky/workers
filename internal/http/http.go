@@ -49,6 +49,19 @@ type AirportInfoResponseBody struct {
 	Longitude float32 `json:"longitude"`
 }
 
+type ProntogramMessageRequest struct {
+	Message    string `json:"message"`
+	Expiration string `json:"expiration"`
+	Username   string `json:"username"`
+	Sid        string `json:"sid"`
+}
+
+type ProntogramMessageResponse struct {
+	Message string `json:"message"`
+	Sid     string `json:"sid"`
+	Status  int    `json:"status"`
+}
+
 // Make a new request to an endpoint with a `body` and returns a response body
 // or an error.
 func MakeRequest(endpoint string, body map[string]interface{}) (*ResponseBody, error) {
@@ -221,6 +234,45 @@ func GetAirportInfo(endpoint string) (*AirportInfoResponseBody, error) {
 	}
 
 	var responseBody AirportInfoResponseBody
+	if err := json.Unmarshal(resBody, &responseBody); err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not unmarshal response body: %s", err))
+	}
+
+	return &responseBody, nil
+}
+
+// Make a new request for Prontogram and returns a ProntogramMessageResponse
+func MakeProntogramRequest(endpoint string, body ProntogramMessageRequest) (*ProntogramMessageResponse, error) {
+	jsonBody, _ := json.Marshal(body)
+	bodyReader := bytes.NewReader(jsonBody)
+
+	req, err := http.NewRequest(http.MethodPost, endpoint, bodyReader)
+
+	if err != nil {
+		return nil, err
+	}
+
+	httpClient := http.Client{
+		Timeout: 30 * time.Second,
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+
+	res, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not read response body: %s", err.Error()))
+	}
+
+	if res.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("HTTP request returned a status %d and response `%s`", res.StatusCode, resBody))
+	}
+
+	var responseBody ProntogramMessageResponse
 	if err := json.Unmarshal(resBody, &responseBody); err != nil {
 		return nil, errors.New(fmt.Sprintf("Could not unmarshal response body: %s", err))
 	}
