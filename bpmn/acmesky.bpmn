@@ -22,7 +22,7 @@
     <bpmn:messageFlow id="Flow_00yxmjl" sourceRef="TM_Error_On_Check_Offer" targetRef="CM_Received_Bank_Error" />
     <bpmn:messageFlow id="Flow_1f8t58i" sourceRef="TM_Send_Payment_Link" targetRef="CM_Received_Bank_Link" />
     <bpmn:messageFlow id="Flow_170f2ic" sourceRef="TM_Check_Offer" targetRef="CM_Check_Offer" />
-    <bpmn:messageFlow id="Flow_0ida45p" sourceRef="TM_Journey" targetRef="CM_Journey" />
+    <bpmn:messageFlow id="Flow_0ida45p" sourceRef="TM_Invoice" targetRef="CM_Journey" />
     <bpmn:messageFlow id="Flow_1iqz0qp" sourceRef="UT_Pay" targetRef="Participant_Bank" />
     <bpmn:messageFlow id="Flow_0mf165c" sourceRef="Participant_Bank" targetRef="UT_Pay" />
     <bpmn:messageFlow id="Flow_0260exq" sourceRef="TM_Ack_Flight_Request_Save" targetRef="CM_Ack_Flight_Request_Save" />
@@ -31,10 +31,10 @@
     <bpmn:messageFlow id="Flow_04g2o5z" sourceRef="TM_Send_Offer" targetRef="Start_Prontogram" />
     <bpmn:messageFlow id="Flow_020v9in" sourceRef="ST_Sort_Rent_Services" targetRef="Participant_Geolocation" />
     <bpmn:messageFlow id="Flow_057on4g" sourceRef="Participant_Geolocation" targetRef="ST_Sort_Rent_Services" />
-    <bpmn:messageFlow id="Flow_18a9rlu" sourceRef="TM_Journey_Rent_Error" targetRef="CM_Journey" />
+    <bpmn:messageFlow id="Flow_18a9rlu" sourceRef="TM_Invoice_Rent_Error" targetRef="CM_Journey" />
     <bpmn:messageFlow id="Flow_01fwi9s" sourceRef="TM_Compute_Distance_User_Airport" targetRef="Participant_Geolocation" />
     <bpmn:messageFlow id="Flow_11v886u" sourceRef="Participant_Geolocation" targetRef="TM_Compute_Distance_User_Airport" />
-    <bpmn:messageFlow id="Flow_1kztkx9" sourceRef="Event_0x77suf" targetRef="CM_Journey_And_Rent" />
+    <bpmn:messageFlow id="Flow_1kztkx9" sourceRef="TM_Invoice_And_Rent" targetRef="CM_Journey_And_Rent" />
     <bpmn:textAnnotation id="TextAnnotation_04likem">
       <bpmn:text>Check if token timestamp is not expired and not used</bpmn:text>
     </bpmn:textAnnotation>
@@ -61,7 +61,7 @@
         <bpmn:childLaneSet id="LaneSet_146b69j" />
       </bpmn:lane>
       <bpmn:lane id="Lane_08pvrfu" name="User profile">
-        <bpmn:flowNodeRef>TM_Journey</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TM_Invoice</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EG_Price_Greater_Than_1000</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ST_Retrieve_Offer</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ST_Sort_Rent_Services</bpmn:flowNodeRef>
@@ -90,8 +90,8 @@
         <bpmn:flowNodeRef>Event_0jl8r24</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EB_Check_Offer</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_078zn83</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>TM_Journey_Rent_Error</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_0x77suf</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TM_Invoice_Rent_Error</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TM_Invoice_And_Rent</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="Flow_066ca6d" sourceRef="Activity_Foreach_Journey" targetRef="End_Check_Interests" />
@@ -105,15 +105,15 @@
     <bpmn:sequenceFlow id="Flow_1wyb4ra" sourceRef="EB_Check_Offer" targetRef="TM_Error_On_Check_Offer" />
     <bpmn:sequenceFlow id="Flow_1g8qzsm" sourceRef="Event_0jl8r24" targetRef="ST_Offer_Still_Valid" />
     <bpmn:sequenceFlow id="Flow_0vvq016" sourceRef="Activity_Book_Journey" targetRef="EG_Price_Greater_Than_1000" />
-    <bpmn:sequenceFlow id="Flow_1liyfs9" name="No" sourceRef="EG_Price_Greater_Than_1000" targetRef="TM_Journey">
+    <bpmn:sequenceFlow id="Flow_1liyfs9" name="No" sourceRef="EG_Price_Greater_Than_1000" targetRef="TM_Invoice">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=flight_price &lt;= 1000</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0tixpey" sourceRef="Start_ACME_UserProfile" targetRef="ST_Save_Flight" />
     <bpmn:sequenceFlow id="Flow_1rtz04m" sourceRef="ST_Save_Flight" targetRef="TM_Ack_Flight_Request_Save" />
     <bpmn:sequenceFlow id="Flow_1qmul68" sourceRef="TM_Ack_Flight_Request_Save" targetRef="End_ACME_UserProfile" />
-    <bpmn:sendTask id="TM_Journey" name="Send journey receipt">
+    <bpmn:sendTask id="TM_Invoice" name="Send invoice">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="TM_Journey" />
+        <zeebe:taskDefinition type="TM_Invoice" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1liyfs9</bpmn:incoming>
       <bpmn:outgoing>Flow_1ydsmn9</bpmn:outgoing>
@@ -385,7 +385,7 @@
     <bpmn:endEvent id="Event_0wi1mfd">
       <bpmn:incoming>Flow_1ydsmn9</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1ydsmn9" sourceRef="TM_Journey" targetRef="Event_0wi1mfd" />
+    <bpmn:sequenceFlow id="Flow_1ydsmn9" sourceRef="TM_Invoice" targetRef="Event_0wi1mfd" />
     <bpmn:subProcess id="Activity_Foreach_AirlineService" name="For each airline service">
       <bpmn:incoming>Flow_0rlehj8</bpmn:incoming>
       <bpmn:outgoing>Flow_0uv1725</bpmn:outgoing>
@@ -582,7 +582,7 @@
       <bpmn:sequenceFlow id="Flow_07otk5v" sourceRef="TM_Ask_For_Rent" targetRef="Gateway_0ffthgx" />
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_14kp621" sourceRef="ST_Sort_Rent_Services" targetRef="Activity_0gchv60" />
-    <bpmn:sequenceFlow id="Flow_0bb5s9s" name="No" sourceRef="EG_Distance_Less_Than_30km" targetRef="TM_Journey_Rent_Error">
+    <bpmn:sequenceFlow id="Flow_0bb5s9s" name="No" sourceRef="EG_Distance_Less_Than_30km" targetRef="TM_Invoice_Rent_Error">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=distance &gt;= 30</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="Gateway_1o1urwx" name="Any reservation ok?">
@@ -591,23 +591,23 @@
       <bpmn:outgoing>Flow_05szqe1</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_1oy8dyj" sourceRef="Activity_0gchv60" targetRef="Gateway_1o1urwx" />
-    <bpmn:sequenceFlow id="Flow_1bf28rv" name="No" sourceRef="Gateway_1o1urwx" targetRef="TM_Journey_Rent_Error">
+    <bpmn:sequenceFlow id="Flow_1bf28rv" name="No" sourceRef="Gateway_1o1urwx" targetRef="TM_Invoice_Rent_Error">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=rent_status != "Ok"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_05szqe1" name="Yes" sourceRef="Gateway_1o1urwx" targetRef="Event_0x77suf">
+    <bpmn:sequenceFlow id="Flow_05szqe1" name="Yes" sourceRef="Gateway_1o1urwx" targetRef="TM_Invoice_And_Rent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=rent_status = "Ok"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:endEvent id="TM_Journey_Rent_Error" name="Send journey with no rent">
+    <bpmn:endEvent id="TM_Invoice_Rent_Error" name="Send invoice with no rent">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="TM_Journey_Rent_Error" />
+        <zeebe:taskDefinition type="TM_Invoice_Rent_Error" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1bf28rv</bpmn:incoming>
       <bpmn:incoming>Flow_0bb5s9s</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_18ibs4w" />
     </bpmn:endEvent>
-    <bpmn:endEvent id="Event_0x77suf" name="Send journey with rent">
+    <bpmn:endEvent id="TM_Invoice_And_Rent" name="Send invoice with rent">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="TM_Journey_And_Rent" />
+        <zeebe:taskDefinition type="TM_Invoice_And_Rent" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_05szqe1</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0z59sko" />
@@ -957,7 +957,7 @@
       <bpmn:outgoing>Flow_0ze2302</bpmn:outgoing>
       <bpmn:outgoing>Flow_0wguizh</bpmn:outgoing>
     </bpmn:eventBasedGateway>
-    <bpmn:intermediateCatchEvent id="CM_Journey" name="Journey receipt">
+    <bpmn:intermediateCatchEvent id="CM_Journey" name="Journey invoice">
       <bpmn:incoming>Flow_1xy1zu5</bpmn:incoming>
       <bpmn:outgoing>Flow_1l3crlq</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1pfhn8w" messageRef="Message_2i9855h" />
@@ -970,7 +970,7 @@
       <bpmn:incoming>Flow_032y2js</bpmn:incoming>
       <bpmn:outgoing>Flow_1arp88i</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:intermediateCatchEvent id="CM_Journey_And_Rent" name="Journey and rent receipts">
+    <bpmn:intermediateCatchEvent id="CM_Journey_And_Rent" name="Journey and rent invoices">
       <bpmn:incoming>Flow_1p6sxgh</bpmn:incoming>
       <bpmn:outgoing>Flow_032y2js</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_02y8pbw" messageRef="Message_3lghqg7" />
@@ -1108,8 +1108,9 @@
         <dc:Bounds x="190" y="1310" width="6340" height="330" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0zn79qw_di" bpmnElement="TM_Journey">
+      <bpmndi:BPMNShape id="Activity_0zn79qw_di" bpmnElement="TM_Invoice">
         <dc:Bounds x="4700" y="850" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1f1gd83_di" bpmnElement="EG_Price_Greater_Than_1000" isMarkerVisible="true">
         <dc:Bounds x="4555" y="785" width="50" height="50" />
@@ -1523,16 +1524,16 @@
           <dc:Bounds x="6241" y="747.5" width="77" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_03rsqbf_di" bpmnElement="TM_Journey_Rent_Error">
+      <bpmndi:BPMNShape id="Event_03rsqbf_di" bpmnElement="TM_Invoice_Rent_Error">
         <dc:Bounds x="6392" y="792" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="6366" y="835" width="88" height="27" />
+          <dc:Bounds x="6367" y="835" width="86" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_007g31y_di" bpmnElement="Event_0x77suf">
+      <bpmndi:BPMNShape id="Event_007g31y_di" bpmnElement="TM_Invoice_And_Rent">
         <dc:Bounds x="6392" y="882" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="6366" y="925" width="88" height="27" />
+          <dc:Bounds x="6367" y="925" width="86" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_13ozonf_di" bpmnElement="Event_078zn83">
@@ -1784,7 +1785,7 @@
       <bpmndi:BPMNShape id="Event_1a5ehcg_di" bpmnElement="CM_Journey">
         <dc:Bounds x="4742" y="282" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="4782" y="303" width="76" height="14" />
+          <dc:Bounds x="4782" y="303" width="77" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0xkh2n0" bpmnElement="End_Received_New_Offer">

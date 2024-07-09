@@ -12,8 +12,8 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
 
-// Make a message request to the user for "journey receipt"
-func TMJourney(client worker.JobClient, job entities.Job) {
+// Make a message request to the user for "journey invoice but rent error"
+func TMInvoiceRentError(client worker.JobClient, job entities.Job) {
 	jobKey := job.GetKey()
 
 	variables, err := job.GetVariablesAsMap()
@@ -35,6 +35,18 @@ func TMJourney(client worker.JobClient, job entities.Job) {
 		log.Errorf("[%s] [%d] Error on saving offer %s", job.Type, jobKey, err.Error())
 		acmejob.FailJob(client, job)
 		return
+	}
+
+	invoice := models.NewInvoice(models.InvoiceInput{
+		JourneyId: offer.JourneyId,
+		UserId:    offer.UserId,
+	})
+	if created := db.Create(&invoice); created == nil {
+		log.Errorf("[%s] [%d] Invoice not saved", job.Type, jobKey)
+		acmejob.FailJob(client, job)
+		return
+	} else {
+		log.Infof("[%s] [%d] Invoice saved", job.Type, jobKey)
 	}
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)

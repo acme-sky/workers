@@ -88,12 +88,12 @@ func main() {
 		{Name: "TM_Send_Payment_Link", Handler: acmeskyHandlers.TMSendPaymentLink, Message: &acmejob.MessageCommand{Name: "CM_Received_Bank_Link", CorrelationKey: "0"}},
 		{Name: "ST_Offer_Still_Valid", Handler: acmeskyHandlers.STOfferStillValid},
 		{Name: "TM_Error_On_Book_Journey", Handler: acmeskyHandlers.TMErrorOnBookJourney, Message: &acmejob.MessageCommand{Name: "CM_Received_Bank_Error", CorrelationKey: "0"}},
-		{Name: "TM_Journey", Handler: acmeskyHandlers.TMJourney, Message: &acmejob.MessageCommand{Name: "CM_Journey", CorrelationKey: "0"}},
+		{Name: "TM_Invoice", Handler: acmeskyHandlers.TMInvoice, Message: &acmejob.MessageCommand{Name: "CM_Journey", CorrelationKey: "0"}},
 		{Name: "TM_Compute_Distance_User_Airport", Handler: acmeskyHandlers.TMComputeDistanceUserAirport},
 		{Name: "ST_Sort_Rent_Services", Handler: acmeskyHandlers.STSortRentServices},
 		{Name: "TM_Ask_For_Rent", Handler: acmeskyHandlers.TMAskForRent},
-		{Name: "TM_Journey_And_Rent", Handler: acmeskyHandlers.TMJourneyAndRent, Message: &acmejob.MessageCommand{Name: "CM_Journey_And_Rent", CorrelationKey: "0"}},
-		{Name: "TM_Journey_Rent_Error", Handler: acmeskyHandlers.TMJourneyRentError, Message: &acmejob.MessageCommand{Name: "CM_Journey", CorrelationKey: "0"}},
+		{Name: "TM_Invoice_And_Rent", Handler: acmeskyHandlers.TMInvoiceAndRent, Message: &acmejob.MessageCommand{Name: "CM_Journey_And_Rent", CorrelationKey: "0"}},
+		{Name: "TM_Invoice_Rent_Error", Handler: acmeskyHandlers.TMInvoiceRentError, Message: &acmejob.MessageCommand{Name: "CM_Journey", CorrelationKey: "0"}},
 
 		// User profile lane: flights manager
 		{Name: "ST_Save_Last_Minute_Offer", Handler: acmeskyHandlers.STSaveLastMinuteOffer},

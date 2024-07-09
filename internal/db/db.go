@@ -26,6 +26,7 @@ func InitDb(dsn string) (*gorm.DB, error) {
 			&models.Offer{},
 			&models.Rent{},
 			&models.Airline{},
+			&models.Invoice{},
 			&models.User{},
 		)
 	}

@@ -59,6 +59,7 @@ func TMAskForRent(client worker.JobClient, job entities.Job) {
 	} else {
 		if response.Status == "OK" {
 			variables["rent_status"] = "Ok"
+			offer.RentEndpoint = rent.Endpoint
 			offer.RentId = response.RentId
 			if err := db.Save(&offer).Error; err != nil {
 				log.Errorf("[%s] [%d] Error on saving offer %s", job.Type, jobKey, err.Error())

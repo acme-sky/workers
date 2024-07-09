@@ -19,6 +19,19 @@ type BookRentResponse struct {
 	RentId string `xml:"RentId"`
 }
 
+type GetRentByIdResult struct {
+	Response GetRentByIdResponse `xml:"GetRentByIdResponse"`
+}
+
+type GetRentByIdResponse struct {
+	Status        string `xml:"Status"`
+	RentId        string `xml:"RentId"`
+	PickupAddress string `xml:"PickupAddress"`
+	Address       string `xml:"Address"`
+	CustomerName  string `xml:"CustomerName"`
+	PickupDate    string `xml:"PickupDate"`
+}
+
 // SOAP call to BookRent action for a selected rent. Returns the call response
 // which has a Status and RentId, the latter will be saved on the offer journey
 func MakeRentRequest(rent models.Rent, offer models.Offer) (*BookRentResponse, error) {
@@ -52,6 +65,34 @@ func MakeRentRequest(rent models.Rent, offer models.Offer) (*BookRentResponse, e
 	}
 
 	var r BookRentResponse
+	res.Unmarshal(&r)
+
+	return &r, nil
+}
+
+// SOAP call to GetRentById action for a selected rent. Returns the reservation
+// object data
+func MakeGetRentByIdRequest(endpoint string, id string) (*GetRentByIdResponse, error) {
+	httpClient := &http.Client{
+		Timeout: 1500 * time.Millisecond,
+	}
+	soap, err := gosoap.SoapClient(endpoint, httpClient)
+	if err != nil {
+		log.Errorf("SoapClient error: %s", err)
+		return nil, err
+	}
+
+	params := gosoap.Params{
+		"RentId": id,
+	}
+
+	res, err := soap.Call("GetRentById", params)
+	if err != nil {
+		log.Fatalf("Call error: %s", err)
+		return nil, err
+	}
+
+	var r GetRentByIdResponse
 	res.Unmarshal(&r)
 
 	return &r, nil
