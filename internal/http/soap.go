@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/acme-sky/workers/internal/db"
 	"github.com/acme-sky/workers/internal/models"
 	"github.com/charmbracelet/log"
 	"github.com/tiaguinho/gosoap"
@@ -44,7 +45,14 @@ func MakeRentRequest(rent models.Rent, offer models.Offer) (*BookRentResponse, e
 		return nil, err
 	}
 
-	endpoint := fmt.Sprintf("%s/airports/code/%s/", offer.Journey.Flight1.Airline, offer.Journey.Flight1.DepartureAirport)
+	db, _ := db.GetDb()
+
+	var flight1Airline models.Airline
+	if err := db.Where("name = ?", offer.Journey.Flight1.Airline).First(&flight1Airline).Error; err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf("%s/airports/code/%s/", flight1Airline.Endpoint, offer.Journey.Flight1.DepartureAirport)
 	airport, err := GetAirportInfo(endpoint)
 	if err != nil {
 		log.Errorf("Can't find info for departure airport: %s", err.Error())
