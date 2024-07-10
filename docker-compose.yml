@@ -12,6 +12,7 @@ services:
     networks:
       - default
       - camunda
+      - acmesky-api
 
   zeebe: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
     image: camunda/zeebe:${CAMUNDA_PLATFORM_VERSION}
@@ -171,6 +172,7 @@ services:
     networks:
       - default
       - camunda
+      - acmesky-api
 
   workers:
     image: acmesky-workers
@@ -215,4 +217,6 @@ volumes:
 networks:
   camunda:
   acmesky:
+    external: true
+  acmesky-api:
     external: true
