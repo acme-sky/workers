@@ -44,8 +44,8 @@ func STSaveLastMinuteOffer(client worker.JobClient, job entities.Job) {
 		}
 
 		var available_flight models.AvailableFlight
-		if found := db.Where("code = ? AND cost = ? AND departure_airport = ? AND arrival_airport = ? AND departure_time = ? AND arrival_time = ?",
-			input.Code, input.Cost, input.DepartureAirport, input.ArrivalAirport, input.DepartureTime, input.ArrivalTime).First(&available_flight).Error; found == nil {
+		if found := db.Where("code = ? AND cost = ? AND departure_airport = ? AND arrival_airport = ? AND departure_time = ? AND arrival_time = ? AND user_id = ?",
+			input.Code, input.Cost, input.DepartureAirport, input.ArrivalAirport, input.DepartureTime, input.ArrivalTime, input.UserId).First(&available_flight).Error; found == nil {
 			log.Warnf("[%s] [%d] Skip an already saved flight", job.Type, jobKey)
 			countNotSaved++
 			continue
