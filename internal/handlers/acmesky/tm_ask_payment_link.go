@@ -39,7 +39,7 @@ func TMAskPaymentLink(client worker.JobClient, job entities.Job) {
 	payload := map[string]interface{}{
 		"owner":    fmt.Sprintf("%s <%s>", offer.User.Name, offer.User.Email),
 		"amount":   offer.Journey.Cost,
-		"callback": fmt.Sprintf("%s/%d", conf.String("bank.callback"), offer.JourneyId),
+		"callback": fmt.Sprintf("%s/%d/", conf.String("bank.callback"), offer.Id),
 	}
 
 	if offer.Journey.Flight2 != nil {
